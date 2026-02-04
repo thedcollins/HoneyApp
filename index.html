@@ -282,8 +282,8 @@
   </style>
 </head>
 <body>
-  <!-- Unlock gate (when encryption is on) -->
-  <div id="screen-gate" class="screen">
+  <!-- Unlock gate (when encryption is on). Default active so app is not visible before init. -->
+  <div id="screen-gate" class="screen active">
     <div class="card">
       <h1>HoneyApp</h1>
       <p class="help" id="gate_help">Enter admin username and password to unlock.</p>
@@ -316,7 +316,7 @@
     </div>
   </div>
 
-  <div id="screen-app" class="screen active">
+  <div id="screen-app" class="screen">
     <div class="home-layout">
       <aside id="home-header" class="home-header-bar"></aside>
       <div class="home-main">
