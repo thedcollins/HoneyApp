@@ -40,9 +40,11 @@
     .settings-content { flex: 1; min-width: 0; }
     .settings-panel { display: none; padding: 0.5rem 0; }
     .settings-panel.active { display: block; }
-    .settings-actions { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; justify-content: flex-end; }
-    .settings-actions #settings_status { margin-right: auto; }
-    .settings-actions .btn { width: auto; margin: 0; }
+    #app-sheet-settings .settings-content .settings-panel:first-child { padding-top: 0; }
+    #app-sheet-settings .settings-content .settings-panel:first-child .settings-block { margin-top: 0; }
+    #settings_status:empty { display: none; }
+    #settings_status:not(:empty) { margin-top: 0.75rem; }
+    #admin_status:empty { display: none; }
     .admin-list-item { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin: 0.2rem 0; }
     .btn-remove { font-size: 0.8rem; padding: 0.2rem 0.4rem; min-height: auto; background: transparent; color: var(--muted); }
     .btn-remove:hover { color: var(--status-err, #a52a2a); }
@@ -157,8 +159,11 @@
     #cal-repeat-custom-wrap input[type="number"] { width: 4rem; }
     #cal-repeat-custom-wrap select { width: auto; min-width: 7rem; }
     .cal-event-item .cal-event-location { font-size: 0.85rem; color: var(--muted); margin-left: 0.25rem; }
-    .home-header-bar { width: 100%; min-height: 3rem; background: var(--honey-dark); color: #fff; border-radius: 10px; padding: 0.75rem 1rem; margin-bottom: 1rem; box-sizing: border-box; display: flex; gap: 1rem; flex-wrap: wrap; }
-    .home-header-col { flex: 1; min-width: 140px; }
+    .home-layout { display: flex; flex-direction: row; gap: 1rem; width: 100%; min-height: 0; }
+    .home-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .home-header-bar { flex: 0 0 auto; width: 200px; min-height: 3rem; max-height: 80vh; overflow-y: auto; background: var(--honey-dark); color: #fff; border-radius: 10px; padding: 0.75rem 1rem; margin-bottom: 0; box-sizing: border-box; display: flex; flex-direction: column; gap: 1rem; }
+    .home-header-bar.empty { display: none; }
+    .home-header-col { flex: 0 0 auto; min-width: 0; width: 100%; }
     .home-header-col .home-col-title { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.9; margin-bottom: 0.4rem; text-align: center; }
     .home-header-bar .home-today-empty, .home-header-bar .home-upcoming-empty { display: flex; align-items: center; justify-content: center; min-height: 2.5rem; font-size: 0.9rem; color: rgba(255,255,255,0.9); }
     .home-header-bar .home-today-events, .home-header-bar .home-upcoming-events { list-style: none; padding: 0; margin: 0; width: 100%; }
@@ -289,12 +294,10 @@
   </div>
 
   <div id="screen-app" class="screen active">
-    <div id="home-header" class="home-header-bar"></div>
-    <div class="tabs">
-      <button type="button" data-tab="home" class="active">Home</button>
-      <button type="button" data-tab="settings" class="">Settings</button>
-    </div>
-    <div id="sheet-home" class="sheet active">
+    <div class="home-layout">
+      <aside id="home-header" class="home-header-bar"></aside>
+      <div class="home-main">
+        <div id="sheet-home" class="sheet active">
       <div id="home-app-grid" class="app-grid">
         <div class="app-card" data-app="database" role="button" tabindex="0"><div class="app-icon-wrap"><span class="app-icon">📦</span></div><div class="app-title">Database</div></div>
         <div class="app-card" data-app="projects" role="button" tabindex="0"><div class="app-icon-wrap"><span class="app-icon">📋</span></div><div class="app-title">Projects</div></div>
@@ -307,7 +310,7 @@
         <div class="app-card" data-app="tasks" role="button" tabindex="0"><div class="app-icon-wrap"><span class="app-icon">✅</span></div><div class="app-title">Tasks</div></div>
         <div class="app-card" data-app="notes" role="button" tabindex="0"><div class="app-icon-wrap"><span class="app-icon">📝</span></div><div class="app-title">Notes</div></div>
         <div class="app-card" data-app="calendar" role="button" tabindex="0"><div class="app-icon-wrap"><span class="app-icon">📅</span></div><div class="app-title">Calendar</div></div>
-        <div class="app-card" data-app="dashboard" role="button" tabindex="0"><div class="app-icon-wrap"><span class="app-icon">🏠</span></div><div class="app-title">Dashboard</div></div>
+        <div class="app-card" data-app="settings" role="button" tabindex="0"><div class="app-icon-wrap"><span class="app-icon">⚙️</span></div><div class="app-title">Settings</div></div>
       </div>
       <div id="app-sheet-database" class="app-sheet" data-app="database">
         <button type="button" class="btn app-sheet-back secondary" data-app-back>← Back to Home</button>
@@ -573,18 +576,12 @@
         <div id="calendar-week-view" class="calendar-view" style="display: none;"></div>
         <div id="calendar-day-view" class="calendar-view" style="display: none;"></div>
       </div>
-      <div id="app-sheet-dashboard" class="app-sheet" data-app="dashboard">
-        <button type="button" class="btn app-sheet-back secondary" data-app-back>← Back to Home</button>
-        <h2>🏠 Dashboard</h2>
-        <div class="app-desc-full">
-          <p>Single <strong>overview screen</strong>: KPIs and summaries from other apps (e.g. sales this month, low stock, overdue tasks, upcoming events). No data entry—only reads from Sales log, Inventory, Tasks, Calendar, etc.</p>
-          <p><strong>Features to build:</strong> Summary cards or numbers; links or short lists (e.g. recent sales, alerts).</p>
+      <div id="app-sheet-settings" class="app-sheet" data-app="settings">
+        <div class="app-sheet-header">
+          <button type="button" class="btn app-sheet-back secondary" data-app-back>← Back to Home</button>
+          <h2>Settings</h2>
         </div>
-        <div class="app-placeholder">Placeholder — build this app next.</div>
-      </div>
-    </div>
-    <div id="sheet-settings" class="sheet">
-      <div class="settings-layout">
+        <div class="settings-layout">
         <nav class="settings-nav">
           <button type="button" data-settings-panel="github" class="active">GitHub Saver</button>
           <button type="button" data-settings-panel="admin" class="">Add admin</button>
@@ -595,7 +592,7 @@
           <div id="settings-panel-github" class="settings-panel active">
             <div class="settings-block">
               <h2>GitHub Saver</h2>
-              <p class="help">Configure once. Token is kept on this device only. Use <strong>Download</strong> to save the file with your settings, or <strong>Publish</strong> to push to GitHub (settings are saved with the file).</p>
+              <p class="help">Configure once. Token is kept on this device only. Use <strong>Save settings</strong> below to push this app to GitHub (settings are saved with the file).</p>
               <label for="github_repo">Repository (owner/repo)</label>
               <input type="text" id="github_repo" placeholder="username/HoneyApp" autocomplete="off">
               <label for="github_filename">Filename</label>
@@ -609,6 +606,8 @@
               <label for="github_token">Password (personal access token)</label>
               <input type="password" id="github_token" placeholder="ghp_... or token" autocomplete="off">
               <p class="help">Token is not stored in the file; enter it once per device.</p>
+              <p id="settings_status" class="status"></p>
+              <button type="button" class="btn" id="btn_publish">Save settings</button>
             </div>
           </div>
           <div id="settings-panel-admin" class="settings-panel">
@@ -619,13 +618,14 @@
               <p class="help" id="admin_help" style="display: none;">Add an admin (username and password) to enable encryption. Once added, the app is encrypted and you unlock with that username and password.</p>
               <button type="button" id="btn_add_admin" class="btn secondary">Add admin</button>
               <p class="help" id="admin_locked_msg" style="display: block;">Encryption is on. Unlock with any admin username and password on the home screen. You can add more admins below.</p>
-              <p id="admin_status" class="status ok">Admin removed.</p>
+              <p id="admin_status" class="status ok"></p>
             </div>
           </div>
           <div id="settings-panel-export" class="settings-panel">
             <div class="settings-block">
               <h2>Export</h2>
-              <p class="help">Export app data (or chosen sections) to a file (e.g. JSON or CSV) for use elsewhere or as a copy.</p>
+              <p class="help">Save the whole app as an HTML document to this device. Use <strong>Save locally</strong> to download the file with your settings.</p>
+              <button type="button" class="btn secondary" id="btn_save_locally">Save locally</button>
               <div class="app-placeholder" style="margin-top: 0.5rem;">Placeholder — build export here.</div>
             </div>
           </div>
@@ -638,11 +638,8 @@
           </div>
         </div>
       </div>
-      <div class="settings-actions">
-        <p id="settings_status" class="status">Saving to GitHub…</p>
-        <button type="button" id="btn_save_locally" class="btn secondary">Download</button>
-        <button type="button" id="btn_publish" class="btn">Publish</button>
       </div>
+    </div>
     </div>
   </div>
 
@@ -688,7 +685,7 @@
     { id: 'tasks', title: 'Tasks', icon: '✅', desc: 'Day-to-day to-dos (e.g. order wax, ship order, update listing). Each task has a title, optional due date, and done/not done. Separate from Projects: tasks are small actionable items; Projects are larger efforts with timelines. Features: add, complete, delete tasks; optional due date and list view.' },
     { id: 'notes', title: 'Notes', icon: '📝', desc: 'Freeform text: notes, recipes, procedures, or any text you want to keep. Each note has a title and body; optional tags or categories. No calculations—just store and retrieve text. Features: create, edit, delete notes; list by title or tag; simple viewer.' },
     { id: 'calendar', title: 'Calendar', icon: '📅', desc: 'Shows dates and events (e.g. markets, deliveries, deadlines). Events have title, date, optional time and description. Complements Projects (project due dates) and Tasks (task due dates) with a calendar view. Features: add/edit events; month or week view; optional list view.' },
-    { id: 'dashboard', title: 'Dashboard', icon: '🏠', desc: 'Single overview screen: KPIs and summaries from other apps (e.g. sales this month, low stock, overdue tasks, upcoming events). No data entry—only reads from Sales log, Inventory, Tasks, Calendar, etc. Features: summary cards or numbers; links or short lists (e.g. recent sales, alerts).' }
+    { id: 'settings', title: 'Settings', icon: '⚙️', desc: 'Configure GitHub Saver (repo, branch, token), add/remove admins, export data, backup/restore.' }
   ];
 
   function getDefaultAppData() {
@@ -862,7 +859,7 @@
   async function saveToGitHub() {
     var statusEl = $('settings_status') || $('github_status');
     function setStatus(msg, ok) {
-      if (statusEl) { statusEl.textContent = msg; statusEl.className = 'status' + (ok === true ? ' ok' : ok === false ? ' err' : ''); }
+      if (statusEl) { statusEl.textContent = msg || ''; statusEl.className = 'status' + (ok === true ? ' ok' : ok === false ? ' err' : ''); }
     }
     saveSettingsToConfig();
     if (decryptedConfig && sessionPassphrase) {
@@ -888,7 +885,7 @@
     var filePath = pathNorm ? pathNorm + '/' + filename : filename;
     var token = getToken();
     if (!repo || !token) {
-      setStatus('Enter repository (owner/repo) and token, then Publish.', false);
+      setStatus('Enter repository (owner/repo) and token, then Save settings.', false);
       return;
     }
     var parts = repo.split('/').map(function (s) { return s.trim(); });
@@ -933,6 +930,7 @@
         throw new Error(errJson.message || putRes.statusText);
       }
       setStatus('Saved to GitHub.', true);
+        setTimeout(function () { setStatus(''); }, 3000);
     } catch (e) {
       setStatus('Save failed: ' + (e.message || e), false);
     }
@@ -999,18 +997,6 @@
     });
   }
 
-  // Tabs
-  document.querySelectorAll('.tabs button').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      document.querySelectorAll('.tabs button').forEach(function (b) { b.classList.remove('active'); });
-      document.querySelectorAll('.sheet').forEach(function (s) { s.classList.remove('active'); });
-      btn.classList.add('active');
-      var sheet = $('sheet-' + btn.dataset.tab);
-      if (sheet) sheet.classList.add('active');
-      showHomeView('grid');
-    });
-  });
-
   function showHomeView(view) {
     var grid = $('home-app-grid');
     var sheets = document.querySelectorAll('#sheet-home .app-sheet');
@@ -1026,6 +1012,7 @@
       if (view === 'calendar') calendarInit();
       if (view === 'tasks') tasksInit();
       if (view === 'notes') notesInit();
+      if (view === 'settings') { loadConfigIntoForm(); loadTokenIntoForm(); var se = $('settings_status'); if (se) se.textContent = ''; var ae = $('admin_status'); if (ae) ae.textContent = ''; }
     }
   }
 
@@ -1089,6 +1076,13 @@
         return t1.localeCompare(t2);
       });
     } catch (e) {}
+    var hasContent = todayEvents.length > 0 || todayTasks.length > 0 || upcomingInstances.length > 0 || upcomingTasks.length > 0;
+    if (!hasContent) {
+      el.classList.add('empty');
+      el.innerHTML = '';
+      return;
+    }
+    el.classList.remove('empty');
     var dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     var leftHtml = '<div class="home-header-col"><div class="home-col-title">Today</div>';
     if (todayEvents.length > 0 || todayTasks.length > 0) {
@@ -2133,12 +2127,6 @@
   }
 
   function showHomeTab() {
-    document.querySelectorAll('.tabs button').forEach(function (b) { b.classList.remove('active'); });
-    document.querySelectorAll('.sheet').forEach(function (s) { s.classList.remove('active'); });
-    var homeBtn = document.querySelector('.tabs button[data-tab="home"]');
-    var homeSheet = $('sheet-home');
-    if (homeBtn) homeBtn.classList.add('active');
-    if (homeSheet) homeSheet.classList.add('active');
     showHomeView('grid');
   }
 
@@ -2399,7 +2387,7 @@
         sessionBlobIndex = -1;
         loadConfigIntoForm();
         updateAdminSection();
-        if ($('admin_status')) { $('admin_status').textContent = 'All admins removed. Encryption is off.'; $('admin_status').className = 'status ok'; }
+        if ($('admin_status')) { $('admin_status').textContent = 'All admins removed. Encryption is off.'; $('admin_status').className = 'status ok'; setTimeout(function () { var a = $('admin_status'); if (a) a.textContent = ''; }, 3000); }
         return;
       }
       var blobs = (config.blobs || []).slice();
@@ -2411,7 +2399,7 @@
         sessionBlobIndex = -1;
         updateAdminSection();
         showScreen('screen-gate');
-        if ($('admin_status')) { $('admin_status').textContent = 'You removed yourself. Unlock with another admin.'; $('admin_status').className = 'status ok'; }
+        if ($('admin_status')) { $('admin_status').textContent = 'You removed yourself. Unlock with another admin.'; $('admin_status').className = 'status ok'; setTimeout(function () { var a = $('admin_status'); if (a) a.textContent = ''; }, 3000); }
         return;
       }
       if (j < sessionBlobIndex) sessionBlobIndex--;
@@ -2421,9 +2409,9 @@
           blobs[sessionBlobIndex] = blob;
           setEncryptedConfig(blobs);
           updateAdminSection();
-          if ($('admin_status')) { $('admin_status').textContent = 'Admin removed.'; $('admin_status').className = 'status ok'; }
+          if ($('admin_status')) { $('admin_status').textContent = 'Admin removed.'; $('admin_status').className = 'status ok'; setTimeout(function () { var a = $('admin_status'); if (a) a.textContent = ''; }, 3000); }
         } catch (e) {
-          if ($('admin_status')) { $('admin_status').textContent = 'Error: ' + (e.message || e); $('admin_status').className = 'status err'; }
+          if ($('admin_status')) { $('admin_status').textContent = 'Error: ' + (e.message || e); $('admin_status').className = 'status err'; setTimeout(function () { var a = $('admin_status'); if (a) a.textContent = ''; }, 3000); }
         }
       })();
       return;
@@ -2441,7 +2429,7 @@
       }
       setConfig(config);
       updateAdminSection();
-      if ($('admin_status')) { $('admin_status').textContent = 'Admin removed.'; $('admin_status').className = 'status ok'; }
+      if ($('admin_status')) { $('admin_status').textContent = 'Admin removed.'; $('admin_status').className = 'status ok'; setTimeout(function () { var a = $('admin_status'); if (a) a.textContent = ''; }, 3000); }
     }
   }
 
