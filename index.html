@@ -149,14 +149,6 @@
     .tasks-name-priority-row .tasks-field label { margin-top: 0; line-height: 1.25; }
     .tasks-field-name { flex: 1 1 12rem; min-width: 0; }
     .tasks-field-priority { flex: 0 0 auto; min-width: 8rem; }
-    /* Same colours as home header .home-task-pill.priority-*; no grey hover */
-    #task-priority:hover { background: var(--card); color: var(--text); }
-    #task-priority option[value="low"] { background: #2d6a2d; color: #fff; }
-    #task-priority option[value="medium"] { background: #c9a800; color: #fff; }
-    #task-priority option[value="high"] { background: #a52a2a; color: #fff; }
-    #task-priority option[value="low"]:hover { background: #2d6a2d; color: #fff; }
-    #task-priority option[value="medium"]:hover { background: #c9a800; color: #fff; }
-    #task-priority option[value="high"]:hover { background: #a52a2a; color: #fff; }
     .tasks-date-repeat-row { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 0.5rem 1rem; margin-top: 0.5rem; }
     .tasks-date-repeat-row .tasks-field { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; }
     .tasks-date-repeat-row .tasks-field label { margin-top: 0; line-height: 1.25; }
@@ -164,13 +156,16 @@
     .tasks-field-date input[type="date"] { width: 100%; max-width: 100%; min-width: 0; }
     /* iPad / touch only: different layout so date picker isn't too big and has space before repeat */
     @media (hover: none) and (pointer: coarse) {
-      .tasks-field-date { width: 9rem; max-width: 9rem; margin-right: 0.75rem; }
-      .tasks-date-repeat-row #task-date { height: 2.15rem; min-height: 2.15rem; max-height: 2.15rem; }
+      .tasks-field-date { width: 9rem; max-width: 9rem; margin-right: 0; }
+      .tasks-date-repeat-row { gap: 0.5rem 1rem; }
+      .tasks-date-repeat-row #task-date { height: 2rem; min-height: 2rem; max-height: 2rem; }
       .tasks-field-date input[type="date"] { width: 100% !important; max-width: 100% !important; min-width: 0 !important; }
     }
     .tasks-field-repeat { flex: 1 1 8rem; min-width: 8rem; }
-    .tasks-field-custom { flex: 1 1 auto; min-width: 10rem; flex-direction: column; align-items: flex-start; }
+    .tasks-field-custom { flex: 2 1 0; min-width: 10rem; flex-direction: column; align-items: flex-start; }
     .tasks-repeat-custom-inner { display: flex; flex-wrap: nowrap; align-items: center; gap: 0.5rem; width: 100%; }
+    .tasks-repeat-custom-inner input[type="number"] { flex: 0 0 auto; width: 4rem; }
+    .tasks-repeat-custom-inner select { flex: 1 1 0; min-width: 0; }
     .tasks-repeat-custom-inner input, .tasks-repeat-custom-inner select { height: 2.5rem; min-height: 2.5rem; max-height: 2.5rem; box-sizing: border-box; }
     #tasks-repeat-custom-wrap { display: none; flex-direction: column; align-items: flex-start; gap: 0.25rem; }
     #tasks-repeat-custom-wrap label { margin-top: 0; width: auto; }
