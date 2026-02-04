@@ -64,12 +64,97 @@
     .app-sheet.active { display: block; }
     .app-sheet .app-sheet-back { margin-bottom: 1rem; }
     .app-sheet .app-sheet-back.btn { width: auto; }
+    .app-sheet-header { display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: center; margin-bottom: 1rem; gap: 0.5rem; }
+    .app-sheet-header .app-sheet-back { justify-self: start; margin-bottom: 0; }
+    .app-sheet-header h2 { justify-self: center; text-align: center; margin: 0; font-size: 1.2rem; color: var(--honey-dark); }
+    .app-sheet-header #calendar-add-event, .app-sheet-header #tasks-add-btn { justify-self: end; }
     .app-sheet h2 { font-size: 1.2rem; color: var(--honey-dark); margin: 0 0 0.5rem 0; }
     .app-sheet .app-desc { font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem; }
     .app-sheet .app-desc-full { font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem; }
     .app-sheet .app-desc-full p { margin: 0 0 0.6rem 0; line-height: 1.45; }
     .app-sheet .app-desc-full p:last-child { margin-bottom: 0; }
     .app-sheet .app-placeholder { background: var(--wax); border: 1px dashed var(--border); border-radius: 8px; padding: 1.5rem; text-align: center; color: var(--muted); }
+    .calendar-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+    .calendar-view-switcher { display: flex; gap: 0.25rem; }
+    .calendar-view-switcher button { padding: 0.4rem 0.75rem; font-size: 0.85rem; border-radius: 6px; border: 1px solid var(--border); background: var(--card); color: var(--muted); font-weight: 600; cursor: pointer; }
+    .calendar-view-switcher button.active { background: var(--honey-dark); color: #fff; border-color: var(--honey-dark); }
+    .calendar-nav { display: flex; align-items: center; gap: 0.5rem; margin-left: auto; }
+    .calendar-nav button { padding: 0.35rem 0.6rem; min-height: auto; width: auto; font-size: 1rem; }
+    .calendar-nav .calendar-label { font-weight: 600; color: var(--honey-dark); min-width: 140px; text-align: center; font-size: 0.95rem; }
+    .calendar-month { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .calendar-month .cal-weekday { padding: 0.35rem; text-align: center; font-size: 0.7rem; font-weight: 600; color: var(--muted); background: var(--wax); }
+    .calendar-month .cal-day { min-height: 72px; padding: 0.35rem; background: var(--card); font-size: 0.8rem; }
+    .calendar-month .cal-day.other-month { background: var(--bg); color: var(--muted); }
+    .calendar-month .cal-day.today { background: var(--wax); border: 1px solid var(--honey-dark); }
+    .calendar-month .cal-day-num { font-weight: 600; margin-bottom: 0.25rem; }
+    .calendar-month .cal-day-events { font-size: 0.7rem; }
+    .calendar-month .cal-event-dot { display: inline-block; margin-right: 0.2rem; padding: 0 0.25rem; border-radius: 4px; background: var(--honey-dark); color: #fff; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
+    .calendar-week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 1rem; }
+    .calendar-week .cal-day-col { min-height: 120px; padding: 0.5rem; background: var(--card); }
+    .calendar-week .cal-day-col.other-month { background: var(--bg); color: var(--muted); }
+    .calendar-week .cal-day-col.today { background: var(--wax); }
+    .calendar-week .cal-day-header { font-weight: 600; font-size: 0.8rem; margin-bottom: 0.5rem; }
+    .calendar-week .cal-day-events { font-size: 0.8rem; }
+    .calendar-day { margin-bottom: 1rem; }
+    .calendar-day .cal-day-header { font-size: 1.1rem; font-weight: 600; color: var(--honey-dark); margin-bottom: 0.75rem; }
+    .calendar-day .cal-event-item { padding: 0.6rem; margin-bottom: 0.5rem; background: var(--card); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; }
+    .calendar-day .cal-event-item:hover { background: var(--wax); }
+    .calendar-day .cal-event-time { font-size: 0.8rem; color: var(--muted); margin-right: 0.5rem; }
+    .calendar-event-form { background: var(--wax); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
+    .calendar-event-form label { display: block; font-weight: 600; margin-top: 0.5rem; }
+    .calendar-event-form input, .calendar-event-form select, .calendar-event-form textarea { width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; margin: 0.25rem 0; box-sizing: border-box; }
+    .calendar-event-form textarea { min-height: 60px; resize: vertical; }
+    .calendar-event-form .form-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
+    .calendar-event-form .form-actions .btn { width: auto; }
+    #cal-repeat-custom-wrap { display: flex; flex-wrap: nowrap; align-items: center; gap: 0.5rem; margin-top: 0.35rem; }
+    #cal-repeat-custom-wrap label { display: inline-block; margin-top: 0; width: auto; }
+    #cal-repeat-custom-wrap input, #cal-repeat-custom-wrap select { padding: 0.5rem; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; margin: 0; box-sizing: border-box; }
+    #cal-repeat-custom-wrap input[type="number"] { width: 4rem; }
+    #cal-repeat-custom-wrap select { width: auto; min-width: 7rem; }
+    .cal-event-item .cal-event-location { font-size: 0.85rem; color: var(--muted); margin-left: 0.25rem; }
+    .home-header-bar { width: 100%; min-height: 3rem; background: var(--honey-dark); color: #fff; border-radius: 10px; padding: 0.75rem 1rem; margin-bottom: 1rem; box-sizing: border-box; display: flex; gap: 1rem; flex-wrap: wrap; }
+    .home-header-col { flex: 1; min-width: 140px; }
+    .home-header-col .home-col-title { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.9; margin-bottom: 0.4rem; text-align: center; }
+    .home-header-bar .home-today-empty, .home-header-bar .home-upcoming-empty { display: flex; align-items: center; justify-content: center; min-height: 2.5rem; font-size: 0.9rem; color: rgba(255,255,255,0.9); }
+    .home-header-bar .home-today-events, .home-header-bar .home-upcoming-events { list-style: none; padding: 0; margin: 0; width: 100%; }
+    .home-header-bar .home-today-event, .home-header-bar .home-upcoming-event { padding: 0.35rem 0; border-bottom: 1px solid rgba(255,255,255,0.25); font-size: 0.85rem; display: block; width: 100%; box-sizing: border-box; }
+    .home-header-bar .home-today-event:last-child, .home-header-bar .home-upcoming-event:last-child { border-bottom: none; }
+    .home-header-bar .home-event-day { display: block; font-size: 0.7rem; opacity: 0.85; margin-bottom: 0.15rem; }
+    .home-event-pill { display: block; width: 100%; box-sizing: border-box; border: 1px solid rgba(255,255,255,0.55); border-radius: 6px; padding: 0.35rem 0.5rem; font-size: 0.85rem; background: rgba(255,255,255,0.55); color: #2c2416; text-align: center; }
+    .home-task-pill { display: block; width: 100%; box-sizing: border-box; border: 1px solid; border-radius: 6px; padding: 0.35rem 0.5rem; font-size: 0.85rem; font-weight: 500; text-align: center; }
+    .home-task-pill.priority-low { border-color: #2d6a2d; background: rgba(45,106,45,0.5); color: #fff; }
+    .home-task-pill.priority-medium { border-color: #c9a800; background: rgba(201,168,0,0.5); color: #fff; }
+    .home-task-pill.priority-high { border-color: #a52a2a; background: rgba(165,42,42,0.55); color: #fff; }
+    .home-header-bar .home-event-time { font-size: 0.75rem; opacity: 0.9; min-width: 3.5rem; }
+    .home-header-bar .home-event-title { flex: 1; }
+    .tasks-view-toggle { display: flex; gap: 0.25rem; margin-bottom: 1rem; }
+    .tasks-view-toggle button { flex: 1; padding: 0.5rem; font-size: 0.9rem; font-weight: 600; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--muted); cursor: pointer; }
+    .tasks-view-toggle button.active { background: var(--honey-dark); color: #fff; border-color: var(--honey-dark); }
+    .tasks-form-wrap { background: var(--wax); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
+    .tasks-form-wrap label { display: block; font-weight: 600; margin-top: 0.5rem; }
+    .tasks-form-wrap input, .tasks-form-wrap select { width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; margin: 0.25rem 0; box-sizing: border-box; }
+    .tasks-form-wrap .form-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
+    .tasks-form-wrap .form-actions .btn { width: auto; }
+    #tasks-repeat-custom-wrap { display: flex; flex-wrap: nowrap; align-items: center; gap: 0.5rem; margin-top: 0.35rem; }
+    #tasks-repeat-custom-wrap label { display: inline-block; margin-top: 0; width: auto; }
+    #tasks-repeat-custom-wrap input, #tasks-repeat-custom-wrap select { padding: 0.5rem; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; margin: 0; box-sizing: border-box; }
+    #tasks-repeat-custom-wrap input[type="number"] { width: 4rem; }
+    #tasks-repeat-custom-wrap select { width: auto; min-width: 7rem; }
+    .tasks-group { margin-bottom: 1.25rem; }
+    .tasks-group-title { font-size: 0.8rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.5rem; padding-bottom: 0.25rem; }
+    .tasks-list { list-style: none; padding: 0; margin: 0; }
+    .tasks-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border); background: var(--card); border-radius: 6px; margin-bottom: 0.35rem; }
+    .tasks-item:hover { background: var(--wax); }
+    .tasks-item .task-priority { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .tasks-item .task-priority.low { background: #2d6a2d; }
+    .tasks-item .task-priority.medium { background: #c9a800; }
+    .tasks-item .task-priority.high { background: #a52a2a; }
+    .tasks-item .task-checkbox { flex-shrink: 0; cursor: pointer; }
+    .tasks-item .task-content { flex: 1; min-width: 0; font-size: 0.95rem; }
+    .tasks-item .task-time { font-size: 0.8rem; color: var(--muted); margin-right: 0.5rem; }
+    .tasks-item .task-actions { flex-shrink: 0; }
+    .tasks-item.completed .task-content { text-decoration: line-through; color: var(--muted); }
+    .tasks-item .task-completed-at { font-size: 0.8rem; color: var(--muted); margin-left: 0.35rem; font-weight: normal; }
   </style>
 </head>
 <body>
@@ -108,8 +193,7 @@
   </div>
 
   <div id="screen-app" class="screen active">
-    <h1>HoneyApp</h1>
-    <p class="help">Planner – basic version. Configure GitHub Saver and add an admin in Settings to enable encryption.</p>
+    <div id="home-header" class="home-header-bar"></div>
     <div class="tabs">
       <button type="button" data-tab="home" class="active">Home</button>
       <button type="button" data-tab="settings" class="">Settings</button>
@@ -202,13 +286,53 @@
         <div class="app-placeholder">Placeholder — build this app next.</div>
       </div>
       <div id="app-sheet-tasks" class="app-sheet" data-app="tasks">
-        <button type="button" class="btn app-sheet-back secondary" data-app-back>← Back to Home</button>
-        <h2>✅ Tasks</h2>
-        <div class="app-desc-full">
-          <p><strong>Day-to-day to-dos</strong> (e.g. order wax, ship order, update listing). Each task has a title, optional due date, and done/not done. Separate from Projects: tasks are small actionable items; Projects are larger efforts with timelines.</p>
-          <p><strong>Features to build:</strong> Add, complete, delete tasks; optional due date and list view.</p>
+        <div class="app-sheet-header">
+          <button type="button" class="btn app-sheet-back secondary" data-app-back>← Back to Home</button>
+          <h2>Tasks</h2>
+          <button type="button" class="btn secondary" id="tasks-add-btn">Add task</button>
         </div>
-        <div class="app-placeholder">Placeholder — build this app next.</div>
+        <div class="tasks-view-toggle">
+          <button type="button" id="tasks-view-scheduled" class="active">Scheduled</button>
+          <button type="button" id="tasks-view-completed">Completed</button>
+        </div>
+        <div id="tasks-form-wrap" class="tasks-form-wrap" style="display: none;">
+          <label for="task-title">Name</label>
+          <input type="text" id="task-title" placeholder="Task name">
+          <label for="task-date">Date</label>
+          <input type="date" id="task-date">
+          <label for="task-priority">Priority</label>
+          <select id="task-priority">
+            <option value="low">Low (green)</option>
+            <option value="medium">Medium (yellow)</option>
+            <option value="high">High (red)</option>
+          </select>
+          <label for="task-repeat">Repeat</label>
+          <select id="task-repeat">
+            <option value="">None</option>
+            <option value="daily">Every day</option>
+            <option value="weekly">Every week</option>
+            <option value="biweekly">Every 2 weeks</option>
+            <option value="monthly">Every month</option>
+            <option value="yearly">Every year</option>
+            <option value="custom">Custom</option>
+          </select>
+          <div id="tasks-repeat-custom-wrap" style="display: none;">
+            <label for="task-repeat-interval">Every</label>
+            <input type="number" id="task-repeat-interval" min="1" max="99" value="1">
+            <select id="task-repeat-frequency">
+              <option value="daily">day(s)</option>
+              <option value="weekly">week(s)</option>
+              <option value="monthly">month(s)</option>
+              <option value="yearly">year(s)</option>
+            </select>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn" id="task-save">Save</button>
+            <button type="button" class="btn secondary" id="task-cancel">Cancel</button>
+            <button type="button" class="btn btn-remove" id="task-delete" style="display: none;">Delete</button>
+          </div>
+        </div>
+        <div id="tasks-list-container"></div>
       </div>
       <div id="app-sheet-notes" class="app-sheet" data-app="notes">
         <button type="button" class="btn app-sheet-back secondary" data-app-back>← Back to Home</button>
@@ -220,13 +344,67 @@
         <div class="app-placeholder">Placeholder — build this app next.</div>
       </div>
       <div id="app-sheet-calendar" class="app-sheet" data-app="calendar">
-        <button type="button" class="btn app-sheet-back secondary" data-app-back>← Back to Home</button>
-        <h2>📅 Calendar</h2>
-        <div class="app-desc-full">
-          <p>Shows <strong>dates and events</strong> (e.g. markets, deliveries, deadlines). Events have title, date, optional time and description. Complements Projects (project due dates) and Tasks (task due dates) with a calendar view.</p>
-          <p><strong>Features to build:</strong> Add/edit events; month or week view; optional list view.</p>
+        <div class="app-sheet-header">
+          <button type="button" class="btn app-sheet-back secondary" data-app-back>← Back to Home</button>
+          <h2>Calendar</h2>
+          <button type="button" class="btn secondary" id="calendar-add-event">Add event</button>
         </div>
-        <div class="app-placeholder">Placeholder — build this app next.</div>
+        <div class="calendar-toolbar">
+          <div class="calendar-view-switcher">
+            <button type="button" data-cal-view="month" class="active">Month</button>
+            <button type="button" data-cal-view="week">Week</button>
+            <button type="button" data-cal-view="day">Day</button>
+          </div>
+          <div class="calendar-nav">
+            <button type="button" class="btn secondary" id="calendar-prev" aria-label="Previous">←</button>
+            <span class="calendar-label" id="calendar-label">February 2026</span>
+            <button type="button" class="btn secondary" id="calendar-next" aria-label="Next">→</button>
+          </div>
+        </div>
+        <div id="calendar-event-form-wrap" class="calendar-event-form" style="display: none;">
+          <label for="cal-event-title">Title</label>
+          <input type="text" id="cal-event-title" placeholder="Event title">
+          <label for="cal-event-date">Start date</label>
+          <input type="date" id="cal-event-date">
+          <label for="cal-event-time">Start time (optional)</label>
+          <input type="time" id="cal-event-time">
+          <label for="cal-event-end-date">End date (optional)</label>
+          <input type="date" id="cal-event-end-date">
+          <label for="cal-event-end-time">End time (optional)</label>
+          <input type="time" id="cal-event-end-time">
+          <label for="cal-event-location">Location (optional)</label>
+          <input type="text" id="cal-event-location" placeholder="Where">
+          <label for="cal-event-repeat">Repeat</label>
+          <select id="cal-event-repeat">
+            <option value="">None</option>
+            <option value="daily">Every day</option>
+            <option value="weekly">Every week</option>
+            <option value="biweekly">Every 2 weeks</option>
+            <option value="monthly">Every month</option>
+            <option value="yearly">Every year</option>
+            <option value="custom">Custom</option>
+          </select>
+          <div id="cal-repeat-custom-wrap" style="display: none;">
+            <label for="cal-repeat-interval">Every</label>
+            <input type="number" id="cal-repeat-interval" min="1" max="99" value="1">
+            <select id="cal-repeat-frequency">
+              <option value="daily">day(s)</option>
+              <option value="weekly">week(s)</option>
+              <option value="monthly">month(s)</option>
+              <option value="yearly">year(s)</option>
+            </select>
+          </div>
+          <label for="cal-event-desc">Description (optional)</label>
+          <textarea id="cal-event-desc" placeholder="Notes"></textarea>
+          <div class="form-actions">
+            <button type="button" class="btn" id="cal-event-save">Save</button>
+            <button type="button" class="btn secondary" id="cal-event-cancel">Cancel</button>
+            <button type="button" class="btn btn-remove" id="cal-event-delete" style="display: none;">Delete</button>
+          </div>
+        </div>
+        <div id="calendar-month-view" class="calendar-view"></div>
+        <div id="calendar-week-view" class="calendar-view" style="display: none;"></div>
+        <div id="calendar-day-view" class="calendar-view" style="display: none;"></div>
       </div>
       <div id="app-sheet-dashboard" class="app-sheet" data-app="dashboard">
         <button type="button" class="btn app-sheet-back secondary" data-app-back>← Back to Home</button>
@@ -672,13 +850,708 @@
     if (view === 'grid') {
       if (grid) grid.style.display = '';
       sheets.forEach(function (s) { s.classList.remove('active'); });
+      updateHomeHeader();
     } else {
       if (grid) grid.style.display = 'none';
       sheets.forEach(function (s) {
         s.classList.toggle('active', s.getAttribute('data-app') === view);
       });
+      if (view === 'calendar') calendarInit();
+      if (view === 'tasks') tasksInit();
     }
   }
+
+  function updateHomeHeader() {
+    var el = $('home-header');
+    if (!el) return;
+    var now = new Date();
+    var todayKey = formatDateKey(now);
+    var dayOfWeek = now.getDay();
+    var daysToSunday = dayOfWeek === 0 ? 0 : (7 - dayOfWeek);
+    var sundayDate = addDays(now, daysToSunday);
+    var endOfWeekKey = formatDateKey(sundayDate);
+    var tomorrowDate = addDays(now, 1);
+    var tomorrowKey = formatDateKey(tomorrowDate);
+    var todayEvents = getEventsForDate(todayKey).slice().sort(function (a, b) {
+      var t1 = (a.time || '').trim();
+      var t2 = (b.time || '').trim();
+      if (!t1 && !t2) return 0;
+      if (!t1) return 1;
+      if (!t2) return -1;
+      return t1.localeCompare(t2);
+    });
+    var todayTasks = [];
+    try {
+      todayTasks = getTasks().filter(function (t) {
+        var k = (t.date || '').substring(0, 10);
+        return k === todayKey && !t.completed;
+      }).slice().sort(function (a, b) {
+        var t1 = (a.time || '').trim();
+        var t2 = (b.time || '').trim();
+        if (!t1 && !t2) return 0;
+        if (!t1) return 1;
+        if (!t2) return -1;
+        return t1.localeCompare(t2);
+      });
+    } catch (e) {}
+    var upcomingInstances = tomorrowKey <= endOfWeekKey ? getEventInstancesInRange(tomorrowKey, endOfWeekKey) : [];
+    upcomingInstances.sort(function (a, b) {
+      if (a.instanceDate !== b.instanceDate) return a.instanceDate.localeCompare(b.instanceDate);
+      var t1 = (a.event.time || '').trim();
+      var t2 = (b.event.time || '').trim();
+      if (!t1 && !t2) return 0;
+      if (!t1) return 1;
+      if (!t2) return -1;
+      return t1.localeCompare(t2);
+    });
+    var upcomingTasks = [];
+    try {
+      upcomingTasks = getTasks().filter(function (t) {
+        var k = (t.date || '').substring(0, 10);
+        return k && k > todayKey && k <= endOfWeekKey && !t.completed;
+      }).slice().sort(function (a, b) {
+        var k1 = (a.date || '').substring(0, 10);
+        var k2 = (b.date || '').substring(0, 10);
+        if (k1 !== k2) return k1.localeCompare(k2);
+        var t1 = (a.time || '').trim();
+        var t2 = (b.time || '').trim();
+        if (!t1 && !t2) return 0;
+        if (!t1) return 1;
+        if (!t2) return -1;
+        return t1.localeCompare(t2);
+      });
+    } catch (e) {}
+    var dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    var leftHtml = '<div class="home-header-col"><div class="home-col-title">Today</div>';
+    if (todayEvents.length > 0 || todayTasks.length > 0) {
+      leftHtml += '<ul class="home-today-events">';
+      todayEvents.forEach(function (ev) {
+        leftHtml += '<li class="home-today-event"><span class="home-event-pill"><strong>EVENT</strong> - ' + escapeHtml(ev.title || '') + '</span></li>';
+      });
+      todayTasks.forEach(function (t) {
+        var pri = (t.priority || 'low');
+        leftHtml += '<li class="home-today-event"><span class="home-task-pill priority-' + escapeHtml(pri) + '"><strong>TASK</strong> - ' + escapeHtml(t.title || '') + '</span></li>';
+      });
+      leftHtml += '</ul>';
+    } else {
+      leftHtml += '<div class="home-today-empty">Nothing today</div>';
+    }
+    leftHtml += '</div>';
+    var rightHtml = '<div class="home-header-col"><div class="home-col-title">Upcoming this week</div>';
+    if (upcomingInstances.length > 0 || upcomingTasks.length > 0) {
+      rightHtml += '<ul class="home-upcoming-events">';
+      upcomingInstances.forEach(function (item) {
+        var ev = item.event;
+        var instanceD = parseDateKey(item.instanceDate);
+        var dayLabel = instanceD ? dayLabels[instanceD.getDay()] : '';
+        rightHtml += '<li class="home-upcoming-event"><span class="home-event-day">' + escapeHtml(dayLabel) + '</span> <span class="home-event-pill"><strong>EVENT</strong> - ' + escapeHtml(ev.title || '') + '</span></li>';
+      });
+      upcomingTasks.forEach(function (t) {
+        var k = (t.date || '').substring(0, 10);
+        var d = parseDateKey(k);
+        var dayLabel = d ? dayLabels[d.getDay()] : '';
+        var pri = (t.priority || 'low');
+        rightHtml += '<li class="home-upcoming-event"><span class="home-event-day">' + escapeHtml(dayLabel) + '</span> <span class="home-task-pill priority-' + escapeHtml(pri) + '"><strong>TASK</strong> - ' + escapeHtml(t.title || '') + '</span></li>';
+      });
+      rightHtml += '</ul>';
+    } else {
+      rightHtml += '<div class="home-upcoming-empty">Nothing upcoming</div>';
+    }
+    rightHtml += '</div>';
+    el.innerHTML = leftHtml + rightHtml;
+  }
+
+  // --- Calendar app ---
+  var calendarState = { currentDate: new Date(), viewMode: 'month', editingEventId: null };
+  function getCalendarEvents() {
+    var cfg = getDecryptedConfig();
+    if (!cfg || !Array.isArray(cfg.calendar)) return [];
+    return cfg.calendar;
+  }
+  function formatDateKey(d) {
+    var y = d.getFullYear();
+    var m = (d.getMonth() + 1);
+    var day = d.getDate();
+    return y + '-' + (m < 10 ? '0' + m : m) + '-' + (day < 10 ? '0' + day : day);
+  }
+  function parseDateKey(key) {
+    var parts = key.split('-');
+    if (parts.length !== 3) return null;
+    var d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+    return isNaN(d.getTime()) ? null : d;
+  }
+  function getRepeatSpec(ev) {
+    var r = ev.repeat;
+    if (!r) return null;
+    if (typeof r === 'object' && r.frequency && r.interval) return { frequency: r.frequency, interval: Math.max(1, Math.min(99, parseInt(r.interval, 10) || 1)) };
+    if (r === 'biweekly') return { frequency: 'weekly', interval: 2 };
+    if (r === 'daily' || r === 'weekly' || r === 'monthly' || r === 'yearly') return { frequency: r, interval: 1 };
+    return null;
+  }
+  function addDays(d, n) {
+    var copy = new Date(d);
+    copy.setDate(copy.getDate() + n);
+    return copy;
+  }
+  function addMonths(d, n) {
+    var copy = new Date(d);
+    var day = copy.getDate();
+    copy.setMonth(copy.getMonth() + n);
+    if (copy.getDate() !== day) {
+      copy.setMonth(copy.getMonth() + 1);
+      copy.setDate(0);
+    }
+    return copy;
+  }
+  function addYears(d, n) {
+    var copy = new Date(d);
+    copy.setFullYear(copy.getFullYear() + n);
+    return copy;
+  }
+  function getEventInstancesInRange(startKey, endKey) {
+    var events = getCalendarEvents();
+    var startD = parseDateKey(startKey);
+    var endD = parseDateKey(endKey);
+    if (!startD || !endD) return [];
+    var result = [];
+    var maxIter = 5000;
+    events.forEach(function (ev) {
+      var evStart = (ev.date || '').substring(0, 10);
+      if (!evStart) return;
+      var spec = getRepeatSpec(ev);
+      if (!spec) {
+        if (evStart >= startKey && evStart <= endKey) result.push({ event: ev, instanceDate: evStart });
+        return;
+      }
+      var d = parseDateKey(evStart);
+      if (!d || d.getTime() > endD.getTime()) return;
+      var count = 0;
+      while (d.getTime() <= endD.getTime() && count < maxIter) {
+        var key = formatDateKey(d);
+        if (key >= startKey && key <= endKey) result.push({ event: ev, instanceDate: key });
+        count++;
+        if (spec.frequency === 'daily') d = addDays(d, spec.interval);
+        else if (spec.frequency === 'weekly') d = addDays(d, 7 * spec.interval);
+        else if (spec.frequency === 'monthly') d = addMonths(d, spec.interval);
+        else if (spec.frequency === 'yearly') d = addYears(d, spec.interval);
+        else d = addDays(d, spec.interval);
+      }
+    });
+    return result;
+  }
+  function getEventsForDate(dateKey) {
+    var instances = getEventInstancesInRange(dateKey, dateKey);
+    return instances.map(function (x) { return x.event; });
+  }
+  function getEventsInRange(startKey, endKey) {
+    return getEventInstancesInRange(startKey, endKey).map(function (x) { return x.event; });
+  }
+  function isToday(d) { return formatDateKey(d) === formatDateKey(new Date()); }
+  function isOtherMonth(d, year, month) { return d.getFullYear() !== year || d.getMonth() !== month; }
+  function calendarUpdateLabel() {
+    var el = $('calendar-label');
+    if (!el) return;
+    var d = calendarState.currentDate;
+    var mode = calendarState.viewMode;
+    if (mode === 'month') el.textContent = d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    else if (mode === 'week') {
+      var start = getWeekStart(d);
+      var end = new Date(start);
+      end.setDate(end.getDate() + 6);
+      el.textContent = start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' – ' + end.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    } else el.textContent = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+  }
+  function getWeekStart(d) {
+    var copy = new Date(d);
+    var day = copy.getDay();
+    var diff = copy.getDate() - day + (day === 0 ? -6 : 1);
+    copy.setDate(diff);
+    return copy;
+  }
+  function renderMonth() {
+    var el = $('calendar-month-view');
+    if (!el) return;
+    var d = calendarState.currentDate;
+    var year = d.getFullYear();
+    var month = d.getMonth();
+    var first = new Date(year, month, 1);
+    var startDay = first.getDay();
+    var startOffset = startDay === 0 ? 6 : startDay - 1;
+    var daysInMonth = new Date(year, month + 1, 0).getDate();
+    var prevMonth = new Date(year, month, 0);
+    var prevDays = prevMonth.getDate();
+    var html = '';
+    var weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    weekdays.forEach(function (w) { html += '<div class="cal-weekday">' + escapeHtml(w) + '</div>'; });
+    var dayCount = 0;
+    var totalCells = Math.ceil((startOffset + daysInMonth) / 7) * 7;
+    for (var i = 0; i < totalCells; i++) {
+      var cellDate;
+      var other = false;
+      if (i < startOffset) {
+        cellDate = new Date(year, month - 1, prevDays - startOffset + i + 1);
+        other = true;
+      } else if (dayCount < daysInMonth) {
+        dayCount++;
+        cellDate = new Date(year, month, dayCount);
+      } else {
+        cellDate = new Date(year, month + 1, dayCount - daysInMonth + 1);
+        other = true;
+      }
+      var key = formatDateKey(cellDate);
+      var events = getEventsForDate(key);
+      var cls = 'cal-day';
+      if (other) cls += ' other-month';
+      if (isToday(cellDate)) cls += ' today';
+      html += '<div class="' + cls + '" data-date="' + escapeHtml(key) + '">';
+      html += '<div class="cal-day-num">' + cellDate.getDate() + '</div>';
+      html += '<div class="cal-day-events">';
+      events.slice(0, 3).forEach(function (ev) {
+        var tip = (ev.title || '') + ((ev.time || '').trim() ? ' ' + (ev.time || '').trim() : '') + ((ev.endTime || '').trim() ? ' – ' + (ev.endTime || '').trim() : '') + ((ev.location || '').trim() ? ' @ ' + (ev.location || '').trim() : '') + (getRepeatSpec(ev) ? ' (repeats)' : '');
+        html += '<span class="cal-event-dot" data-event-id="' + escapeHtml(ev.id || '') + '" title="' + escapeHtml(tip) + '">' + escapeHtml((ev.time || '').trim() ? (ev.time + ' ') : '') + escapeHtml(ev.title || '') + '</span>';
+      });
+      if (events.length > 3) html += '<span class="cal-event-dot">+' + (events.length - 3) + '</span>';
+      html += '</div></div>';
+    }
+    el.innerHTML = '<div class="calendar-month">' + html + '</div>';
+    el.style.display = '';
+  }
+  function renderWeek() {
+    var el = $('calendar-week-view');
+    if (!el) return;
+    var d = calendarState.currentDate;
+    var start = getWeekStart(d);
+    var html = '<div class="calendar-week">';
+    for (var i = 0; i < 7; i++) {
+      var cellDate = new Date(start);
+      cellDate.setDate(start.getDate() + i);
+      var key = formatDateKey(cellDate);
+      var events = getEventsForDate(key);
+      var cls = 'cal-day-col';
+      if (cellDate.getMonth() !== start.getMonth()) cls += ' other-month';
+      if (isToday(cellDate)) cls += ' today';
+      html += '<div class="' + cls + '" data-date="' + escapeHtml(key) + '">';
+      html += '<div class="cal-day-header">' + cellDate.toLocaleDateString('en-US', { weekday: 'short' }) + ' ' + cellDate.getDate() + '</div>';
+      html += '<div class="cal-day-events">';
+      events.forEach(function (ev) {
+        var tip = (ev.title || '') + ((ev.time || '').trim() ? ' ' + (ev.time || '').trim() : '') + ((ev.endTime || '').trim() ? ' – ' + (ev.endTime || '').trim() : '') + ((ev.location || '').trim() ? ' @ ' + (ev.location || '').trim() : '') + (getRepeatSpec(ev) ? ' (repeats)' : '');
+        html += '<div class="cal-event-dot" data-event-id="' + escapeHtml(ev.id || '') + '" title="' + escapeHtml(tip) + '">' + escapeHtml((ev.time || '').trim() ? (ev.time + ' ') : '') + escapeHtml(ev.title || '') + '</div>';
+      });
+      html += '</div></div>';
+    }
+    html += '</div>';
+    el.innerHTML = html;
+    el.style.display = '';
+  }
+  function renderDay() {
+    var el = $('calendar-day-view');
+    if (!el) return;
+    var d = calendarState.currentDate;
+    var key = formatDateKey(d);
+    var events = getEventsForDate(key).slice().sort(function (a, b) {
+      var t1 = (a.time || '').trim();
+      var t2 = (b.time || '').trim();
+      if (!t1 && !t2) return 0;
+      if (!t1) return 1;
+      if (!t2) return -1;
+      return t1.localeCompare(t2);
+    });
+    var html = '<div class="calendar-day">';
+    html += '<div class="cal-day-header">' + d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }) + '</div>';
+    events.forEach(function (ev) {
+      var timeStr = (ev.time || '').trim();
+      if ((ev.endTime || '').trim()) timeStr = timeStr ? (timeStr + ' – ' + (ev.endTime || '').trim()) : ('– ' + (ev.endTime || '').trim());
+      if (!timeStr) timeStr = '—';
+      html += '<div class="cal-event-item" data-event-id="' + escapeHtml(ev.id || '') + '"><span class="cal-event-time">' + escapeHtml(timeStr) + '</span>' + escapeHtml(ev.title || '') + (ev.location ? ' <span class="cal-event-location">@ ' + escapeHtml(ev.location) + '</span>' : '') + (getRepeatSpec(ev) ? ' <span class="help">(repeats)</span>' : '') + (ev.description ? '<br><span class="help">' + escapeHtml(ev.description) + '</span>' : '') + '</div>';
+    });
+    if (!events.length) html += '<p class="help">No events this day.</p>';
+    html += '</div>';
+    el.innerHTML = html;
+    el.style.display = '';
+  }
+  function showCalendarView(mode) {
+    calendarState.viewMode = mode;
+    var monthEl = $('calendar-month-view');
+    var weekEl = $('calendar-week-view');
+    var dayEl = $('calendar-day-view');
+    if (monthEl) monthEl.style.display = mode === 'month' ? '' : 'none';
+    if (weekEl) weekEl.style.display = mode === 'week' ? '' : 'none';
+    if (dayEl) dayEl.style.display = mode === 'day' ? '' : 'none';
+    document.querySelectorAll('.calendar-view-switcher button').forEach(function (b) {
+      b.classList.toggle('active', (b.getAttribute('data-cal-view') || '') === mode);
+    });
+    calendarUpdateLabel();
+    if (mode === 'month') renderMonth();
+    else if (mode === 'week') renderWeek();
+    else renderDay();
+  }
+  function calendarShowForm(ev) {
+    var wrap = $('calendar-event-form-wrap');
+    var saveBtn = $('cal-event-save');
+    var delBtn = $('cal-event-delete');
+    var customWrap = $('cal-repeat-custom-wrap');
+    if (!wrap) return;
+    if (ev) {
+      calendarState.editingEventId = ev.id;
+      if ($('cal-event-title')) $('cal-event-title').value = ev.title || '';
+      if ($('cal-event-date')) $('cal-event-date').value = (ev.date || '').substring(0, 10) || '';
+      if ($('cal-event-time')) $('cal-event-time').value = (ev.time || '').trim().substring(0, 5) || '';
+      if ($('cal-event-end-date')) $('cal-event-end-date').value = (ev.endDate || '').substring(0, 10) || '';
+      if ($('cal-event-end-time')) $('cal-event-end-time').value = (ev.endTime || '').trim().substring(0, 5) || '';
+      if ($('cal-event-location')) $('cal-event-location').value = ev.location || '';
+      if ($('cal-event-desc')) $('cal-event-desc').value = ev.description || '';
+      var rep = ev.repeat;
+      var repeatVal = '';
+      if (rep && typeof rep === 'object' && rep.frequency && rep.interval) repeatVal = 'custom';
+      else if (rep === 'daily' || rep === 'weekly' || rep === 'biweekly' || rep === 'monthly' || rep === 'yearly') repeatVal = rep;
+      if ($('cal-event-repeat')) $('cal-event-repeat').value = repeatVal;
+      if (repeatVal === 'custom' && rep && rep.interval) {
+        if ($('cal-repeat-interval')) $('cal-repeat-interval').value = Math.max(1, Math.min(99, parseInt(rep.interval, 10) || 1));
+        if ($('cal-repeat-frequency')) $('cal-repeat-frequency').value = rep.frequency || 'weekly';
+      }
+      if (customWrap) customWrap.style.display = repeatVal === 'custom' ? 'flex' : 'none';
+      if (saveBtn) saveBtn.textContent = 'Update';
+      if (delBtn) delBtn.style.display = '';
+    } else {
+      calendarState.editingEventId = null;
+      var today = new Date();
+      var key = formatDateKey(today);
+      var nextQuarter = Math.ceil(today.getMinutes() / 15) * 15;
+      var startH = today.getHours();
+      if (nextQuarter >= 60) { nextQuarter = 0; startH += 1; }
+      if (startH >= 24) startH = 0;
+      var startTime = (startH < 10 ? '0' : '') + startH + ':' + (nextQuarter < 10 ? '0' : '') + nextQuarter;
+      var endH = startH + 1;
+      if (endH >= 24) endH = 0;
+      var endTime = (endH < 10 ? '0' : '') + endH + ':' + (nextQuarter < 10 ? '0' : '') + nextQuarter;
+      if ($('cal-event-title')) $('cal-event-title').value = '';
+      if ($('cal-event-date')) $('cal-event-date').value = key;
+      if ($('cal-event-time')) $('cal-event-time').value = startTime;
+      if ($('cal-event-end-date')) $('cal-event-end-date').value = key;
+      if ($('cal-event-end-time')) $('cal-event-end-time').value = endTime;
+      if ($('cal-event-location')) $('cal-event-location').value = '';
+      if ($('cal-event-desc')) $('cal-event-desc').value = '';
+      if ($('cal-event-repeat')) $('cal-event-repeat').value = '';
+      if ($('cal-repeat-interval')) $('cal-repeat-interval').value = '1';
+      if ($('cal-repeat-frequency')) $('cal-repeat-frequency').value = 'weekly';
+      if (customWrap) customWrap.style.display = 'none';
+      if (saveBtn) saveBtn.textContent = 'Save';
+      if (delBtn) delBtn.style.display = 'none';
+    }
+    wrap.style.display = 'block';
+  }
+  function calendarHideForm() {
+    var wrap = $('calendar-event-form-wrap');
+    if (wrap) wrap.style.display = 'none';
+    calendarState.editingEventId = null;
+  }
+  function calendarSaveEvent() {
+    var title = ($('cal-event-title') && $('cal-event-title').value || '').trim();
+    var dateVal = ($('cal-event-date') && $('cal-event-date').value || '').trim().substring(0, 10);
+    var timeVal = ($('cal-event-time') && $('cal-event-time').value || '').trim().substring(0, 5);
+    var endDateVal = ($('cal-event-end-date') && $('cal-event-end-date').value || '').trim().substring(0, 10);
+    var endTimeVal = ($('cal-event-end-time') && $('cal-event-end-time').value || '').trim().substring(0, 5);
+    var locationVal = ($('cal-event-location') && $('cal-event-location').value || '').trim();
+    var desc = ($('cal-event-desc') && $('cal-event-desc').value || '').trim();
+    var repeatVal = ($('cal-event-repeat') && $('cal-event-repeat').value || '').trim();
+    var repeat = null;
+    if (repeatVal === 'custom') {
+      var interval = Math.max(1, Math.min(99, parseInt(($('cal-repeat-interval') && $('cal-repeat-interval').value) || '1', 10)));
+      var freq = ($('cal-repeat-frequency') && $('cal-repeat-frequency').value) || 'weekly';
+      repeat = { frequency: freq, interval: interval };
+    } else if (repeatVal) repeat = repeatVal;
+    if (!title || !dateVal) return;
+    var cfg = getDecryptedConfig();
+    if (!cfg) return;
+    cfg.calendar = cfg.calendar || [];
+    var payload = { id: null, title: title, date: dateVal, time: timeVal, endDate: endDateVal || undefined, endTime: endTimeVal || undefined, location: locationVal || undefined, description: desc || undefined, repeat: repeat || undefined };
+    var id = calendarState.editingEventId;
+    if (id) {
+      payload.id = id;
+      var idx = cfg.calendar.findIndex(function (e) { return e.id === id; });
+      if (idx !== -1) cfg.calendar[idx] = payload;
+    } else {
+      payload.id = Date.now() + '-' + Math.random().toString(36).slice(2, 9);
+      cfg.calendar.push(payload);
+    }
+    calendarHideForm();
+    showCalendarView(calendarState.viewMode);
+  }
+  function calendarDeleteEvent() {
+    var id = calendarState.editingEventId;
+    if (!id) return;
+    var cfg = getDecryptedConfig();
+    if (cfg && Array.isArray(cfg.calendar)) cfg.calendar = cfg.calendar.filter(function (e) { return e.id !== id; });
+    calendarHideForm();
+    showCalendarView(calendarState.viewMode);
+  }
+  function calendarNavigate(delta) {
+    var d = calendarState.currentDate;
+    var mode = calendarState.viewMode;
+    var next = new Date(d);
+    if (mode === 'month') next.setMonth(next.getMonth() + delta);
+    else if (mode === 'week') next.setDate(next.getDate() + (delta * 7));
+    else next.setDate(next.getDate() + delta);
+    calendarState.currentDate = next;
+    calendarUpdateLabel();
+    if (mode === 'month') renderMonth();
+    else if (mode === 'week') renderWeek();
+    else renderDay();
+  }
+  function calendarInit() {
+    var cfg = getDecryptedConfig();
+    if (cfg && !Array.isArray(cfg.calendar)) cfg.calendar = [];
+    calendarState.currentDate = new Date();
+    calendarState.viewMode = 'month';
+    calendarUpdateLabel();
+    showCalendarView('month');
+  }
+  if ($('calendar-prev')) $('calendar-prev').addEventListener('click', function () { calendarNavigate(-1); });
+  if ($('calendar-next')) $('calendar-next').addEventListener('click', function () { calendarNavigate(1); });
+  document.querySelectorAll('.calendar-view-switcher button').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var mode = btn.getAttribute('data-cal-view') || 'month';
+      calendarState.viewMode = mode;
+      showCalendarView(mode);
+    });
+  });
+  if ($('cal-event-repeat')) $('cal-event-repeat').addEventListener('change', function () {
+    var wrap = $('cal-repeat-custom-wrap');
+    if (wrap) wrap.style.display = (this.value === 'custom') ? 'flex' : 'none';
+  });
+  if ($('calendar-add-event')) $('calendar-add-event').addEventListener('click', function () { calendarShowForm(null); });
+  if ($('cal-event-save')) $('cal-event-save').addEventListener('click', calendarSaveEvent);
+  if ($('cal-event-cancel')) $('cal-event-cancel').addEventListener('click', calendarHideForm);
+  if ($('cal-event-delete')) $('cal-event-delete').addEventListener('click', calendarDeleteEvent);
+  document.addEventListener('click', function (e) {
+    var target = e.target.closest('[data-event-id]');
+    if (!target) return;
+    var id = target.getAttribute('data-event-id');
+    if (!id) return;
+    var events = getCalendarEvents();
+    var ev = events.filter(function (x) { return x.id === id; })[0];
+    if (ev) calendarShowForm(ev);
+  });
+
+  // --- Tasks app ---
+  var tasksState = { viewMode: 'scheduled', editingTaskId: null };
+  function getTasks() {
+    var cfg = getDecryptedConfig();
+    if (!cfg || !Array.isArray(cfg.tasks)) return [];
+    return cfg.tasks;
+  }
+  function getTaskDateLabel(dateKey, isCompleted) {
+    var todayKey = formatDateKey(new Date());
+    var tomorrowKey = formatDateKey(addDays(new Date(), 1));
+    var yesterdayKey = formatDateKey(addDays(new Date(), -1));
+    if (dateKey === todayKey) return 'Today';
+    if (dateKey === tomorrowKey) return 'Tomorrow';
+    if (isCompleted && dateKey === yesterdayKey) return 'Yesterday';
+    var d = parseDateKey(dateKey);
+    if (!d) return dateKey;
+    return d.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' });
+  }
+  function groupTasksByDate(tasks, isCompleted) {
+    var todayKey = formatDateKey(new Date());
+    var groups = [];
+    var byDate = {};
+    tasks.forEach(function (t) {
+    var k = (t.date || '').substring(0, 10);
+      if (!k) return;
+      if (!byDate[k]) byDate[k] = [];
+      byDate[k].push(t);
+    });
+    var keys = Object.keys(byDate).sort();
+    if (isCompleted) keys.reverse();
+    keys.forEach(function (k) {
+      var list = byDate[k].slice().sort(function (a, b) {
+        var t1 = (a.time || '').trim();
+        var t2 = (b.time || '').trim();
+        if (!t1 && !t2) return 0;
+        if (!t1) return 1;
+        if (!t2) return -1;
+        return t1.localeCompare(t2);
+      });
+      groups.push({ dateKey: k, label: getTaskDateLabel(k, isCompleted), tasks: list });
+    });
+    return groups;
+  }
+  function renderTasksList() {
+    var container = $('tasks-list-container');
+    if (!container) return;
+    var all = getTasks();
+    var todayKey = formatDateKey(new Date());
+    var scheduled = all.filter(function (t) {
+      var k = (t.date || '').substring(0, 10);
+      return k && !t.completed;
+    });
+    var completed = all.filter(function (t) {
+      return t.completed === true;
+    });
+    var isCompleted = tasksState.viewMode === 'completed';
+    var list = isCompleted ? completed : scheduled;
+    var groups = groupTasksByDate(list, isCompleted);
+    var html = '';
+    groups.forEach(function (g) {
+      html += '<div class="tasks-group"><div class="tasks-group-title">' + escapeHtml(g.label) + '</div><ul class="tasks-list">';
+      g.tasks.forEach(function (t) {
+        var pri = (t.priority || 'low');
+        var completed = t.completed ? ' completed' : '';
+        var completedAtStr = '';
+        if (t.completed && t.completedAt) {
+          try {
+            var completedDate = new Date(t.completedAt);
+            completedAtStr = ' <span class="task-completed-at">Completed ' + completedDate.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: completedDate.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined }) + '</span>';
+          } catch (e) {}
+        }
+        html += '<li class="tasks-item' + completed + '" data-task-id="' + escapeHtml(t.id || '') + '"><input type="checkbox" class="task-checkbox" ' + (t.completed ? 'checked' : '') + ' aria-label="Complete"><span class="task-priority ' + escapeHtml(pri) + '"></span><span class="task-content">' + escapeHtml(t.title || '') + completedAtStr + '</span><span class="task-actions"><button type="button" class="btn btn-remove task-edit" data-task-id="' + escapeHtml(t.id || '') + '">Edit</button></span></li>';
+      });
+      html += '</ul></div>';
+    });
+    if (groups.length === 0) html = '<p class="help">No ' + (isCompleted ? 'completed' : 'scheduled') + ' tasks.</p>';
+    container.innerHTML = html;
+  }
+  function tasksShowForm(task) {
+    var wrap = $('tasks-form-wrap');
+    var delBtn = $('task-delete');
+    if (!wrap) return;
+    if (task) {
+      tasksState.editingTaskId = task.id;
+      if ($('task-title')) $('task-title').value = task.title || '';
+      if ($('task-date')) $('task-date').value = (task.date || '').substring(0, 10) || '';
+      if ($('task-priority')) $('task-priority').value = task.priority || 'low';
+      var rep = task.repeat;
+      var repeatVal = '';
+      if (rep && typeof rep === 'object' && rep.frequency && rep.interval) repeatVal = 'custom';
+      else if (rep === 'daily' || rep === 'weekly' || rep === 'biweekly' || rep === 'monthly' || rep === 'yearly') repeatVal = rep;
+      if ($('task-repeat')) $('task-repeat').value = repeatVal;
+      if (repeatVal === 'custom' && rep && rep.interval) {
+        if ($('task-repeat-interval')) $('task-repeat-interval').value = Math.max(1, Math.min(99, parseInt(rep.interval, 10) || 1));
+        if ($('task-repeat-frequency')) $('task-repeat-frequency').value = rep.frequency || 'weekly';
+      }
+      if ($('tasks-repeat-custom-wrap')) $('tasks-repeat-custom-wrap').style.display = repeatVal === 'custom' ? 'flex' : 'none';
+      if (delBtn) delBtn.style.display = '';
+    } else {
+      tasksState.editingTaskId = null;
+      var today = new Date();
+      var key = formatDateKey(today);
+      var nextQ = Math.ceil(today.getMinutes() / 15) * 15;
+      var h = today.getHours();
+      if (nextQ >= 60) { nextQ = 0; h += 1; }
+      if (h >= 24) h = 0;
+      var startTime = (h < 10 ? '0' : '') + h + ':' + (nextQ < 10 ? '0' : '') + nextQ;
+      if ($('task-title')) $('task-title').value = '';
+      if ($('task-date')) $('task-date').value = key;
+      if ($('task-priority')) $('task-priority').value = 'low';
+      if ($('task-repeat')) $('task-repeat').value = '';
+      if ($('task-repeat-interval')) $('task-repeat-interval').value = '1';
+      if ($('task-repeat-frequency')) $('task-repeat-frequency').value = 'weekly';
+      if ($('tasks-repeat-custom-wrap')) $('tasks-repeat-custom-wrap').style.display = 'none';
+      if (delBtn) delBtn.style.display = 'none';
+    }
+    wrap.style.display = 'block';
+  }
+  function tasksHideForm() {
+    var wrap = $('tasks-form-wrap');
+    if (wrap) wrap.style.display = 'none';
+    tasksState.editingTaskId = null;
+  }
+  function taskSave() {
+    var title = ($('task-title') && $('task-title').value || '').trim();
+    var dateVal = ($('task-date') && $('task-date').value || '').trim().substring(0, 10);
+    var timeVal = '';
+    var priorityVal = ($('task-priority') && $('task-priority').value) || 'low';
+    var repeatVal = ($('task-repeat') && $('task-repeat').value || '').trim();
+    var repeat = null;
+    if (repeatVal === 'custom') {
+      var interval = Math.max(1, Math.min(99, parseInt(($('task-repeat-interval') && $('task-repeat-interval').value) || '1', 10)));
+      var freq = ($('task-repeat-frequency') && $('task-repeat-frequency').value) || 'weekly';
+      repeat = { frequency: freq, interval: interval };
+    } else if (repeatVal) repeat = repeatVal;
+    if (!title || !dateVal) return;
+    var cfg = getDecryptedConfig();
+    if (!cfg) return;
+    cfg.tasks = cfg.tasks || [];
+    var id = tasksState.editingTaskId;
+    if (id) {
+      var idx = cfg.tasks.findIndex(function (e) { return e.id === id; });
+      if (idx !== -1) {
+        var existing = cfg.tasks[idx];
+        cfg.tasks[idx] = { id: id, title: title, date: dateVal, time: timeVal, priority: priorityVal, repeat: repeat || undefined, completed: existing.completed, completedAt: existing.completedAt, createdAt: existing.createdAt };
+      }
+    } else {
+      var newId = Date.now() + '-' + Math.random().toString(36).slice(2, 9);
+      cfg.tasks.push({ id: newId, title: title, date: dateVal, time: timeVal, priority: priorityVal, repeat: repeat || undefined, completed: false, createdAt: new Date().toISOString() });
+    }
+    tasksHideForm();
+    renderTasksList();
+  }
+  function taskDelete() {
+    var id = tasksState.editingTaskId;
+    if (!id) return;
+    var cfg = getDecryptedConfig();
+    if (cfg && Array.isArray(cfg.tasks)) cfg.tasks = cfg.tasks.filter(function (e) { return e.id !== id; });
+    tasksHideForm();
+    renderTasksList();
+  }
+  function taskToggleComplete(id) {
+    var cfg = getDecryptedConfig();
+    if (!cfg || !Array.isArray(cfg.tasks)) return;
+    var t = cfg.tasks.find(function (e) { return e.id === id; });
+    if (t) {
+      t.completed = !t.completed;
+      t.completedAt = t.completed ? new Date().toISOString() : undefined;
+    }
+    renderTasksList();
+  }
+  function tasksInit() {
+    var cfg = getDecryptedConfig();
+    if (cfg && !Array.isArray(cfg.tasks)) cfg.tasks = [];
+    tasksState.viewMode = 'scheduled';
+    tasksState.editingTaskId = null;
+    document.querySelectorAll('.tasks-view-toggle button').forEach(function (b) {
+      b.classList.toggle('active', b.id === 'tasks-view-scheduled');
+    });
+    renderTasksList();
+  }
+  if ($('tasks-view-scheduled')) $('tasks-view-scheduled').addEventListener('click', function () {
+    tasksState.viewMode = 'scheduled';
+    document.querySelectorAll('.tasks-view-toggle button').forEach(function (b) { b.classList.remove('active'); });
+    if ($('tasks-view-scheduled')) $('tasks-view-scheduled').classList.add('active');
+    renderTasksList();
+  });
+  if ($('tasks-view-completed')) $('tasks-view-completed').addEventListener('click', function () {
+    tasksState.viewMode = 'completed';
+    document.querySelectorAll('.tasks-view-toggle button').forEach(function (b) { b.classList.remove('active'); });
+    if ($('tasks-view-completed')) $('tasks-view-completed').classList.add('active');
+    renderTasksList();
+  });
+  if ($('tasks-add-btn')) $('tasks-add-btn').addEventListener('click', function () { tasksShowForm(null); });
+  if ($('task-save')) $('task-save').addEventListener('click', taskSave);
+  if ($('task-cancel')) $('task-cancel').addEventListener('click', tasksHideForm);
+  if ($('task-delete')) $('task-delete').addEventListener('click', taskDelete);
+  if ($('task-repeat')) $('task-repeat').addEventListener('change', function () {
+    var wrap = $('tasks-repeat-custom-wrap');
+    if (wrap) wrap.style.display = (this.value === 'custom') ? 'flex' : 'none';
+  });
+  document.addEventListener('click', function (e) {
+    var editBtn = e.target.closest('.task-edit');
+    if (editBtn) {
+      var id = editBtn.getAttribute('data-task-id');
+      if (!id) return;
+      var tasks = getTasks();
+      var task = tasks.find(function (t) { return t.id === id; });
+      if (task) tasksShowForm(task);
+      return;
+    }
+    var checkbox = e.target.closest('.task-checkbox');
+    if (checkbox) {
+      var row = e.target.closest('.tasks-item');
+      if (!row) return;
+      var id = row.getAttribute('data-task-id');
+      if (id) taskToggleComplete(id);
+    }
+  });
 
   document.querySelectorAll('.app-card[data-app]').forEach(function (card) {
     card.addEventListener('click', function () { showHomeView(card.getAttribute('data-app')); });
@@ -873,6 +1746,7 @@
     var homeSheet = $('sheet-home');
     if (homeBtn) homeBtn.classList.add('active');
     if (homeSheet) homeSheet.classList.add('active');
+    showHomeView('grid');
   }
 
   // Unlock: verify username + password, decrypt, show app (supports encrypted blob-only format and legacy)
