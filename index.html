@@ -58,6 +58,21 @@
     .calendar-unsaved-wrapper .form-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
     .calendar-unsaved-wrapper .form-actions .btn { width: auto; }
     .password-wrapper h1 { font-size: 1.2rem; margin-bottom: 0.5rem; }
+    .notes-layout { display: flex; gap: 1rem; min-height: 360px; margin-top: 1rem; }
+    @media (max-width: 560px) { .notes-layout { flex-direction: column; } }
+    .notes-sidebar { flex: 0 0 220px; min-width: 0; display: flex; flex-direction: column; gap: 0.5rem; border-right: 1px solid var(--border); padding-right: 1rem; }
+    @media (max-width: 560px) { .notes-sidebar { border-right: none; border-bottom: 1px solid var(--border); padding-right: 0; padding-bottom: 1rem; flex: 0 0 auto; } }
+    .notes-list { list-style: none; margin: 0; padding: 0; flex: 1; min-height: 0; overflow: auto; }
+    .notes-list-item { display: block; width: 100%; text-align: left; padding: 0.5rem 0.6rem; margin: 0.2rem 0; border: none; border-radius: 6px; background: transparent; color: var(--text); font-size: 0.9rem; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; border-left: 3px solid transparent; }
+    .notes-list-item:hover { background: var(--wax); }
+    .notes-list-item.active { background: var(--wax); border-left-color: var(--honey-dark); font-weight: 600; }
+    .notes-list-item .notes-list-item-title { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .notes-list-item .notes-list-item-preview { display: block; font-size: 0.75rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 0.15rem; }
+    .notes-editor { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+    .notes-title-input { width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; font-weight: 600; background: var(--card); color: var(--text); box-sizing: border-box; }
+    .notes-body-input { flex: 1; min-height: 200px; padding: 0.5rem; border: 1px solid var(--border); border-radius: 6px; font-size: 0.95rem; resize: vertical; background: var(--card); color: var(--text); box-sizing: border-box; font-family: inherit; }
+    .notes-editor-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .notes-editor-actions .btn { width: auto; margin: 0; }
     .app-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem 0.75rem; margin: 1.25rem 0; padding: 0 0.25rem; }
     @media (min-width: 400px) { .app-grid { grid-template-columns: repeat(4, 1fr); gap: 1.5rem 1rem; } }
     @media (min-width: 520px) { .app-grid { gap: 2rem 1.25rem; } }
@@ -77,7 +92,7 @@
     .app-sheet-header { display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: center; margin-bottom: 1rem; gap: 0.5rem; }
     .app-sheet-header .app-sheet-back { justify-self: start; margin-bottom: 0; }
     .app-sheet-header h2 { justify-self: center; text-align: center; margin: 0; font-size: 1.2rem; color: var(--honey-dark); }
-    .app-sheet-header #calendar-add-event, .app-sheet-header #tasks-add-btn { justify-self: end; }
+    .app-sheet-header #calendar-add-event, .app-sheet-header #tasks-add-btn, .app-sheet-header #notes-new-btn { justify-self: end; }
     .app-sheet h2 { font-size: 1.2rem; color: var(--honey-dark); margin: 0 0 0.5rem 0; }
     .app-sheet .app-desc { font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem; }
     .app-sheet .app-desc-full { font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem; }
@@ -193,8 +208,8 @@
       .calendar-event-form #cal-event-end-date,
       .calendar-event-form #cal-event-time,
       .calendar-event-form #cal-event-end-time { height: 2rem !important; min-height: 2rem !important; max-height: 2rem !important; }
-      .calendar-event-form-row:nth-child(2) .calendar-event-field:first-child,
-      .calendar-event-form-row:nth-child(3) .calendar-event-field:first-child { width: 9rem; max-width: 9rem; margin-right: 1rem; flex: 0 0 auto; }
+      .calendar-event-form-row:nth-child(2) .calendar-event-field,
+      .calendar-event-form-row:nth-child(3) .calendar-event-field { flex: 1 1 0; min-width: 0; }
       .calendar-event-form #cal-event-date,
       .calendar-event-form #cal-event-end-date,
       .calendar-event-form #cal-event-time,
@@ -202,8 +217,6 @@
       .calendar-event-form .cal-repeat-custom-inner input,
       .calendar-event-form .cal-repeat-custom-inner select { height: 3.25rem !important; min-height: 3.25rem !important; max-height: 3.25rem !important; line-height: 1.25; box-sizing: border-box; }
       .calendar-event-form-row { gap: 0.5rem 1rem; }
-      .calendar-event-form-row:nth-child(2) .calendar-event-field:nth-child(2),
-      .calendar-event-form-row:nth-child(3) .calendar-event-field:nth-child(2) { margin-right: 1rem; }
     }
     .tasks-field-repeat { flex: 1 1 8rem; min-width: 8rem; }
     .tasks-field-custom { flex: 2 1 0; min-width: 10rem; flex-direction: column; align-items: flex-start; }
@@ -446,13 +459,24 @@
         </div>
       </div>
       <div id="app-sheet-notes" class="app-sheet" data-app="notes">
-        <button type="button" class="btn app-sheet-back secondary" data-app-back>← Back to Home</button>
-        <h2>📝 Notes</h2>
-        <div class="app-desc-full">
-          <p><strong>Freeform text</strong>: notes, recipes, procedures, or any text you want to keep. Each note has a title and body; optional tags or categories. No calculations—just store and retrieve text.</p>
-          <p><strong>Features to build:</strong> Create, edit, delete notes; list by title or tag; simple viewer.</p>
+        <div class="app-sheet-header">
+          <button type="button" class="btn app-sheet-back secondary" data-app-back>← Back to Home</button>
+          <h2>Notes</h2>
+          <button type="button" class="btn secondary" id="notes-new-btn">New note</button>
         </div>
-        <div class="app-placeholder">Placeholder — build this app next.</div>
+        <div class="notes-layout">
+          <aside class="notes-sidebar">
+            <ul id="notes-list" class="notes-list" aria-label="Notes"></ul>
+          </aside>
+          <div class="notes-editor">
+            <input type="text" id="notes-title" class="notes-title-input" placeholder="Note title" aria-label="Note title">
+            <textarea id="notes-body" class="notes-body-input" placeholder="Write your note here…" aria-label="Note body"></textarea>
+            <div class="notes-editor-actions">
+              <button type="button" class="btn" id="notes-save-btn">Save</button>
+              <button type="button" class="btn secondary" id="notes-delete-btn">Delete</button>
+            </div>
+          </div>
+        </div>
       </div>
       <div id="app-sheet-calendar" class="app-sheet" data-app="calendar">
         <div class="app-sheet-header">
@@ -993,6 +1017,7 @@
       });
       if (view === 'calendar') calendarInit();
       if (view === 'tasks') tasksInit();
+      if (view === 'notes') notesInit();
     }
   }
 
@@ -1749,6 +1774,112 @@
       var id = row.getAttribute('data-task-id');
       if (id) taskToggleComplete(id);
     }
+  });
+
+  // --- Notes app ---
+  var notesState = { selectedId: null };
+  function getNotes() {
+    var cfg = getDecryptedConfig();
+    if (!cfg || !Array.isArray(cfg.notes)) return [];
+    return cfg.notes;
+  }
+  function renderNotesList() {
+    var list = $('notes-list');
+    if (!list) return;
+    var notes = getNotes().slice().sort(function (a, b) {
+    var ta = (a.updatedAt || a.createdAt || '').trim();
+    var tb = (b.updatedAt || b.createdAt || '').trim();
+      if (!ta && !tb) return 0;
+      if (!ta) return 1;
+      if (!tb) return -1;
+      return tb.localeCompare(ta);
+    });
+    var html = '';
+    notes.forEach(function (note) {
+      var title = (note.title || '').trim() || 'Untitled';
+      var preview = (note.body || '').trim().replace(/\s+/g, ' ').slice(0, 50);
+      if ((note.body || '').trim().length > 50) preview += '…';
+      var active = note.id === notesState.selectedId ? ' active' : '';
+      html += '<li><button type="button" class="notes-list-item' + active + '" data-note-id="' + escapeHtml(note.id || '') + '"><span class="notes-list-item-title">' + escapeHtml(title) + '</span>' + (preview ? '<span class="notes-list-item-preview">' + escapeHtml(preview) + '</span>' : '') + '</button></li>';
+    });
+    list.innerHTML = html || '<li class="help" style="padding:0.5rem;">No notes yet.</li>';
+  }
+  function selectNote(id) {
+    notesState.selectedId = id;
+    renderNotesList();
+    var titleEl = $('notes-title');
+    var bodyEl = $('notes-body');
+    if (!titleEl || !bodyEl) return;
+    if (!id) {
+      titleEl.value = '';
+      bodyEl.value = '';
+      return;
+    }
+    var notes = getNotes();
+    var note = notes.find(function (n) { return n.id === id; });
+    if (note) {
+      titleEl.value = note.title || '';
+      bodyEl.value = note.body || '';
+    } else {
+      titleEl.value = '';
+      bodyEl.value = '';
+    }
+  }
+  function notesSave() {
+    var titleEl = $('notes-title');
+    var bodyEl = $('notes-body');
+    if (!titleEl || !bodyEl) return;
+    var title = (titleEl.value || '').trim();
+    var body = (bodyEl.value || '').trim();
+    var cfg = getDecryptedConfig();
+    if (!cfg) return;
+    cfg.notes = cfg.notes || [];
+    var id = notesState.selectedId;
+    var now = new Date().toISOString();
+    if (id) {
+      var idx = cfg.notes.findIndex(function (n) { return n.id === id; });
+      if (idx !== -1) {
+        cfg.notes[idx].title = title || 'Untitled';
+        cfg.notes[idx].body = body;
+        cfg.notes[idx].updatedAt = now;
+      } else {
+        id = null;
+      }
+    }
+    if (!id) {
+      id = 'note-' + Date.now() + '-' + Math.random().toString(36).slice(2, 9);
+      cfg.notes.push({ id: id, title: title || 'Untitled', body: body, createdAt: now, updatedAt: now });
+    }
+    notesState.selectedId = id;
+    renderNotesList();
+  }
+  function notesDelete() {
+    var id = notesState.selectedId;
+    if (!id) return;
+    var cfg = getDecryptedConfig();
+    if (cfg && Array.isArray(cfg.notes)) cfg.notes = cfg.notes.filter(function (n) { return n.id !== id; });
+    notesState.selectedId = null;
+    selectNote(null);
+    renderNotesList();
+  }
+  function notesInit() {
+    var cfg = getDecryptedConfig();
+    if (cfg && !Array.isArray(cfg.notes)) cfg.notes = [];
+    renderNotesList();
+    if (notesState.selectedId) {
+      var note = getNotes().find(function (n) { return n.id === notesState.selectedId; });
+      if (!note) notesState.selectedId = null;
+    }
+    selectNote(notesState.selectedId || null);
+  }
+  if ($('notes-new-btn')) $('notes-new-btn').addEventListener('click', function () { selectNote(null); if ($('notes-title')) $('notes-title').focus(); });
+  if ($('notes-save-btn')) $('notes-save-btn').addEventListener('click', notesSave);
+  if ($('notes-delete-btn')) $('notes-delete-btn').addEventListener('click', notesDelete);
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('.notes-list-item[data-note-id]');
+    if (!btn) return;
+    var id = btn.getAttribute('data-note-id');
+    if (id) selectNote(id);
   });
 
   document.querySelectorAll('.app-card[data-app]').forEach(function (card) {
