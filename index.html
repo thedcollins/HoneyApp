@@ -125,6 +125,13 @@
     .calendar-nav { display: flex; align-items: center; gap: 0.5rem; margin-left: auto; }
     .calendar-nav button { padding: 0.35rem 0.6rem; min-height: auto; width: auto; font-size: 1rem; }
     .calendar-nav .calendar-label { font-weight: 600; color: var(--honey-dark); min-width: 140px; text-align: center; font-size: 0.95rem; display: inline-block; }
+    @media (max-width: 767px) {
+      .calendar-toolbar { flex-direction: column; align-items: stretch; width: 100%; }
+      .calendar-view-switcher { width: 100%; }
+      .calendar-view-switcher button { flex: 1; }
+      .calendar-nav { width: 100%; margin-left: 0; }
+      .calendar-nav .calendar-label { flex: 1; min-width: 0; }
+    }
     :root { --cal-cell-height: 95px; --cal-header-height: 2rem; --cal-five-rows-height: calc(var(--cal-header-height) + 5 * var(--cal-cell-height)); }
     .calendar-month { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; min-height: var(--cal-five-rows-height); }
     .calendar-month .cal-weekday { padding: 0.35rem; text-align: center; font-size: 0.7rem; font-weight: 600; color: var(--muted); background: var(--wax); }
