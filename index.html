@@ -47,6 +47,11 @@
     .password-wrapper { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1000; align-items: center; justify-content: center; padding: 1rem; }
     .password-wrapper.active { display: flex; }
     .password-wrapper .card { max-width: 360px; margin: 0; }
+    .tasks-unsaved-wrapper { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1000; align-items: center; justify-content: center; padding: 1rem; }
+    .tasks-unsaved-wrapper.active { display: flex; }
+    .tasks-unsaved-wrapper .card { max-width: 360px; margin: 0; }
+    .tasks-unsaved-wrapper .form-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+    .tasks-unsaved-wrapper .form-actions .btn { width: auto; }
     .password-wrapper h1 { font-size: 1.2rem; margin-bottom: 0.5rem; }
     .app-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem 0.75rem; margin: 1.25rem 0; padding: 0 0.25rem; }
     @media (min-width: 400px) { .app-grid { grid-template-columns: repeat(4, 1fr); gap: 1.5rem 1rem; } }
@@ -156,7 +161,18 @@
     .tasks-date-repeat-row .tasks-field { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; }
     .tasks-date-repeat-row .tasks-field label { margin-top: 0; line-height: 1.25; }
     .tasks-field-date { flex: 0 0 auto; width: 10rem; max-width: 10rem; }
-    .tasks-field-date input[type="date"] { width: 100%; max-width: 100%; }
+    .tasks-field-date input[type="date"] { width: 100%; max-width: 100%; min-width: 0; }
+    @media (max-width: 768px) {
+      .tasks-field-date { width: 8rem; max-width: 8rem; }
+    }
+    @media (max-width: 480px) {
+      .tasks-field-date { width: 7rem; max-width: 7rem; }
+    }
+    /* Safari/iOS: keep date input from blowing up */
+    @supports (-webkit-touch-callout: none) {
+      .tasks-field-date { width: 8rem; max-width: 8rem; }
+      #task-date { width: 100% !important; max-width: 100% !important; min-width: 0 !important; }
+    }
     .tasks-field-repeat { flex: 1 1 8rem; min-width: 8rem; }
     .tasks-field-custom { flex: 1 1 auto; min-width: 10rem; flex-direction: column; align-items: flex-start; }
     .tasks-repeat-custom-inner { display: flex; flex-wrap: nowrap; align-items: center; gap: 0.5rem; width: 100%; }
@@ -372,6 +388,17 @@
           </div>
         </div>
         <div id="tasks-list-container"></div>
+      </div>
+      <div id="tasks-unsaved-wrapper" class="tasks-unsaved-wrapper" aria-hidden="true">
+        <div class="card">
+          <h2 style="margin: 0 0 0.5rem 0; font-size: 1.2rem;">Unsaved task</h2>
+          <p class="help" style="margin: 0;">Save task or cancel before going back to home?</p>
+          <div class="form-actions">
+            <button type="button" class="btn" id="tasks-unsaved-save">Save task</button>
+            <button type="button" class="btn secondary" id="tasks-unsaved-cancel">Cancel task</button>
+            <button type="button" class="btn secondary" id="tasks-unsaved-stay">Stay</button>
+          </div>
+        </div>
       </div>
       <div id="app-sheet-notes" class="app-sheet" data-app="notes">
         <button type="button" class="btn app-sheet-back secondary" data-app-back>← Back to Home</button>
@@ -1508,9 +1535,9 @@
       var freq = ($('task-repeat-frequency') && $('task-repeat-frequency').value) || 'weekly';
       repeat = { frequency: freq, interval: interval };
     } else if (repeatVal) repeat = repeatVal;
-    if (!title || !dateVal) return;
+    if (!title || !dateVal) return false;
     var cfg = getDecryptedConfig();
-    if (!cfg) return;
+    if (!cfg) return false;
     cfg.tasks = cfg.tasks || [];
     var id = tasksState.editingTaskId;
     if (id) {
@@ -1525,6 +1552,7 @@
     }
     tasksHideForm();
     renderTasksList();
+    return true;
   }
   function taskDelete() {
     var id = tasksState.editingTaskId;
@@ -1600,7 +1628,37 @@
     });
   });
   document.querySelectorAll('.app-sheet [data-app-back]').forEach(function (btn) {
-    btn.addEventListener('click', function () { showHomeView('grid'); });
+    btn.addEventListener('click', function () {
+      var sheet = this.closest('.app-sheet');
+      var app = sheet && sheet.getAttribute('data-app');
+      var formWrap = $('tasks-form-wrap');
+      var formVisible = formWrap && formWrap.style.display !== 'none' && formWrap.style.display !== '';
+      if (app === 'tasks' && formVisible) {
+        showTasksUnsavedDialog();
+        return;
+      }
+      showHomeView('grid');
+    });
+  });
+  function showTasksUnsavedDialog() {
+    var wrap = $('tasks-unsaved-wrapper');
+    if (wrap) { wrap.classList.add('active'); wrap.setAttribute('aria-hidden', 'false'); }
+  }
+  function hideTasksUnsavedDialog() {
+    var wrap = $('tasks-unsaved-wrapper');
+    if (wrap) { wrap.classList.remove('active'); wrap.setAttribute('aria-hidden', 'true'); }
+  }
+  if ($('tasks-unsaved-save')) $('tasks-unsaved-save').addEventListener('click', function () {
+    hideTasksUnsavedDialog();
+    if (taskSave()) showHomeView('grid');
+  });
+  if ($('tasks-unsaved-cancel')) $('tasks-unsaved-cancel').addEventListener('click', function () {
+    hideTasksUnsavedDialog();
+    tasksHideForm();
+    showHomeView('grid');
+  });
+  if ($('tasks-unsaved-stay')) $('tasks-unsaved-stay').addEventListener('click', function () {
+    hideTasksUnsavedDialog();
   });
 
   // Settings nav: switch panel
