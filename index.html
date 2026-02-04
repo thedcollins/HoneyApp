@@ -172,9 +172,12 @@
     .calendar-day-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 0.35rem; }
     .calendar-day-list { padding: 0; }
     .calendar-day .cal-day-header { font-size: 1.1rem; font-weight: 600; color: var(--honey-dark); margin-bottom: 0.75rem; }
-    .calendar-day .cal-event-item { padding: 0.6rem; margin-bottom: 0.5rem; background: var(--card); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; }
+    .calendar-day .cal-event-item { display: flex; align-items: flex-start; gap: 0.5rem; padding: 0.6rem; margin-bottom: 0.5rem; background: var(--card); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; }
     .calendar-day .cal-event-item:hover { background: var(--wax); border-color: var(--honey-dark); }
-    .calendar-day .cal-event-time { font-size: 0.8rem; color: var(--muted); margin-right: 0.5rem; }
+    .calendar-day .cal-event-time { font-size: 0.8rem; color: var(--muted); margin-right: 0.25rem; flex-shrink: 0; }
+    .calendar-day .cal-event-title-wrap { flex: 1; min-width: 0; }
+    .calendar-day .cal-event-actions { flex-shrink: 0; }
+    .calendar-day .cal-event-actions .btn { margin: 0; padding: 0.25rem 0.5rem; font-size: 0.85rem; min-height: auto; }
     .calendar-event-form { background: var(--wax); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; overflow: hidden; min-width: 0; }
     .calendar-event-form label { display: block; font-weight: 600; margin-top: 0.5rem; }
     .calendar-event-form input, .calendar-event-form select, .calendar-event-form textarea { width: 100%; max-width: 100%; min-width: 0; padding: 0.5rem; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; margin: 0.25rem 0; box-sizing: border-box; background: var(--card); color: var(--text); }
@@ -223,6 +226,7 @@
     .home-layout:has(.app-sheet.active) .home-header-bar { display: none; }
     .home-header-col { flex: 0 0 auto; min-width: 0; width: 100%; }
     .home-header-col .home-col-title { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.9; margin-bottom: 0.4rem; text-align: center; }
+    .home-header-col .home-col-title-overdue { color: #f5c6c6; }
     .home-header-bar .home-today-empty, .home-header-bar .home-upcoming-empty { display: flex; align-items: center; justify-content: center; min-height: 2.5rem; font-size: 0.9rem; color: rgba(255,255,255,0.9); }
     .home-header-bar .home-today-events, .home-header-bar .home-upcoming-events { list-style: none; padding: 0; margin: 0; width: 100%; }
     .home-header-bar .home-today-event, .home-header-bar .home-upcoming-event { padding: 0.35rem 0; border-bottom: 1px solid rgba(255,255,255,0.25); font-size: 0.85rem; display: block; width: 100%; box-sizing: border-box; }
@@ -231,9 +235,9 @@
     .home-header-bar .home-event-day { display: block; font-size: 0.7rem; opacity: 0.85; margin-bottom: 0.15rem; }
     .home-event-pill { display: block; width: 100%; box-sizing: border-box; border: 1px solid rgba(255,255,255,0.55); border-radius: 6px; padding: 0.35rem 0.5rem; font-size: 0.85rem; background: rgba(255,255,255,0.55); color: #2c2416; text-align: center; }
     .home-task-pill { display: block; width: 100%; box-sizing: border-box; border: 1px solid; border-radius: 6px; padding: 0.35rem 0.5rem; font-size: 0.85rem; font-weight: 500; text-align: center; }
-    .home-task-pill.priority-low { border-color: #2d6a2d; background: rgba(45,106,45,0.5); color: #fff; }
-    .home-task-pill.priority-medium { border-color: #c9a800; background: rgba(201,168,0,0.5); color: #fff; }
-    .home-task-pill.priority-high { border-color: #a52a2a; background: rgba(165,42,42,0.55); color: #fff; }
+    .home-task-pill.priority-low { border-color: #2d6a2d; background: #2d6a2d; color: #fff; }
+    .home-task-pill.priority-medium { border-color: #c9a800; background: #c9a800; color: #fff; }
+    .home-task-pill.priority-high { border-color: #a52a2a; background: #a52a2a; color: #fff; }
     .home-header-bar .home-event-time { font-size: 0.75rem; opacity: 0.9; min-width: 3.5rem; }
     .home-header-bar .home-event-title { flex: 1; }
     .tasks-view-toggle { display: flex; gap: 0.25rem; margin-bottom: 1rem; }
@@ -311,12 +315,12 @@
     #tasks-repeat-custom-wrap select { width: auto; min-width: 7rem; }
     .tasks-group { margin-bottom: 1.25rem; }
     .tasks-group-title { font-size: 0.8rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.5rem; padding-bottom: 0.25rem; }
+    .tasks-group-title-overdue { color: #a52a2a; }
     .tasks-list { list-style: none; padding: 0; margin: 0; }
-    .tasks-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border); background: var(--card); border-radius: 6px; margin-bottom: 0.35rem; }
-    .tasks-item .task-priority { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-    .tasks-item .task-priority.low { background: #2d6a2d; }
-    .tasks-item .task-priority.medium { background: #c9a800; }
-    .tasks-item .task-priority.high { background: #a52a2a; }
+    .tasks-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border); border-radius: 6px; margin-bottom: 0.35rem; border-left: 4px solid var(--border); }
+    .tasks-item.priority-low { background: rgba(45,106,45,0.12); border-left-color: #2d6a2d; }
+    .tasks-item.priority-medium { background: rgba(201,168,0,0.15); border-left-color: #c9a800; }
+    .tasks-item.priority-high { background: rgba(165,42,42,0.12); border-left-color: #a52a2a; }
     .tasks-item .task-checkbox { flex-shrink: 0; cursor: pointer; }
     .tasks-item .task-content { flex: 1; min-width: 0; font-size: 0.95rem; }
     .tasks-item .task-time { font-size: 0.8rem; color: var(--muted); margin-right: 0.5rem; }
@@ -1178,8 +1182,23 @@
       if (!t2) return -1;
       return t1.localeCompare(t2);
     });
+    var overdueTasks = [];
     var todayTasks = [];
     try {
+      overdueTasks = getTasks().filter(function (t) {
+        var k = (t.date || '').substring(0, 10);
+        return k && k < todayKey && !t.completed;
+      }).slice().sort(function (a, b) {
+        var k1 = (a.date || '').substring(0, 10);
+        var k2 = (b.date || '').substring(0, 10);
+        if (k1 !== k2) return k1.localeCompare(k2);
+        var t1 = (a.time || '').trim();
+        var t2 = (b.time || '').trim();
+        if (!t1 && !t2) return 0;
+        if (!t1) return 1;
+        if (!t2) return -1;
+        return t1.localeCompare(t2);
+      });
       todayTasks = getTasks().filter(function (t) {
         var k = (t.date || '').substring(0, 10);
         return k === todayKey && !t.completed;
@@ -1219,7 +1238,7 @@
         return t1.localeCompare(t2);
       });
     } catch (e) {}
-    var hasContent = todayEvents.length > 0 || todayTasks.length > 0 || upcomingInstances.length > 0 || upcomingTasks.length > 0;
+    var hasContent = overdueTasks.length > 0 || todayEvents.length > 0 || todayTasks.length > 0 || upcomingInstances.length > 0 || upcomingTasks.length > 0;
     if (!hasContent) {
       el.classList.add('empty');
       el.innerHTML = '';
@@ -1227,7 +1246,17 @@
     }
     el.classList.remove('empty');
     var dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    var leftHtml = '<div class="home-header-col"><div class="home-col-title">Today</div>';
+    var leftHtml = '<div class="home-header-col">';
+    if (overdueTasks.length > 0) {
+      leftHtml += '<div class="home-col-title home-col-title-overdue">Overdue</div><ul class="home-today-events">';
+      overdueTasks.forEach(function (t) {
+        var pri = (t.priority || 'low');
+        var k = (t.date || '').substring(0, 10);
+        leftHtml += '<li class="home-today-event"><span class="home-task-pill priority-' + escapeHtml(pri) + '" data-type="task" data-task-id="' + escapeHtml(t.id || '') + '" data-date="' + escapeHtml(k || '') + '"><strong>TASK</strong> - ' + escapeHtml(t.title || '') + '</span></li>';
+      });
+      leftHtml += '</ul>';
+    }
+    leftHtml += '<div class="home-col-title">Today</div>';
     if (todayEvents.length > 0 || todayTasks.length > 0) {
       leftHtml += '<ul class="home-today-events">';
       todayEvents.forEach(function (ev) {
@@ -1499,7 +1528,7 @@
       var timeStr = (ev.time || '').trim();
       if ((ev.endTime || '').trim()) timeStr = timeStr ? (timeStr + ' – ' + (ev.endTime || '').trim()) : ('– ' + (ev.endTime || '').trim());
       if (!timeStr) timeStr = '—';
-      html += '<div class="cal-event-item" data-event-id="' + escapeHtml(ev.id || '') + '"><span class="cal-event-time">' + escapeHtml(timeStr) + '</span>' + escapeHtml(ev.title || '') + (ev.location ? ' <span class="cal-event-location">@ ' + escapeHtml(ev.location) + '</span>' : '') + (getRepeatSpec(ev) ? ' <span class="help">(repeats)</span>' : '') + (ev.description ? '<br><span class="help">' + escapeHtml(ev.description) + '</span>' : '') + '</div>';
+      html += '<div class="cal-event-item" data-event-id="' + escapeHtml(ev.id || '') + '"><span class="cal-event-time">' + escapeHtml(timeStr) + '</span><span class="cal-event-title-wrap">' + escapeHtml(ev.title || '') + (ev.location ? ' <span class="cal-event-location">@ ' + escapeHtml(ev.location) + '</span>' : '') + (getRepeatSpec(ev) ? ' <span class="help">(repeats)</span>' : '') + (ev.description ? '<br><span class="help">' + escapeHtml(ev.description) + '</span>' : '') + '</span><span class="cal-event-actions"><button type="button" class="btn btn-remove cal-event-edit" data-event-id="' + escapeHtml(ev.id || '') + '">Edit</button></span></div>';
     });
     if (!events.length) html += '<p class="help">No events this day.</p>';
     html += '</div></div></div>';
@@ -1529,7 +1558,6 @@
     var delBtn = $('cal-event-delete');
     var customWrap = $('cal-repeat-custom-wrap');
     if (!wrap) return;
-    if (ev) ensureCalendarFormInList();
     if (ev) {
       calendarState.editingEventId = ev.id;
       if ($('cal-event-title')) $('cal-event-title').value = ev.title || '';
@@ -1553,10 +1581,11 @@
       if (delBtn) delBtn.style.display = '';
     } else {
       calendarState.editingEventId = null;
-      var today = new Date();
-      var key = formatDateKey(today);
-      var nextQuarter = Math.ceil(today.getMinutes() / 15) * 15;
-      var startH = today.getHours();
+      var defaultDay = calendarState.currentDate ? new Date(calendarState.currentDate.getTime()) : new Date();
+      var key = formatDateKey(defaultDay);
+      var now = new Date();
+      var nextQuarter = Math.ceil(now.getMinutes() / 15) * 15;
+      var startH = now.getHours();
       if (nextQuarter >= 60) { nextQuarter = 0; startH += 1; }
       if (startH >= 24) startH = 0;
       var startTime = (startH < 10 ? '0' : '') + startH + ':' + (nextQuarter < 10 ? '0' : '') + nextQuarter;
@@ -1604,6 +1633,17 @@
     modalWrap.classList.add('active');
     modalWrap.setAttribute('aria-hidden', 'false');
     calendarShowForm(null);
+  }
+  function openCalendarNewEventModalForEdit(ev) {
+    var formWrap = $('calendar-event-form-wrap');
+    var content = $('calendar-new-event-content');
+    var placeholder = $('calendar-event-form-placeholder');
+    var modalWrap = $('calendar-new-event-wrapper');
+    if (!formWrap || !content || !placeholder || !modalWrap || !ev) return;
+    content.appendChild(formWrap);
+    modalWrap.classList.add('active');
+    modalWrap.setAttribute('aria-hidden', 'false');
+    calendarShowForm(ev);
   }
   function closeCalendarNewEventModal() {
     var formWrap = $('calendar-event-form-wrap');
@@ -1691,6 +1731,17 @@
     var wrap = $('cal-repeat-custom-wrap');
     if (wrap) wrap.style.display = (this.value === 'custom') ? 'flex' : 'none';
   });
+  if ($('cal-event-date')) $('cal-event-date').addEventListener('change', function () {
+    var startVal = (this.value || '').trim().substring(0, 10);
+    if (!startVal) return;
+    var endEl = $('cal-event-end-date');
+    if (endEl) endEl.value = startVal;
+  });
+  if ($('cal-event-time')) $('cal-event-time').addEventListener('change', function () {
+    var startVal = (this.value || '').trim().substring(0, 5);
+    var endEl = $('cal-event-end-time');
+    if (endEl && startVal) endEl.value = startVal;
+  });
   if ($('calendar-add-event')) $('calendar-add-event').addEventListener('click', openCalendarNewEventModal);
   if ($('cal-event-save')) $('cal-event-save').addEventListener('click', function () { if (calendarSaveEvent()) closeCalendarNewEventModal(); });
   if ($('cal-event-cancel')) $('cal-event-cancel').addEventListener('click', function () { closeCalendarNewEventModal(); calendarHideForm(); });
@@ -1703,7 +1754,7 @@
     if (!id) return;
     var events = getCalendarEvents();
     var ev = events.filter(function (x) { return x.id === id; })[0];
-    if (ev) calendarShowForm(ev);
+    if (ev) openCalendarNewEventModalForEdit(ev);
   });
   var monthViewEl = $('calendar-month-view');
   if (monthViewEl) {
@@ -1790,11 +1841,35 @@
       return t.completed === true;
     });
     var isCompleted = tasksState.viewMode === 'completed';
-    var list = isCompleted ? completed : scheduled;
-    var groups = groupTasksByDate(list, isCompleted);
+    var groups = [];
+    if (isCompleted) {
+      groups = groupTasksByDate(completed, true);
+    } else {
+      var overdue = scheduled.filter(function (t) {
+        var k = (t.date || '').substring(0, 10);
+        return k && k < todayKey;
+      }).slice().sort(function (a, b) {
+        var k1 = (a.date || '').substring(0, 10);
+        var k2 = (b.date || '').substring(0, 10);
+        if (k1 !== k2) return k1.localeCompare(k2);
+        var t1 = (a.time || '').trim();
+        var t2 = (b.time || '').trim();
+        if (!t1 && !t2) return 0;
+        if (!t1) return 1;
+        if (!t2) return -1;
+        return t1.localeCompare(t2);
+      });
+      var upcoming = scheduled.filter(function (t) {
+        var k = (t.date || '').substring(0, 10);
+        return k && k >= todayKey;
+      });
+      if (overdue.length > 0) groups.push({ dateKey: '', label: 'OVERDUE', tasks: overdue, isOverdue: true });
+      groups = groups.concat(groupTasksByDate(upcoming, false));
+    }
     var html = '';
     groups.forEach(function (g) {
-      html += '<div class="tasks-group"><div class="tasks-group-title">' + escapeHtml(g.label) + '</div><ul class="tasks-list">';
+      var titleClass = g.isOverdue ? ' tasks-group-title-overdue' : '';
+      html += '<div class="tasks-group"><div class="tasks-group-title' + titleClass + '">' + escapeHtml(g.label) + '</div><ul class="tasks-list">';
       g.tasks.forEach(function (t) {
         var pri = (t.priority || 'low');
         var completed = t.completed ? ' completed' : '';
@@ -1805,7 +1880,7 @@
             completedAtStr = ' <span class="task-completed-at">Completed ' + completedDate.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: completedDate.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined }) + '</span>';
           } catch (e) {}
         }
-        html += '<li class="tasks-item' + completed + '" data-task-id="' + escapeHtml(t.id || '') + '"><input type="checkbox" class="task-checkbox" ' + (t.completed ? 'checked' : '') + ' aria-label="Complete"><span class="task-priority ' + escapeHtml(pri) + '"></span><span class="task-content">' + escapeHtml(t.title || '') + completedAtStr + '</span><span class="task-actions"><button type="button" class="btn btn-remove task-edit" data-task-id="' + escapeHtml(t.id || '') + '">Edit</button></span></li>';
+        html += '<li class="tasks-item priority-' + escapeHtml(pri) + completed + '" data-task-id="' + escapeHtml(t.id || '') + '"><input type="checkbox" class="task-checkbox" ' + (t.completed ? 'checked' : '') + ' aria-label="Complete"><span class="task-content">' + escapeHtml(t.title || '') + completedAtStr + '</span><span class="task-actions"><button type="button" class="btn btn-remove task-edit" data-task-id="' + escapeHtml(t.id || '') + '">Edit</button></span></li>';
       });
       html += '</ul></div>';
     });
@@ -1816,7 +1891,6 @@
     var wrap = $('tasks-form-wrap');
     var delBtn = $('task-delete');
     if (!wrap) return;
-    if (task) ensureTasksFormInList();
     if (task) {
       tasksState.editingTaskId = task.id;
       if ($('task-title')) $('task-title').value = task.title || '';
@@ -2134,11 +2208,7 @@
           showCalendarView('day');
         }
       } else if (type === 'task') {
-        var taskId = pill.getAttribute('data-task-id');
-        if (!taskId) return;
         showHomeView('tasks');
-        var task = getTasks().filter(function (t) { return t.id === taskId; })[0];
-        if (task) openTasksNewTaskModalForEdit(task);
       }
     });
   }
