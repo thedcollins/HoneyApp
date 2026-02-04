@@ -52,6 +52,11 @@
     .tasks-unsaved-wrapper .card { max-width: 360px; margin: 0; }
     .tasks-unsaved-wrapper .form-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
     .tasks-unsaved-wrapper .form-actions .btn { width: auto; }
+    .calendar-unsaved-wrapper { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1000; align-items: center; justify-content: center; padding: 1rem; }
+    .calendar-unsaved-wrapper.active { display: flex; }
+    .calendar-unsaved-wrapper .card { max-width: 360px; margin: 0; }
+    .calendar-unsaved-wrapper .form-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+    .calendar-unsaved-wrapper .form-actions .btn { width: auto; }
     .password-wrapper h1 { font-size: 1.2rem; margin-bottom: 0.5rem; }
     .app-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem 0.75rem; margin: 1.25rem 0; padding: 0 0.25rem; }
     @media (min-width: 400px) { .app-grid { grid-template-columns: repeat(4, 1fr); gap: 1.5rem 1rem; } }
@@ -161,7 +166,7 @@
       .tasks-date-repeat-row { gap: 0.5rem 1rem; }
       .tasks-form-wrap #task-title,
       .tasks-form-wrap #task-priority,
-      .tasks-form-wrap #task-repeat,
+      .tasks-form-wrap #task-repeat { height: 4rem !important; min-height: 4rem !important; max-height: 4rem !important; }
       .tasks-date-repeat-row #task-date { height: 2rem !important; min-height: 2rem !important; max-height: 2rem !important; }
       .tasks-field-date input[type="date"] { width: 100% !important; max-width: 100% !important; min-width: 0 !important; }
     }
@@ -386,11 +391,22 @@
       <div id="tasks-unsaved-wrapper" class="tasks-unsaved-wrapper" aria-hidden="true">
         <div class="card">
           <h2 style="margin: 0 0 0.5rem 0; font-size: 1.2rem;">Unsaved task</h2>
-          <p class="help" style="margin: 0;">Save task or cancel before going back to home?</p>
+          <p class="help" style="margin: 0;">Save or discard before going back to home?</p>
           <div class="form-actions">
-            <button type="button" class="btn" id="tasks-unsaved-save">Save task</button>
-            <button type="button" class="btn secondary" id="tasks-unsaved-cancel">Cancel task</button>
+            <button type="button" class="btn" id="tasks-unsaved-save">Save</button>
+            <button type="button" class="btn secondary" id="tasks-unsaved-cancel">Discard</button>
             <button type="button" class="btn secondary" id="tasks-unsaved-stay">Stay</button>
+          </div>
+        </div>
+      </div>
+      <div id="calendar-unsaved-wrapper" class="calendar-unsaved-wrapper" aria-hidden="true">
+        <div class="card">
+          <h2 style="margin: 0 0 0.5rem 0; font-size: 1.2rem;">Unsaved event</h2>
+          <p class="help" style="margin: 0;">Save or discard before going back to home?</p>
+          <div class="form-actions">
+            <button type="button" class="btn" id="calendar-unsaved-save">Save</button>
+            <button type="button" class="btn secondary" id="calendar-unsaved-cancel">Discard</button>
+            <button type="button" class="btn secondary" id="calendar-unsaved-stay">Stay</button>
           </div>
         </div>
       </div>
@@ -1320,9 +1336,9 @@
       var freq = ($('cal-repeat-frequency') && $('cal-repeat-frequency').value) || 'weekly';
       repeat = { frequency: freq, interval: interval };
     } else if (repeatVal) repeat = repeatVal;
-    if (!title || !dateVal) return;
+    if (!title || !dateVal) return false;
     var cfg = getDecryptedConfig();
-    if (!cfg) return;
+    if (!cfg) return false;
     cfg.calendar = cfg.calendar || [];
     var payload = { id: null, title: title, date: dateVal, time: timeVal, endDate: endDateVal || undefined, endTime: endTimeVal || undefined, location: locationVal || undefined, description: desc || undefined, repeat: repeat || undefined };
     var id = calendarState.editingEventId;
@@ -1336,6 +1352,7 @@
     }
     calendarHideForm();
     showCalendarView(calendarState.viewMode);
+    return true;
   }
   function calendarDeleteEvent() {
     var id = calendarState.editingEventId;
@@ -1631,6 +1648,12 @@
         showTasksUnsavedDialog();
         return;
       }
+      var calFormWrap = $('calendar-event-form-wrap');
+      var calFormVisible = calFormWrap && calFormWrap.style.display !== 'none' && calFormWrap.style.display !== '';
+      if (app === 'calendar' && calFormVisible) {
+        showCalendarUnsavedDialog();
+        return;
+      }
       showHomeView('grid');
     });
   });
@@ -1653,6 +1676,26 @@
   });
   if ($('tasks-unsaved-stay')) $('tasks-unsaved-stay').addEventListener('click', function () {
     hideTasksUnsavedDialog();
+  });
+  function showCalendarUnsavedDialog() {
+    var wrap = $('calendar-unsaved-wrapper');
+    if (wrap) { wrap.classList.add('active'); wrap.setAttribute('aria-hidden', 'false'); }
+  }
+  function hideCalendarUnsavedDialog() {
+    var wrap = $('calendar-unsaved-wrapper');
+    if (wrap) { wrap.classList.remove('active'); wrap.setAttribute('aria-hidden', 'true'); }
+  }
+  if ($('calendar-unsaved-save')) $('calendar-unsaved-save').addEventListener('click', function () {
+    hideCalendarUnsavedDialog();
+    if (calendarSaveEvent()) showHomeView('grid');
+  });
+  if ($('calendar-unsaved-cancel')) $('calendar-unsaved-cancel').addEventListener('click', function () {
+    hideCalendarUnsavedDialog();
+    calendarHideForm();
+    showHomeView('grid');
+  });
+  if ($('calendar-unsaved-stay')) $('calendar-unsaved-stay').addEventListener('click', function () {
+    hideCalendarUnsavedDialog();
   });
 
   // Settings nav: switch panel
