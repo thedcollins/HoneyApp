@@ -150,7 +150,7 @@
       .calendar-view-switcher { width: 100%; }
       .calendar-view-switcher button { flex: 1; }
       .calendar-nav { width: 100%; margin-left: 0; }
-      .calendar-nav .calendar-label { flex: 1; min-width: 0; }
+      .calendar-nav .calendar-label { flex: 1; min-width: 0; max-width: 215px; min-width: 215px !important; }
       .calendar-nav button { flex-shrink: 0; padding: 0.5rem 0.85rem; min-width: 2.75rem; }
     }
     :root { --cal-cell-height: 95px; --cal-header-height: 2rem; --cal-five-rows-height: calc(var(--cal-header-height) + 5 * var(--cal-cell-height)); }
@@ -1385,6 +1385,7 @@
     var wMonth = measure.offsetWidth;
     document.body.removeChild(measure);
     var w = Math.max(wDay, wWeek, wMonth);
+    if (window.innerWidth <= 767) w = Math.min(w, 215);
     el.style.minWidth = w + 'px';
     el.dataset.calLabelWidthFixed = '1';
   }
