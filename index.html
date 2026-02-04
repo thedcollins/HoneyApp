@@ -175,8 +175,10 @@
     .home-layout { display: flex; flex-direction: row; gap: 1rem; width: 100%; min-height: 0; }
     .home-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
     @media (min-width: 768px) and (hover: none) and (pointer: coarse) {
-      #screen-app .home-layout { min-height: 100vh; }
-      #screen-app .home-main { min-height: 0; overflow: auto; }
+      #screen-app { height: 100vh; display: flex; flex-direction: column; min-height: 0; }
+      #screen-app .home-layout { flex: 1; min-height: 0; display: flex; }
+      #screen-app .home-main { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+      #screen-app #sheet-home { flex: 1; min-height: 0; overflow: auto; }
       #sheet-home .app-grid { gap: 2.25rem 1.5rem; }
       .app-icon-wrap { width: 96px; height: 96px; border-radius: 22px; }
       .app-card .app-icon { font-size: 3rem; }
