@@ -229,6 +229,7 @@
     }
     .app-top-bar { display: none; }
     #screen-app { position: relative; }
+    .app-top-bar .app-top-bar-text { display: none; }
     .app-top-bar .app-top-bar-btn { width: 2.5rem; height: 2.5rem; min-width: 2.5rem; min-height: 2.5rem; padding: 0; border: none; border-radius: 8px; background: var(--wax); color: var(--honey-dark); font-size: 1.25rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-sizing: border-box; }
     .app-top-bar .app-top-bar-btn:hover { background: var(--border); }
     .app-top-bar .app-top-bar-btn:focus { outline: 2px solid var(--honey-dark); outline-offset: 2px; }
@@ -239,9 +240,16 @@
     .app-profile-logout { display: block; width: 100%; text-align: left; padding: 0.5rem 0.75rem; border: none; background: none; font-size: 0.9rem; color: var(--text); cursor: pointer; }
     .app-profile-logout:hover { background: var(--wax); }
     @media (min-width: 768px) and (hover: none) and (pointer: coarse) {
-      .app-top-bar { display: flex; align-items: center; justify-content: flex-start; gap: 0.5rem; padding: 0.5rem 1rem; position: absolute; top: 0; left: 0; right: auto; z-index: 100; }
-      #screen-app { padding-top: 3.5rem; }
-      .app-profile-dropdown { left: 0; right: auto; }
+      .app-top-bar { display: flex; flex-direction: column; align-items: stretch; gap: 0; position: absolute; top: 50%; right: 0; transform: translateY(-50%); z-index: 100; width: 5.5rem; }
+      .app-top-bar .app-top-bar-icon { display: none; }
+      .app-top-bar .app-top-bar-text { display: inline; }
+      .app-top-bar .app-top-bar-btn { width: 100%; min-width: 0; height: auto; min-height: 2.75rem; padding: 0.6rem 0.75rem; font-size: 0.9rem; font-weight: 600; border-radius: 8px 0 0 8px; border: 1px solid var(--border); border-right: none; background: var(--wax); color: var(--honey-dark); box-shadow: -2px 0 6px rgba(0,0,0,0.06); }
+      .app-top-bar .app-top-bar-btn:hover { background: var(--card); }
+      .app-top-bar .app-top-bar-btn:first-of-type { border-radius: 8px 0 0 0; }
+      .app-top-bar-profile-wrap .app-top-bar-btn { border-radius: 0 0 0 8px; border-top: none; }
+      #screen-app { padding-top: 0; }
+      .home-layout { margin-right: 5.5rem; }
+      .app-profile-dropdown { left: 0; right: auto; top: 100%; margin-top: 0.25rem; }
       .home-refresh-wrap { display: none; }
     }
     @media (max-width: 767px) {
@@ -405,9 +413,9 @@
 
   <div id="screen-app" class="screen">
     <div class="app-top-bar" id="app-top-bar" aria-hidden="true">
-      <button type="button" class="app-top-bar-btn" id="app-top-bar-refresh" aria-label="Refresh">🔄</button>
+      <button type="button" class="app-top-bar-btn" id="app-top-bar-refresh" aria-label="Refresh"><span class="app-top-bar-icon">🔄</span><span class="app-top-bar-text">Refresh</span></button>
       <div class="app-top-bar-profile-wrap">
-        <button type="button" class="app-top-bar-btn" id="app-top-bar-profile" aria-label="Profile" aria-expanded="false" aria-haspopup="true">👤</button>
+        <button type="button" class="app-top-bar-btn" id="app-top-bar-profile" aria-label="Profile" aria-expanded="false" aria-haspopup="true"><span class="app-top-bar-icon">👤</span><span class="app-top-bar-text">Profile</span></button>
         <div class="app-profile-dropdown" id="app-profile-dropdown" role="menu" hidden>
           <div class="app-profile-user" id="app-profile-username">—</div>
           <button type="button" class="app-profile-logout" id="app-profile-logout" role="menuitem">Log out</button>
@@ -715,10 +723,10 @@
             </div>
             <div id="db-form-equipment" class="database-add-form">
               <div class="form-row"><label for="db-equipment-category">Category</label><select id="db-equipment-category"><option value="Extractors">Extractors</option><option value="Hive Boxes">Hive Boxes</option><option value="Protective Suits">Protective Suits</option><option value="Vehicles">Vehicles</option></select></div>
-              <div class="form-row"><label>Purchase Date</label><input type="date" id="db-equipment-purchase-date"></div>
-              <div class="form-row"><label>Depreciation</label><input type="text" id="db-equipment-depreciation" placeholder="e.g. 5 years"></div>
-              <div class="form-row"><label>Maintenance Schedule</label><input type="text" id="db-equipment-maintenance" placeholder="e.g. Clean extractor every August"></div>
-              <div class="form-row"><label>Condition</label><select id="db-equipment-condition"><option value="New">New</option><option value="Used">Used</option><option value="Needs Repair">Needs Repair</option></select></div>
+              <div class="form-row"><label for="db-equipment-purchase-date">Purchase Date</label><input type="date" id="db-equipment-purchase-date"></div>
+              <div class="form-row"><label for="db-equipment-depreciation">Depreciation</label><input type="text" id="db-equipment-depreciation" placeholder="e.g. 5 years"></div>
+              <div class="form-row"><label for="db-equipment-maintenance">Maintenance Schedule</label><input type="text" id="db-equipment-maintenance" placeholder="e.g. Clean extractor every August"></div>
+              <div class="form-row"><label for="db-equipment-condition">Condition</label><select id="db-equipment-condition"><option value="New">New</option><option value="Used">Used</option><option value="Needs Repair">Needs Repair</option></select></div>
               <div class="form-row"><label for="db-equipment-storage">Storage Location</label><input type="text" id="db-equipment-storage" placeholder="e.g. Garage"></div>
               <div class="form-actions"><button type="button" class="btn" id="db-equipment-save">Save</button> <button type="button" class="btn secondary" id="db-equipment-cancel">Cancel</button></div>
             </div>
