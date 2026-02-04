@@ -61,6 +61,20 @@
     .admin-table .btn-remove { color: var(--honey-dark); }
     .admin-table .btn-remove:hover { color: var(--status-err, #a52a2a); }
     .btn-secondary-small { font-size: 0.8rem; padding: 0.2rem 0.4rem; min-height: auto; }
+    .database-panel { display: none; margin-top: 1rem; }
+    .database-panel.active { display: block; }
+    .database-table-wrapper { overflow-x: auto; margin-bottom: 1rem; border: 1px solid var(--border); border-radius: 8px; }
+    .database-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    .database-table th, .database-table td { padding: 0.5rem 0.6rem; text-align: left; border: 1px solid var(--border); }
+    .database-table th { color: var(--honey-dark); font-weight: 700; background: var(--wax); white-space: nowrap; }
+    .database-table .db-row-delete { margin: 0; padding: 0.2rem 0.4rem; font-size: 0.8rem; min-height: auto; background: transparent; color: var(--muted); }
+    .database-table .db-row-delete:hover { color: var(--status-err, #a52a2a); }
+    .database-add-form { display: none; margin-top: 1rem; padding: 1rem; background: var(--wax); border: 1px solid var(--border); border-radius: 8px; }
+    .database-add-form.active { display: block; }
+    .database-add-form .form-row { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 0.75rem; align-items: center; }
+    .database-add-form .form-row label { margin: 0; min-width: 8rem; }
+    .database-add-form .form-row input, .database-add-form .form-row select { flex: 1; min-width: 10rem; padding: 0.4rem 0.5rem; border: 1px solid var(--border); border-radius: 6px; }
+    .database-add-form .form-actions { margin-top: 1rem; }
     .settings-block { margin-top: 1rem; padding: 0.8rem; background: var(--wax); border-radius: 8px; border: 1px solid var(--border); }
     .settings-block h2 { font-size: 1rem; color: var(--honey-dark); margin: 0 0 0.4rem 0; }
     .password-wrapper { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1000; align-items: center; justify-content: center; padding: 1rem; }
@@ -92,6 +106,9 @@
     .calendar-new-event-wrapper .calendar-event-repeat-row .cal-repeat-custom-inner { margin-top: 0.25rem; }
     .calendar-new-event-wrapper .calendar-event-repeat-row .cal-repeat-custom-inner input,
     .calendar-new-event-wrapper .calendar-event-repeat-row .cal-repeat-custom-inner select { height: 2.5rem; min-height: 2.5rem; max-height: 2.5rem; box-sizing: border-box; }
+    .database-new-item-wrapper { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1000; align-items: center; justify-content: center; padding: 1rem; }
+    .database-new-item-wrapper.active { display: flex; }
+    .database-new-item-wrapper .card { max-width: 420px; margin: 0; width: 100%; max-height: 90vh; overflow: auto; }
     .password-wrapper h1 { font-size: 1.2rem; margin-bottom: 0.5rem; }
     .notes-layout { display: flex; gap: 1rem; min-height: 360px; margin-top: 1rem; }
     @media (max-width: 560px) { .notes-layout { flex-direction: column; } }
@@ -127,7 +144,7 @@
     .app-sheet-header { display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: center; margin-bottom: 1rem; gap: 0.5rem; }
     .app-sheet-header .app-sheet-back { justify-self: start; margin-bottom: 0; }
     .app-sheet-header h2 { justify-self: center; text-align: center; margin: 0; font-size: 1.2rem; color: var(--honey-dark); }
-    .app-sheet-header #calendar-add-event, .app-sheet-header #tasks-add-btn, .app-sheet-header #notes-new-btn { justify-self: end; }
+    .app-sheet-header #calendar-add-event, .app-sheet-header #tasks-add-btn, .app-sheet-header #notes-new-btn, .app-sheet-header #db-add-new-btn { justify-self: end; }
     .app-sheet h2 { font-size: 1.2rem; color: var(--honey-dark); margin: 0 0 0.5rem 0; }
     .app-sheet .app-desc { font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem; }
     .app-sheet .app-desc-full { font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem; }
@@ -384,32 +401,73 @@
         <div class="app-card" data-app="settings" role="button" tabindex="0"><div class="app-icon-wrap"><span class="app-icon">⚙️</span></div><div class="app-title">Settings</div></div>
       </div>
       <div id="app-sheet-database" class="app-sheet" data-app="database">
-        <button type="button" class="btn app-sheet-back secondary" data-app-back>← Back to Home</button>
-        <h2>📦 Database</h2>
-        <div class="app-desc-full">
-          <p>Stores <strong>prices</strong> for everything you buy or sell: equipment, supplies, and finished products. Each entry has a name, category (e.g. equipment / supplies / product), price, and optional notes. This is the single source of truth for unit costs so Cost calculator, Inventory, and Sales log can reference it.</p>
-          <p><strong>Features to build:</strong> Add, edit, delete entries; list and filter by category.</p>
-          <h3>🗄️ 1. Database (The Master Reference)</h3>
-          <p>This is the "Source of Truth." No other app should have hard-coded prices.</p>
-          <ul>
-            <li><strong>Item Name:</strong> (e.g., "500g Hexagonal Jar", "Wildflower Honey Bulk").</li>
-            <li><strong>SKU/ID:</strong> Unique identifier for linking.</li>
-            <li><strong>Category:</strong> Raw Material, Packaging, Finished Good, Equipment.</li>
-            <li><strong>Unit of Measure:</strong> kg, gram, unit, box.</li>
-            <li><strong>Unit Cost:</strong> Your purchase price from suppliers.</li>
-            <li><strong>Target Sale Price:</strong> The intended MSRP.</li>
-            <li><strong>Tax Rate:</strong> If applicable (e.g., 0% for raw food, 10% for beeswax candles).</li>
-          </ul>
-          <h3>🛠️ Data Relationship Map</h3>
-          <p>To keep your Encrypted Config clean, use a flat JSON structure where each app is its own key:</p>
-          <pre>{
-  "database": [ { "id": "jar-001", "price": 0.50, ... } ],
-  "inventory": [ { "item_id": "jar-001", "qty": 500 } ],
-  "sales_log": [ { "id": "sale-101", "total": 25.00, ... } ],
-  "settings": { "github_token": "...", "version": "1.0.0" }
-}</pre>
+        <div class="app-sheet-header">
+          <button type="button" class="btn app-sheet-back secondary" data-app-back>← Back to Home</button>
+          <h2>📦 Database</h2>
+          <button type="button" class="btn secondary" id="db-add-new-btn">Add new</button>
         </div>
-        <div class="app-placeholder">Placeholder — build this app next.</div>
+        <div class="tabs database-tabs">
+          <button type="button" class="database-tab active" data-db-tab="supplies">Supplies &amp; Materials</button>
+          <button type="button" class="database-tab" data-db-tab="equipment">Equipment</button>
+          <button type="button" class="database-tab" data-db-tab="products">Products</button>
+        </div>
+        <div id="database-panel-supplies" class="database-panel active">
+          <div class="database-table-wrapper">
+            <table class="database-table" id="db-table-supplies">
+              <thead>
+                <tr>
+                  <th>Internal ID</th>
+                  <th>Name</th>
+                  <th>Category</th>
+                  <th>Unit Type</th>
+                  <th>Cost per Unit</th>
+                  <th>Supplier Link</th>
+                  <th>Min Stock</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="db-tbody-supplies"></tbody>
+            </table>
+          </div>
+        </div>
+        <div id="database-panel-equipment" class="database-panel">
+          <div class="database-table-wrapper">
+            <table class="database-table" id="db-table-equipment">
+              <thead>
+                <tr>
+                  <th>Internal ID</th>
+                  <th>Category</th>
+                  <th>Purchase Date</th>
+                  <th>Depreciation</th>
+                  <th>Maintenance Schedule</th>
+                  <th>Condition</th>
+                  <th>Storage Location</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="db-tbody-equipment"></tbody>
+            </table>
+          </div>
+        </div>
+        <div id="database-panel-products" class="database-panel">
+          <div class="database-table-wrapper">
+            <table class="database-table" id="db-table-products">
+              <thead>
+                <tr>
+                  <th>Internal ID</th>
+                  <th>Category</th>
+                  <th>Batch ID Link</th>
+                  <th>Retail Price</th>
+                  <th>Wholesale Price</th>
+                  <th>Weight/Volume</th>
+                  <th>Recipe Link</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="db-tbody-products"></tbody>
+            </table>
+          </div>
+        </div>
       </div>
       <div id="app-sheet-projects" class="app-sheet" data-app="projects">
         <button type="button" class="btn app-sheet-back secondary" data-app-back>← Back to Home</button>
@@ -606,6 +664,39 @@
       <div id="calendar-new-event-wrapper" class="calendar-new-event-wrapper" aria-hidden="true">
         <div class="card">
           <div id="calendar-new-event-content"></div>
+        </div>
+      </div>
+      <div id="database-new-item-wrapper" class="database-new-item-wrapper" aria-hidden="true">
+        <div class="card">
+          <div id="database-new-item-content">
+            <div id="db-form-supplies" class="database-add-form">
+              <div class="form-row"><label>Name</label><input type="text" id="db-supply-name" placeholder="e.g. 500g Jar"></div>
+              <div class="form-row"><label>Category</label><select id="db-supply-category"><option value="Packaging">Packaging</option><option value="Hive Treatments">Hive Treatments</option><option value="Labels">Labels</option><option value="Sugar for feeding">Sugar for feeding</option></select></div>
+              <div class="form-row"><label>Unit Type</label><input type="text" id="db-supply-unit-type" placeholder="e.g. Box of 100, 20kg Pail"></div>
+              <div class="form-row"><label>Cost per Unit</label><input type="number" id="db-supply-cost" step="0.01" min="0" placeholder="0.00"></div>
+              <div class="form-row"><label>Supplier Link (ID)</label><input type="text" id="db-supply-supplier-id" placeholder="Supplier ID from Suppliers app"></div>
+              <div class="form-row"><label>Min Stock Level</label><input type="number" id="db-supply-min-stock" min="0" placeholder="0"></div>
+              <div class="form-actions"><button type="button" class="btn" id="db-supply-save">Save</button> <button type="button" class="btn secondary" id="db-supply-cancel">Cancel</button></div>
+            </div>
+            <div id="db-form-equipment" class="database-add-form">
+              <div class="form-row"><label>Category</label><select id="db-equipment-category"><option value="Extractors">Extractors</option><option value="Hive Boxes">Hive Boxes</option><option value="Protective Suits">Protective Suits</option><option value="Vehicles">Vehicles</option></select></div>
+              <div class="form-row"><label>Purchase Date</label><input type="date" id="db-equipment-purchase-date"></div>
+              <div class="form-row"><label>Depreciation</label><input type="text" id="db-equipment-depreciation" placeholder="e.g. 5 years"></div>
+              <div class="form-row"><label>Maintenance Schedule</label><input type="text" id="db-equipment-maintenance" placeholder="e.g. Clean extractor every August"></div>
+              <div class="form-row"><label>Condition</label><select id="db-equipment-condition"><option value="New">New</option><option value="Used">Used</option><option value="Needs Repair">Needs Repair</option></select></div>
+              <div class="form-row"><label>Storage Location</label><input type="text" id="db-equipment-storage" placeholder="e.g. Garage"></div>
+              <div class="form-actions"><button type="button" class="btn" id="db-equipment-save">Save</button> <button type="button" class="btn secondary" id="db-equipment-cancel">Cancel</button></div>
+            </div>
+            <div id="db-form-products" class="database-add-form">
+              <div class="form-row"><label>Category</label><select id="db-product-category"><option value="Honey Jars">Honey Jars</option><option value="Beeswax Candles">Beeswax Candles</option><option value="Gift Sets">Gift Sets</option><option value="Pollen">Pollen</option></select></div>
+              <div class="form-row"><label>Batch ID Link</label><input type="text" id="db-product-batch-id" placeholder="Which harvest did this come from?"></div>
+              <div class="form-row"><label>Retail Price</label><input type="number" id="db-product-retail" step="0.01" min="0" placeholder="0.00"></div>
+              <div class="form-row"><label>Wholesale Price</label><input type="number" id="db-product-wholesale" step="0.01" min="0" placeholder="0.00"></div>
+              <div class="form-row"><label>Weight/Volume</label><input type="text" id="db-product-weight" placeholder="e.g. 250g, 500g"></div>
+              <div class="form-row"><label>Recipe Link</label><input type="text" id="db-product-recipe" placeholder="Link to Cost Calculator"></div>
+              <div class="form-actions"><button type="button" class="btn" id="db-product-save">Save</button> <button type="button" class="btn secondary" id="db-product-cancel">Cancel</button></div>
+            </div>
+          </div>
         </div>
       </div>
       <div id="app-sheet-notes" class="app-sheet" data-app="notes">
@@ -1147,6 +1238,7 @@
     var sheets = document.querySelectorAll('#sheet-home .app-sheet');
     closeCalendarNewEventModal();
     closeTasksNewTaskModal();
+    closeDatabaseNewItemModal();
     if (view === 'grid') {
       if (grid) grid.style.display = '';
       sheets.forEach(function (s) { s.classList.remove('active'); });
@@ -1158,6 +1250,7 @@
       });
       if (view === 'calendar') calendarInit();
       if (view === 'tasks') tasksInit();
+      if (view === 'database') databaseInit();
       if (view === 'notes') notesInit();
       if (view === 'settings') { loadConfigIntoForm(); loadTokenIntoForm(); var se = $('settings_status'); if (se) se.textContent = ''; var ae = $('admin_status'); if (ae) ae.textContent = ''; }
     }
@@ -1295,6 +1388,175 @@
     el.innerHTML = leftHtml + rightHtml;
   }
 
+  // --- Database app ---
+  var databaseState = { activeTab: 'supplies' };
+  function getDatabase() {
+    var cfg = getDecryptedConfig();
+    if (!cfg) return { supplies: [], equipment: [], products: [] };
+    if (!cfg.database || typeof cfg.database !== 'object') cfg.database = { supplies: [], equipment: [], products: [] };
+    if (!Array.isArray(cfg.database.supplies)) cfg.database.supplies = [];
+    if (!Array.isArray(cfg.database.equipment)) cfg.database.equipment = [];
+    if (!Array.isArray(cfg.database.products)) cfg.database.products = [];
+    return cfg.database;
+  }
+  function updateDbAddButtonText() {
+    var btn = $('db-add-new-btn');
+    if (!btn) return;
+    var labels = { supplies: 'Add supply', equipment: 'Add equipment', products: 'Add product' };
+    btn.textContent = labels[databaseState.activeTab] || 'Add new';
+  }
+  function openDatabaseNewItemModal() {
+    var wrap = $('database-new-item-wrapper');
+    if (!wrap) return;
+    ['supplies', 'equipment', 'products'].forEach(function (tab) {
+      var form = $('db-form-' + tab);
+      if (form) form.classList.toggle('active', tab === databaseState.activeTab);
+    });
+    wrap.classList.add('active');
+    wrap.setAttribute('aria-hidden', 'false');
+  }
+  function closeDatabaseNewItemModal() {
+    var wrap = $('database-new-item-wrapper');
+    if (wrap) {
+      wrap.classList.remove('active');
+      wrap.setAttribute('aria-hidden', 'true');
+    }
+    ['supplies', 'equipment', 'products'].forEach(function (tab) {
+      var form = $('db-form-' + tab);
+      if (form) form.classList.remove('active');
+    });
+  }
+  function databaseInit() {
+    getDatabase();
+    renderDatabaseSupplies();
+    renderDatabaseEquipment();
+    renderDatabaseProducts();
+    databaseState.activeTab = 'supplies';
+    updateDbAddButtonText();
+    document.querySelectorAll('.database-tab').forEach(function (b) { b.classList.remove('active'); });
+    document.querySelectorAll('.database-panel').forEach(function (p) { p.classList.remove('active'); });
+    var firstTab = document.querySelector('.database-tab[data-db-tab="supplies"]');
+    var firstPanel = $('database-panel-supplies');
+    if (firstTab) firstTab.classList.add('active');
+    if (firstPanel) firstPanel.classList.add('active');
+  }
+  document.querySelectorAll('.database-tab').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var tab = this.getAttribute('data-db-tab');
+      databaseState.activeTab = tab || 'supplies';
+      updateDbAddButtonText();
+      document.querySelectorAll('.database-tab').forEach(function (b) { b.classList.remove('active'); });
+      document.querySelectorAll('.database-panel').forEach(function (p) { p.classList.remove('active'); });
+      this.classList.add('active');
+      var panel = $('database-panel-' + tab);
+      if (panel) panel.classList.add('active');
+    });
+  });
+  if ($('db-add-new-btn')) $('db-add-new-btn').addEventListener('click', openDatabaseNewItemModal);
+  if ($('db-supply-cancel')) $('db-supply-cancel').addEventListener('click', closeDatabaseNewItemModal);
+  if ($('db-supply-save')) $('db-supply-save').addEventListener('click', function () {
+    var name = ($('db-supply-name') && $('db-supply-name').value || '').trim();
+    if (!name) return;
+    var db = getDatabase();
+    db.supplies.push({
+      id: 'sup-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7),
+      name: name,
+      category: ($('db-supply-category') && $('db-supply-category').value) || 'Packaging',
+      unitType: ($('db-supply-unit-type') && $('db-supply-unit-type').value || '').trim(),
+      costPerUnit: parseFloat(($('db-supply-cost') && $('db-supply-cost').value) || 0) || 0,
+      supplierId: ($('db-supply-supplier-id') && $('db-supply-supplier-id').value || '').trim(),
+      minStockLevel: parseInt(($('db-supply-min-stock') && $('db-supply-min-stock').value) || 0, 10) || 0
+    });
+    $('db-supply-name').value = ''; $('db-supply-cost').value = ''; $('db-supply-supplier-id').value = ''; $('db-supply-min-stock').value = '';
+    renderDatabaseSupplies();
+    closeDatabaseNewItemModal();
+  });
+  if ($('db-equipment-cancel')) $('db-equipment-cancel').addEventListener('click', closeDatabaseNewItemModal);
+  if ($('db-equipment-save')) $('db-equipment-save').addEventListener('click', function () {
+    var db = getDatabase();
+    db.equipment.push({
+      id: 'eq-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7),
+      category: ($('db-equipment-category') && $('db-equipment-category').value) || 'Extractors',
+      purchaseDate: ($('db-equipment-purchase-date') && $('db-equipment-purchase-date').value || '').trim(),
+      depreciation: ($('db-equipment-depreciation') && $('db-equipment-depreciation').value || '').trim(),
+      maintenanceSchedule: ($('db-equipment-maintenance') && $('db-equipment-maintenance').value || '').trim(),
+      condition: ($('db-equipment-condition') && $('db-equipment-condition').value) || 'New',
+      storageLocation: ($('db-equipment-storage') && $('db-equipment-storage').value || '').trim()
+    });
+    $('db-equipment-purchase-date').value = ''; $('db-equipment-depreciation').value = ''; $('db-equipment-maintenance').value = ''; $('db-equipment-storage').value = '';
+    renderDatabaseEquipment();
+    closeDatabaseNewItemModal();
+  });
+  if ($('db-product-cancel')) $('db-product-cancel').addEventListener('click', closeDatabaseNewItemModal);
+  if ($('db-product-save')) $('db-product-save').addEventListener('click', function () {
+    var db = getDatabase();
+    db.products.push({
+      id: 'prod-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7),
+      category: ($('db-product-category') && $('db-product-category').value) || 'Honey Jars',
+      batchIdLink: ($('db-product-batch-id') && $('db-product-batch-id').value || '').trim(),
+      retailPrice: parseFloat(($('db-product-retail') && $('db-product-retail').value) || 0) || 0,
+      wholesalePrice: parseFloat(($('db-product-wholesale') && $('db-product-wholesale').value) || 0) || 0,
+      weightVolume: ($('db-product-weight') && $('db-product-weight').value || '').trim(),
+      recipeLink: ($('db-product-recipe') && $('db-product-recipe').value || '').trim()
+    });
+    $('db-product-batch-id').value = ''; $('db-product-retail').value = ''; $('db-product-wholesale').value = ''; $('db-product-weight').value = ''; $('db-product-recipe').value = '';
+    renderDatabaseProducts();
+    closeDatabaseNewItemModal();
+  });
+  function renderDatabaseSupplies() {
+    var tbody = $('db-tbody-supplies');
+    if (!tbody) return;
+    var list = getDatabase().supplies;
+    var html = '';
+    list.forEach(function (row) {
+      html += '<tr><td>' + escapeHtml(row.id || '') + '</td><td>' + escapeHtml(row.name || '') + '</td><td>' + escapeHtml(row.category || '') + '</td><td>' + escapeHtml(row.unitType || '') + '</td><td>' + escapeHtml(String(row.costPerUnit != null ? row.costPerUnit : '')) + '</td><td>' + escapeHtml(row.supplierId || '') + '</td><td>' + escapeHtml(String(row.minStockLevel != null ? row.minStockLevel : '')) + '</td><td><button type="button" class="btn db-row-delete" data-db-type="supplies" data-db-id="' + escapeHtml(row.id || '') + '">Delete</button></td></tr>';
+    });
+    tbody.innerHTML = html || '<tr><td colspan="8" class="help">No supplies yet. Click Add supply above.</td></tr>';
+    tbody.querySelectorAll('.db-row-delete').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var id = btn.getAttribute('data-db-id');
+        var db = getDatabase();
+        db.supplies = db.supplies.filter(function (r) { return r.id !== id; });
+        renderDatabaseSupplies();
+      });
+    });
+  }
+  function renderDatabaseEquipment() {
+    var tbody = $('db-tbody-equipment');
+    if (!tbody) return;
+    var list = getDatabase().equipment;
+    var html = '';
+    list.forEach(function (row) {
+      html += '<tr><td>' + escapeHtml(row.id || '') + '</td><td>' + escapeHtml(row.category || '') + '</td><td>' + escapeHtml(row.purchaseDate || '') + '</td><td>' + escapeHtml(row.depreciation || '') + '</td><td>' + escapeHtml(row.maintenanceSchedule || '') + '</td><td>' + escapeHtml(row.condition || '') + '</td><td>' + escapeHtml(row.storageLocation || '') + '</td><td><button type="button" class="btn db-row-delete" data-db-type="equipment" data-db-id="' + escapeHtml(row.id || '') + '">Delete</button></td></tr>';
+    });
+    tbody.innerHTML = html || '<tr><td colspan="8" class="help">No equipment yet. Click Add equipment above.</td></tr>';
+    tbody.querySelectorAll('.db-row-delete').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var id = btn.getAttribute('data-db-id');
+        var db = getDatabase();
+        db.equipment = db.equipment.filter(function (r) { return r.id !== id; });
+        renderDatabaseEquipment();
+      });
+    });
+  }
+  function renderDatabaseProducts() {
+    var tbody = $('db-tbody-products');
+    if (!tbody) return;
+    var list = getDatabase().products;
+    var html = '';
+    list.forEach(function (row) {
+      html += '<tr><td>' + escapeHtml(row.id || '') + '</td><td>' + escapeHtml(row.category || '') + '</td><td>' + escapeHtml(row.batchIdLink || '') + '</td><td>' + escapeHtml(String(row.retailPrice != null ? row.retailPrice : '')) + '</td><td>' + escapeHtml(String(row.wholesalePrice != null ? row.wholesalePrice : '')) + '</td><td>' + escapeHtml(row.weightVolume || '') + '</td><td>' + escapeHtml(row.recipeLink || '') + '</td><td><button type="button" class="btn db-row-delete" data-db-type="products" data-db-id="' + escapeHtml(row.id || '') + '">Delete</button></td></tr>';
+    });
+    tbody.innerHTML = html || '<tr><td colspan="8" class="help">No products yet. Click Add product above.</td></tr>';
+    tbody.querySelectorAll('.db-row-delete').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var id = btn.getAttribute('data-db-id');
+        var db = getDatabase();
+        db.products = db.products.filter(function (r) { return r.id !== id; });
+        renderDatabaseProducts();
+      });
+    });
+  }
   // --- Calendar app ---
   var calendarState = { currentDate: new Date(), viewMode: 'month', editingEventId: null };
   function getCalendarEvents() {
