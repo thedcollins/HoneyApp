@@ -72,7 +72,8 @@
     .tasks-new-task-wrapper .tasks-form-wrap { margin-bottom: 0; }
     .tasks-new-task-wrapper .tasks-date-row { padding-right: 0; }
     .tasks-new-task-wrapper .tasks-repeat-row { flex-wrap: nowrap; align-items: flex-start; }
-    .tasks-new-task-wrapper .tasks-repeat-row .tasks-field-repeat { flex: 0 0 auto; }
+    .tasks-new-task-wrapper .tasks-repeat-row .tasks-field-repeat { flex: 1 1 100%; width: 100%; min-width: 0; }
+    .tasks-new-task-wrapper .tasks-repeat-row:has(#tasks-repeat-custom-wrap[style*="display: flex"]) .tasks-field-repeat { flex: 0 0 8rem; width: 8rem; max-width: 8rem; min-width: 0; }
     .tasks-new-task-wrapper .tasks-repeat-row #tasks-repeat-custom-wrap { flex: 1 1 0; min-width: 0; flex-direction: column; align-items: flex-start; gap: 0 0.5rem; }
     .tasks-new-task-wrapper .tasks-repeat-row #tasks-repeat-custom-wrap label { margin: 0; font-weight: 600; line-height: 1.25; }
     .tasks-new-task-wrapper .tasks-repeat-row .tasks-repeat-custom-inner { margin-top: 0.25rem; }
@@ -84,7 +85,8 @@
     .calendar-new-event-wrapper .calendar-event-form { margin-bottom: 0; }
     .calendar-new-event-wrapper .calendar-event-repeat-row { align-items: flex-start; }
     .calendar-new-event-wrapper .calendar-event-repeat-row .calendar-event-field-location { flex: 1 1 100%; width: 100%; max-width: 100%; }
-    .calendar-new-event-wrapper .calendar-event-repeat-row .calendar-event-field-repeat { flex: 0 0 auto; }
+    .calendar-new-event-wrapper .calendar-event-repeat-row .calendar-event-field-repeat { flex: 1 1 100%; width: 100%; min-width: 0; }
+    .calendar-new-event-wrapper .calendar-event-repeat-row:has(#cal-repeat-custom-wrap[style*="display: flex"]) .calendar-event-field-repeat { flex: 0 0 8rem; width: 8rem; max-width: 8rem; min-width: 0; }
     .calendar-new-event-wrapper .calendar-event-repeat-row #cal-repeat-custom-wrap { flex: 1 1 0; min-width: 0; flex-direction: column; align-items: flex-start; gap: 0 0.5rem; }
     .calendar-new-event-wrapper .calendar-event-repeat-row #cal-repeat-custom-wrap label { margin: 0; font-weight: 600; line-height: 1.25; }
     .calendar-new-event-wrapper .calendar-event-repeat-row .cal-repeat-custom-inner { margin-top: 0.25rem; }
@@ -131,6 +133,10 @@
     .app-sheet .app-desc-full { font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem; }
     .app-sheet .app-desc-full p { margin: 0 0 0.6rem 0; line-height: 1.45; }
     .app-sheet .app-desc-full p:last-child { margin-bottom: 0; }
+    .app-sheet .app-desc-full h3 { font-size: 0.95rem; color: var(--honey-dark); margin: 1rem 0 0.4rem 0; }
+    .app-sheet .app-desc-full ul { margin: 0 0 0.6rem 0; padding-left: 1.25rem; line-height: 1.45; }
+    .app-sheet .app-desc-full pre { font-size: 0.8rem; overflow-x: auto; background: var(--wax); padding: 0.75rem; border-radius: 6px; margin: 0.5rem 0; border: 1px solid var(--border); }
+    .app-sheet .app-placeholder-warning { background: #fef3cd; border: 1px solid #ffc107; border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1rem; font-size: 0.9rem; color: #856404; }
     .app-sheet .app-placeholder { background: var(--wax); border: 1px dashed var(--border); border-radius: 8px; padding: 1.5rem; text-align: center; color: var(--muted); }
     .calendar-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
     .calendar-view-switcher { display: flex; gap: 0.25rem; }
@@ -254,6 +260,7 @@
     #tasks-repeat-custom-wrap { flex: 0 0 auto; display: none; flex-direction: row; align-items: flex-end; gap: 0.5rem; }
     /* iPad / touch only: same 2rem height for date and 3.25rem for other task form controls */
     @media (hover: none) and (pointer: coarse) {
+      .tasks-new-task-wrapper .tasks-date-row .tasks-field-date { margin-right: 1rem; }
       .tasks-field-date { width: 9rem; max-width: 9rem; }
       .tasks-form-wrap #task-title,
       .tasks-form-wrap #task-priority,
@@ -371,6 +378,25 @@
         <div class="app-desc-full">
           <p>Stores <strong>prices</strong> for everything you buy or sell: equipment, supplies, and finished products. Each entry has a name, category (e.g. equipment / supplies / product), price, and optional notes. This is the single source of truth for unit costs so Cost calculator, Inventory, and Sales log can reference it.</p>
           <p><strong>Features to build:</strong> Add, edit, delete entries; list and filter by category.</p>
+          <h3>🗄️ 1. Database (The Master Reference)</h3>
+          <p>This is the "Source of Truth." No other app should have hard-coded prices.</p>
+          <ul>
+            <li><strong>Item Name:</strong> (e.g., "500g Hexagonal Jar", "Wildflower Honey Bulk").</li>
+            <li><strong>SKU/ID:</strong> Unique identifier for linking.</li>
+            <li><strong>Category:</strong> Raw Material, Packaging, Finished Good, Equipment.</li>
+            <li><strong>Unit of Measure:</strong> kg, gram, unit, box.</li>
+            <li><strong>Unit Cost:</strong> Your purchase price from suppliers.</li>
+            <li><strong>Target Sale Price:</strong> The intended MSRP.</li>
+            <li><strong>Tax Rate:</strong> If applicable (e.g., 0% for raw food, 10% for beeswax candles).</li>
+          </ul>
+          <h3>🛠️ Data Relationship Map</h3>
+          <p>To keep your Encrypted Config clean, use a flat JSON structure where each app is its own key:</p>
+          <pre>{
+  "database": [ { "id": "jar-001", "price": 0.50, ... } ],
+  "inventory": [ { "item_id": "jar-001", "qty": 500 } ],
+  "sales_log": [ { "id": "sale-101", "total": 25.00, ... } ],
+  "settings": { "github_token": "...", "version": "1.0.0" }
+}</pre>
         </div>
         <div class="app-placeholder">Placeholder — build this app next.</div>
       </div>
@@ -380,6 +406,14 @@
         <div class="app-desc-full">
           <p>Manages <strong>multi-step initiatives</strong> and their timelines. Each project has a name, optional due date, status (e.g. planning / in progress / done), and can have phases or milestones. For planning and tracking bigger efforts, not day-to-day tasks.</p>
           <p><strong>Features to build:</strong> Create projects, set due dates, update status; optional list of phases or milestones.</p>
+          <h3>🏗️ 8. Projects (Long-term Strategy)</h3>
+          <p>Unlike Tasks, these are "Parent" containers.</p>
+          <ul>
+            <li><strong>Project Goal:</strong> (e.g., "Expansion to 50 Hives" or "Organic Certification").</li>
+            <li><strong>Status:</strong> Backlog, Active, Blocked, Complete.</li>
+            <li><strong>Milestones:</strong> High-level checkboxes (e.g., "Apply for permit", "Buy Nucs").</li>
+            <li><strong>Linked Tasks:</strong> Pulls in items from your Tasks app that share a Project ID.</li>
+          </ul>
         </div>
         <div class="app-placeholder">Placeholder — build this app next.</div>
       </div>
@@ -389,6 +423,14 @@
         <div class="app-desc-full">
           <p>Tracks <strong>stock levels</strong>: what you've made or bought (in) and what you've sold or used (out). Each item links to a product or supply (ideally from Database). Records quantity on hand and optional movements (add/remove with reason and date).</p>
           <p><strong>Features to build:</strong> List items with quantities; log in/out movements; simple current-stock view.</p>
+          <h3>📦 3. Inventory (Stock &amp; Flow)</h3>
+          <p>This app calculates the "Current Balance" by looking at In vs. Out.</p>
+          <ul>
+            <li><strong>Current Stock:</strong> Real-time quantity.</li>
+            <li><strong>Reorder Point:</strong> A threshold that triggers a "Task" to buy more.</li>
+            <li><strong>Location:</strong> (e.g., "Warehouse Shelf A", "Garage Hive Yard").</li>
+            <li><strong>Movement Log:</strong> Date, Quantity, Type (Restock, Sale, Damage, Harvest), Batch ID.</li>
+          </ul>
         </div>
         <div class="app-placeholder">Placeholder — build this app next.</div>
       </div>
@@ -398,6 +440,14 @@
         <div class="app-desc-full">
           <p>Visualizes <strong>data from the app</strong>, especially sales (from Sales log) and optionally inventory or costs. E.g. sales over time, by product, or simple comparisons. Read-only—no new data entry; charts are driven by existing data.</p>
           <p><strong>Features to build:</strong> One or more charts (e.g. line/bar) driven by Sales log and later other sources.</p>
+          <h3>📈 6. Graphs (Visual Intelligence)</h3>
+          <p>This is a read-only dashboard pulling from the Sales Log.</p>
+          <ul>
+            <li><strong>Revenue vs. Time:</strong> Line chart (Monthly/Weekly).</li>
+            <li><strong>Product Mix:</strong> Pie chart (Which honey flavor sells best?).</li>
+            <li><strong>Channel Performance:</strong> Bar chart (Market vs. Online).</li>
+            <li><strong>Burn Rate:</strong> How fast you are using jars/lids vs. your sales.</li>
+          </ul>
         </div>
         <div class="app-placeholder">Placeholder — build this app next.</div>
       </div>
@@ -407,24 +457,49 @@
         <div class="app-desc-full">
           <p>Lets you set <strong>targets</strong> (e.g. revenue, units sold, profit) and see <strong>what's needed</strong> to get there (e.g. units to sell, price or cost assumptions). Uses data from Sales log, Database, and optionally Inventory.</p>
           <p><strong>Features to build:</strong> Set target and timeframe; show gap vs current trend and simple "required per day/unit" metrics.</p>
+          <h3>🎯 7. Predictions (The "Crystal Ball")</h3>
+          <ul>
+            <li><strong>Sales Forecasting:</strong> Uses last year's data + a "Growth %" modifier.</li>
+            <li><strong>Stock-Out Dates:</strong> "Based on current sales, you will run out of jars in 14 days."</li>
+            <li><strong>Harvest Goals:</strong> "To hit $50k revenue, you need to harvest X amount of honey this season."</li>
+          </ul>
         </div>
         <div class="app-placeholder">Placeholder — build this app next.</div>
       </div>
       <div id="app-sheet-cost-calculator" class="app-sheet" data-app="cost-calculator">
         <button type="button" class="btn app-sheet-back secondary" data-app-back>← Back to Home</button>
         <h2>🧮 Cost calculator</h2>
+        <div class="app-placeholder-warning"><strong>⚠️ Build order:</strong> Database and Inventory apps should be built before Cost Calculator so it can reference prices and items.</div>
         <div class="app-desc-full">
           <p>Uses <strong>Database</strong> prices to compute the cost of a recipe or batch: pick items and quantities, app sums total cost (and optional unit cost per output). No new price storage—only reads from Database.</p>
           <p><strong>Features to build:</strong> Select items and quantities; show total and optional per-unit cost.</p>
+          <h3>🧮 4. Cost Calculator (The Recipe Book)</h3>
+          <p>This app doesn't store prices; it performs math on Database items.</p>
+          <ul>
+            <li><strong>Product Template:</strong> (e.g., "Lavender Infused Honey - Small").</li>
+            <li><strong>Bill of Materials (BOM):</strong> Item ID + Quantity used (e.g., 1 Jar + 250g Honey + 1 Lid + 1 Label).</li>
+            <li><strong>Overhead Markup:</strong> A percentage (e.g., 20%) to cover electricity/rent.</li>
+            <li><strong>Calculated Field:</strong> Total Cost to Produce vs. Profit Margin %.</li>
+          </ul>
         </div>
         <div class="app-placeholder">Placeholder — build this app next.</div>
       </div>
       <div id="app-sheet-orders" class="app-sheet" data-app="orders">
         <button type="button" class="btn app-sheet-back secondary" data-app-back>← Back to Home</button>
         <h2>🛒 Sales log</h2>
+        <div class="app-placeholder-warning"><strong>⚠️ Build order:</strong> Database and Inventory apps should be built before Sales Log so it can reference products and optionally deduct from stock.</div>
         <div class="app-desc-full">
           <p>Logs <strong>individual sales</strong>: who, when, what product(s), quantity, price/revenue, optional customer or note. This is the transaction log that Graphs and Predictions use; Inventory may deduct from stock when you record a sale.</p>
           <p><strong>Features to build:</strong> Add/edit sales with date, items, quantities, amounts; list and filter by date or product.</p>
+          <h3>🛒 5. Sales Log (Orders)</h3>
+          <p>The engine for your Graphs and Predictions.</p>
+          <ul>
+            <li><strong>Transaction ID:</strong> Unique order number.</li>
+            <li><strong>Customer Info:</strong> Name/Email (for CRM marketing).</li>
+            <li><strong>Channel:</strong> Farmers Market, Website, Wholesale, Farm Gate.</li>
+            <li><strong>Line Items:</strong> Product ID + Quantity + Price Sold.</li>
+            <li><strong>Inventory Toggle:</strong> A checkbox: "Deduct from Inventory?" (Auto-updates App #3).</li>
+          </ul>
         </div>
         <div class="app-placeholder">Placeholder — build this app next.</div>
       </div>
@@ -434,6 +509,14 @@
         <div class="app-desc-full">
           <p>Stores <strong>supplier info</strong>: name, contact (phone/email), optional address, notes, and which items (from Database or Inventory) they supply. For finding who to reorder from; prices stay in Database.</p>
           <p><strong>Features to build:</strong> Add, edit, delete suppliers; link to products/supplies; simple list and search.</p>
+          <h3>🏭 2. Suppliers</h3>
+          <ul>
+            <li><strong>Company Name &amp; Contact:</strong> Primary contact person.</li>
+            <li><strong>Lead Time:</strong> How many days it takes for them to deliver (crucial for "Predictions").</li>
+            <li><strong>Minimum Order Quantity (MOQ):</strong> Minimum jars/labels you must buy.</li>
+            <li><strong>Linked Items:</strong> A list of IDs from your Database that this supplier provides.</li>
+            <li><strong>Reliability Rating:</strong> 1–5 stars (did they break the jars during shipping?).</li>
+          </ul>
         </div>
         <div class="app-placeholder">Placeholder — build this app next.</div>
       </div>
