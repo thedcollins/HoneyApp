@@ -1,0 +1,1518 @@
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#b8860b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="HoneyApp">
+  <title>HoneyApp</title>
+  <style>
+    :root { --honey: #d4a017; --honey-dark: #b8860b; --wax: #e8d5a3; --bg: #fefce8; --card: #fffef5; --border: #e6d9a8; --text: #2c2416; --muted: #6b5d4a; }
+    * { box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 1rem; min-height: 100vh; padding-bottom: env(safe-area-inset-bottom, 1rem); }
+    .screen { display: none; max-width: 720px; margin: 0 auto; }
+    .screen.active { display: block; }
+    h1 { color: var(--honey-dark); font-size: 1.5rem; margin: 0 0 0.5rem 0; }
+    .help { font-size: 0.85rem; color: var(--muted); margin-top: 0.25rem; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin: 1rem 0; }
+    .btn { background: var(--honey-dark); color: #fff; border: none; padding: 0.65rem 1rem; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.95rem; min-height: 44px; width: 100%; margin: 0.4rem 0; }
+    .btn:hover { background: var(--honey); }
+    .btn.secondary { background: var(--wax); color: var(--text); width: auto; }
+    .status { font-size: 0.9rem; color: var(--muted); margin-top: 0.5rem; }
+    .status.ok { color: #2d6a2d; }
+    .status.err { color: #a52a2a; }
+    input[type="text"], input[type="password"] { width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; margin: 0.25rem 0; }
+    label { display: block; font-weight: 600; margin-top: 0.5rem; }
+    .tabs { display: flex; gap: 0.2rem; margin-bottom: 1rem; border-bottom: 2px solid var(--border); flex-wrap: wrap; }
+    .tabs button { background: none; border: none; padding: 0.5rem 0.8rem; min-height: 40px; cursor: pointer; color: var(--muted); font-weight: 600; border-radius: 6px 6px 0 0; }
+    .tabs button.active { color: var(--honey-dark); background: var(--card); border: 1px solid var(--border); border-bottom: none; margin-bottom: -2px; }
+    .sheet { display: none; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; }
+    .sheet.active { display: block; }
+    .settings-layout { display: flex; flex-direction: column; gap: 1rem; }
+    @media (min-width: 560px) { .settings-layout { flex-direction: row; align-items: flex-start; } }
+    .settings-nav { flex: 0 0 auto; min-width: 140px; padding-right: 1rem; border-right: 1px solid var(--border); }
+    .settings-nav button { display: block; width: 100%; text-align: left; background: none; border: none; padding: 0.5rem 0.6rem; margin: 0.2rem 0; border-radius: 6px; cursor: pointer; font-weight: 600; color: var(--muted); }
+    .settings-nav button:hover { background: var(--wax); color: var(--text); }
+    .settings-nav button.active { background: var(--wax); color: var(--honey-dark); }
+    .settings-content { flex: 1; min-width: 0; }
+    .settings-panel { display: none; padding: 0.5rem 0; }
+    .settings-panel.active { display: block; }
+    .settings-actions { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; justify-content: flex-end; }
+    .settings-actions #settings_status { margin-right: auto; }
+    .settings-actions .btn { width: auto; margin: 0; }
+    .admin-list-item { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin: 0.2rem 0; }
+    .btn-remove { font-size: 0.8rem; padding: 0.2rem 0.4rem; min-height: auto; background: transparent; color: var(--muted); }
+    .btn-remove:hover { color: var(--status-err, #a52a2a); }
+    .settings-block { margin-top: 1rem; padding: 0.8rem; background: var(--wax); border-radius: 8px; border: 1px solid var(--border); }
+    .settings-block h2 { font-size: 1rem; color: var(--honey-dark); margin: 0 0 0.4rem 0; }
+    .password-wrapper { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1000; align-items: center; justify-content: center; padding: 1rem; }
+    .password-wrapper.active { display: flex; }
+    .password-wrapper .card { max-width: 360px; margin: 0; }
+    .password-wrapper h1 { font-size: 1.2rem; margin-bottom: 0.5rem; }
+    .app-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem 0.75rem; margin: 1.25rem 0; padding: 0 0.25rem; }
+    @media (min-width: 400px) { .app-grid { grid-template-columns: repeat(4, 1fr); gap: 1.5rem 1rem; } }
+    @media (min-width: 520px) { .app-grid { gap: 2rem 1.25rem; } }
+    .app-card { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.12s ease; border: none; background: none; padding: 0; }
+    .app-card:hover { transform: scale(1.04); }
+    .app-card:active { transform: scale(0.98); }
+    .app-icon-wrap { width: 72px; height: 72px; border-radius: 16px; background: var(--card); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+    @media (min-width: 520px) { .app-icon-wrap { width: 80px; height: 80px; border-radius: 18px; } }
+    .app-card:hover .app-icon-wrap { background: var(--wax); border-color: var(--honey-dark); }
+    .app-card .app-icon { font-size: 2rem; line-height: 1; }
+    @media (min-width: 520px) { .app-card .app-icon { font-size: 2.25rem; } }
+    .app-card .app-title { margin-top: 0.5rem; font-weight: 500; font-size: 0.75rem; color: var(--text); text-align: center; line-height: 1.2; max-width: 100%; word-break: break-word; }
+    .app-sheet { display: none; }
+    .app-sheet.active { display: block; }
+    .app-sheet .app-sheet-back { margin-bottom: 1rem; }
+    .app-sheet .app-sheet-back.btn { width: auto; }
+    .app-sheet h2 { font-size: 1.2rem; color: var(--honey-dark); margin: 0 0 0.5rem 0; }
+    .app-sheet .app-desc { font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem; }
+    .app-sheet .app-desc-full { font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem; }
+    .app-sheet .app-desc-full p { margin: 0 0 0.6rem 0; line-height: 1.45; }
+    .app-sheet .app-desc-full p:last-child { margin-bottom: 0; }
+    .app-sheet .app-placeholder { background: var(--wax); border: 1px dashed var(--border); border-radius: 8px; padding: 1.5rem; text-align: center; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <!-- Unlock gate (when encryption is on) -->
+  <div id="screen-gate" class="screen">
+    <div class="card">
+      <h1>HoneyApp</h1>
+      <p class="help" id="gate_help">Enter admin username and password to unlock.</p>
+      <form id="unlock_form" autocomplete="off">
+        <label for="unlock_username">Username</label>
+        <input type="text" id="unlock_username" placeholder="Username" autocomplete="username">
+        <label for="unlock_password">Password</label>
+        <input type="password" id="unlock_password" placeholder="Password" autocomplete="current-password">
+        <label class="help" style="display:flex;align-items:center;gap:0.5rem;margin:0.5rem 0 0 0;cursor:pointer;">
+          <input type="checkbox" id="unlock_keep_session" name="keep_session">
+          <span>Keep unlocked for this session (until you close the tab)</span>
+        </label>
+        <button type="submit" id="btn_unlock" class="btn">Unlock</button>
+      </form>
+      <p id="gate_status" class="status err" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <!-- Token gate: require valid GitHub token on this device before using the app -->
+  <div id="screen-token-gate" class="screen">
+    <div class="card">
+      <h1>GitHub token required</h1>
+      <p class="help" id="token_gate_help">This device does not have a valid GitHub token. Enter your personal access token to continue. It is stored on this device only.</p>
+      <form id="token_gate_form" autocomplete="off">
+        <label for="token_gate_input">Personal access token</label>
+        <input type="password" id="token_gate_input" placeholder="ghp_... or token" autocomplete="off">
+        <button type="submit" id="btn_token_continue" class="btn">Continue</button>
+      </form>
+      <p id="token_gate_status" class="status" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <div id="screen-app" class="screen active">
+    <h1>HoneyApp</h1>
+    <p class="help">Planner – basic version. Configure GitHub Saver and add an admin in Settings to enable encryption.</p>
+    <div class="tabs">
+      <button type="button" data-tab="home" class="active">Home</button>
+      <button type="button" data-tab="settings" class="">Settings</button>
+    </div>
+    <div id="sheet-home" class="sheet active">
+      <div id="home-app-grid" class="app-grid">
+        <div class="app-card" data-app="database" role="button" tabindex="0"><div class="app-icon-wrap"><span class="app-icon">📦</span></div><div class="app-title">Database</div></div>
+        <div class="app-card" data-app="projects" role="button" tabindex="0"><div class="app-icon-wrap"><span class="app-icon">📋</span></div><div class="app-title">Projects</div></div>
+        <div class="app-card" data-app="inventory" role="button" tabindex="0"><div class="app-icon-wrap"><span class="app-icon">📊</span></div><div class="app-title">Inventory</div></div>
+        <div class="app-card" data-app="graphs" role="button" tabindex="0"><div class="app-icon-wrap"><span class="app-icon">📈</span></div><div class="app-title">Graphs</div></div>
+        <div class="app-card" data-app="predictions" role="button" tabindex="0"><div class="app-icon-wrap"><span class="app-icon">🎯</span></div><div class="app-title">Predictions</div></div>
+        <div class="app-card" data-app="cost-calculator" role="button" tabindex="0"><div class="app-icon-wrap"><span class="app-icon">🧮</span></div><div class="app-title">Cost calculator</div></div>
+        <div class="app-card" data-app="orders" role="button" tabindex="0"><div class="app-icon-wrap"><span class="app-icon">🛒</span></div><div class="app-title">Sales log</div></div>
+        <div class="app-card" data-app="suppliers" role="button" tabindex="0"><div class="app-icon-wrap"><span class="app-icon">🏭</span></div><div class="app-title">Suppliers</div></div>
+        <div class="app-card" data-app="tasks" role="button" tabindex="0"><div class="app-icon-wrap"><span class="app-icon">✅</span></div><div class="app-title">Tasks</div></div>
+        <div class="app-card" data-app="notes" role="button" tabindex="0"><div class="app-icon-wrap"><span class="app-icon">📝</span></div><div class="app-title">Notes</div></div>
+        <div class="app-card" data-app="calendar" role="button" tabindex="0"><div class="app-icon-wrap"><span class="app-icon">📅</span></div><div class="app-title">Calendar</div></div>
+        <div class="app-card" data-app="dashboard" role="button" tabindex="0"><div class="app-icon-wrap"><span class="app-icon">🏠</span></div><div class="app-title">Dashboard</div></div>
+      </div>
+      <div id="app-sheet-database" class="app-sheet" data-app="database">
+        <button type="button" class="btn app-sheet-back secondary" data-app-back>← Back to Home</button>
+        <h2>📦 Database</h2>
+        <div class="app-desc-full">
+          <p>Stores <strong>prices</strong> for everything you buy or sell: equipment, supplies, and finished products. Each entry has a name, category (e.g. equipment / supplies / product), price, and optional notes. This is the single source of truth for unit costs so Cost calculator, Inventory, and Sales log can reference it.</p>
+          <p><strong>Features to build:</strong> Add, edit, delete entries; list and filter by category.</p>
+        </div>
+        <div class="app-placeholder">Placeholder — build this app next.</div>
+      </div>
+      <div id="app-sheet-projects" class="app-sheet" data-app="projects">
+        <button type="button" class="btn app-sheet-back secondary" data-app-back>← Back to Home</button>
+        <h2>📋 Projects</h2>
+        <div class="app-desc-full">
+          <p>Manages <strong>multi-step initiatives</strong> and their timelines. Each project has a name, optional due date, status (e.g. planning / in progress / done), and can have phases or milestones. For planning and tracking bigger efforts, not day-to-day tasks.</p>
+          <p><strong>Features to build:</strong> Create projects, set due dates, update status; optional list of phases or milestones.</p>
+        </div>
+        <div class="app-placeholder">Placeholder — build this app next.</div>
+      </div>
+      <div id="app-sheet-inventory" class="app-sheet" data-app="inventory">
+        <button type="button" class="btn app-sheet-back secondary" data-app-back>← Back to Home</button>
+        <h2>📊 Inventory</h2>
+        <div class="app-desc-full">
+          <p>Tracks <strong>stock levels</strong>: what you've made or bought (in) and what you've sold or used (out). Each item links to a product or supply (ideally from Database). Records quantity on hand and optional movements (add/remove with reason and date).</p>
+          <p><strong>Features to build:</strong> List items with quantities; log in/out movements; simple current-stock view.</p>
+        </div>
+        <div class="app-placeholder">Placeholder — build this app next.</div>
+      </div>
+      <div id="app-sheet-graphs" class="app-sheet" data-app="graphs">
+        <button type="button" class="btn app-sheet-back secondary" data-app-back>← Back to Home</button>
+        <h2>📈 Graphs</h2>
+        <div class="app-desc-full">
+          <p>Visualizes <strong>data from the app</strong>, especially sales (from Sales log) and optionally inventory or costs. E.g. sales over time, by product, or simple comparisons. Read-only—no new data entry; charts are driven by existing data.</p>
+          <p><strong>Features to build:</strong> One or more charts (e.g. line/bar) driven by Sales log and later other sources.</p>
+        </div>
+        <div class="app-placeholder">Placeholder — build this app next.</div>
+      </div>
+      <div id="app-sheet-predictions" class="app-sheet" data-app="predictions">
+        <button type="button" class="btn app-sheet-back secondary" data-app-back>← Back to Home</button>
+        <h2>🎯 Predictions</h2>
+        <div class="app-desc-full">
+          <p>Lets you set <strong>targets</strong> (e.g. revenue, units sold, profit) and see <strong>what's needed</strong> to get there (e.g. units to sell, price or cost assumptions). Uses data from Sales log, Database, and optionally Inventory.</p>
+          <p><strong>Features to build:</strong> Set target and timeframe; show gap vs current trend and simple "required per day/unit" metrics.</p>
+        </div>
+        <div class="app-placeholder">Placeholder — build this app next.</div>
+      </div>
+      <div id="app-sheet-cost-calculator" class="app-sheet" data-app="cost-calculator">
+        <button type="button" class="btn app-sheet-back secondary" data-app-back>← Back to Home</button>
+        <h2>🧮 Cost calculator</h2>
+        <div class="app-desc-full">
+          <p>Uses <strong>Database</strong> prices to compute the cost of a recipe or batch: pick items and quantities, app sums total cost (and optional unit cost per output). No new price storage—only reads from Database.</p>
+          <p><strong>Features to build:</strong> Select items and quantities; show total and optional per-unit cost.</p>
+        </div>
+        <div class="app-placeholder">Placeholder — build this app next.</div>
+      </div>
+      <div id="app-sheet-orders" class="app-sheet" data-app="orders">
+        <button type="button" class="btn app-sheet-back secondary" data-app-back>← Back to Home</button>
+        <h2>🛒 Sales log</h2>
+        <div class="app-desc-full">
+          <p>Logs <strong>individual sales</strong>: who, when, what product(s), quantity, price/revenue, optional customer or note. This is the transaction log that Graphs and Predictions use; Inventory may deduct from stock when you record a sale.</p>
+          <p><strong>Features to build:</strong> Add/edit sales with date, items, quantities, amounts; list and filter by date or product.</p>
+        </div>
+        <div class="app-placeholder">Placeholder — build this app next.</div>
+      </div>
+      <div id="app-sheet-suppliers" class="app-sheet" data-app="suppliers">
+        <button type="button" class="btn app-sheet-back secondary" data-app-back>← Back to Home</button>
+        <h2>🏭 Suppliers</h2>
+        <div class="app-desc-full">
+          <p>Stores <strong>supplier info</strong>: name, contact (phone/email), optional address, notes, and which items (from Database or Inventory) they supply. For finding who to reorder from; prices stay in Database.</p>
+          <p><strong>Features to build:</strong> Add, edit, delete suppliers; link to products/supplies; simple list and search.</p>
+        </div>
+        <div class="app-placeholder">Placeholder — build this app next.</div>
+      </div>
+      <div id="app-sheet-tasks" class="app-sheet" data-app="tasks">
+        <button type="button" class="btn app-sheet-back secondary" data-app-back>← Back to Home</button>
+        <h2>✅ Tasks</h2>
+        <div class="app-desc-full">
+          <p><strong>Day-to-day to-dos</strong> (e.g. order wax, ship order, update listing). Each task has a title, optional due date, and done/not done. Separate from Projects: tasks are small actionable items; Projects are larger efforts with timelines.</p>
+          <p><strong>Features to build:</strong> Add, complete, delete tasks; optional due date and list view.</p>
+        </div>
+        <div class="app-placeholder">Placeholder — build this app next.</div>
+      </div>
+      <div id="app-sheet-notes" class="app-sheet" data-app="notes">
+        <button type="button" class="btn app-sheet-back secondary" data-app-back>← Back to Home</button>
+        <h2>📝 Notes</h2>
+        <div class="app-desc-full">
+          <p><strong>Freeform text</strong>: notes, recipes, procedures, or any text you want to keep. Each note has a title and body; optional tags or categories. No calculations—just store and retrieve text.</p>
+          <p><strong>Features to build:</strong> Create, edit, delete notes; list by title or tag; simple viewer.</p>
+        </div>
+        <div class="app-placeholder">Placeholder — build this app next.</div>
+      </div>
+      <div id="app-sheet-calendar" class="app-sheet" data-app="calendar">
+        <button type="button" class="btn app-sheet-back secondary" data-app-back>← Back to Home</button>
+        <h2>📅 Calendar</h2>
+        <div class="app-desc-full">
+          <p>Shows <strong>dates and events</strong> (e.g. markets, deliveries, deadlines). Events have title, date, optional time and description. Complements Projects (project due dates) and Tasks (task due dates) with a calendar view.</p>
+          <p><strong>Features to build:</strong> Add/edit events; month or week view; optional list view.</p>
+        </div>
+        <div class="app-placeholder">Placeholder — build this app next.</div>
+      </div>
+      <div id="app-sheet-dashboard" class="app-sheet" data-app="dashboard">
+        <button type="button" class="btn app-sheet-back secondary" data-app-back>← Back to Home</button>
+        <h2>🏠 Dashboard</h2>
+        <div class="app-desc-full">
+          <p>Single <strong>overview screen</strong>: KPIs and summaries from other apps (e.g. sales this month, low stock, overdue tasks, upcoming events). No data entry—only reads from Sales log, Inventory, Tasks, Calendar, etc.</p>
+          <p><strong>Features to build:</strong> Summary cards or numbers; links or short lists (e.g. recent sales, alerts).</p>
+        </div>
+        <div class="app-placeholder">Placeholder — build this app next.</div>
+      </div>
+    </div>
+    <div id="sheet-settings" class="sheet">
+      <div class="settings-layout">
+        <nav class="settings-nav">
+          <button type="button" data-settings-panel="github" class="active">GitHub Saver</button>
+          <button type="button" data-settings-panel="admin" class="">Add admin</button>
+          <button type="button" data-settings-panel="export" class="">Export</button>
+          <button type="button" data-settings-panel="backup" class="">Backup</button>
+        </nav>
+        <div class="settings-content">
+          <div id="settings-panel-github" class="settings-panel active">
+            <div class="settings-block">
+              <h2>GitHub Saver</h2>
+              <p class="help">Configure once. Token is kept on this device only. Use <strong>Download</strong> to save the file with your settings, or <strong>Publish</strong> to push to GitHub (settings are saved with the file).</p>
+              <label for="github_repo">Repository (owner/repo)</label>
+              <input type="text" id="github_repo" placeholder="username/HoneyApp" autocomplete="off">
+              <label for="github_filename">Filename</label>
+              <input type="text" id="github_filename" placeholder="index.html" value="index.html">
+              <label for="github_branch">Branch</label>
+              <input type="text" id="github_branch" placeholder="master" value="master">
+              <label for="github_path">Path (optional, e.g. / or /wiki/)</label>
+              <input type="text" id="github_path" placeholder="/">
+              <label for="github_username">Username (GitHub username)</label>
+              <input type="text" id="github_username" placeholder="GitHub username" autocomplete="username">
+              <label for="github_token">Password (personal access token)</label>
+              <input type="password" id="github_token" placeholder="ghp_... or token" autocomplete="off">
+              <p class="help">Token is not stored in the file; enter it once per device.</p>
+            </div>
+          </div>
+          <div id="settings-panel-admin" class="settings-panel">
+            <div class="settings-block" id="admin_block">
+              <h2>Add admin</h2>
+              <p class="help" id="admin_list_label" style="display: block;">Current admins:</p>
+              <ul id="admin_list" class="help" style="display: block; margin: 0.25rem 0px 0.75rem; padding-left: 1.25rem;"><li class="admin-list-item"><span>dominik.collins</span><button type="button" class="btn btn-remove" data-remove-username="dominik.collins">Remove</button></li></ul>
+              <p class="help" id="admin_help" style="display: none;">Add an admin (username and password) to enable encryption. Once added, the app is encrypted and you unlock with that username and password.</p>
+              <button type="button" id="btn_add_admin" class="btn secondary">Add admin</button>
+              <p class="help" id="admin_locked_msg" style="display: block;">Encryption is on. Unlock with any admin username and password on the home screen. You can add more admins below.</p>
+              <p id="admin_status" class="status ok">Admin removed.</p>
+            </div>
+          </div>
+          <div id="settings-panel-export" class="settings-panel">
+            <div class="settings-block">
+              <h2>Export</h2>
+              <p class="help">Export app data (or chosen sections) to a file (e.g. JSON or CSV) for use elsewhere or as a copy.</p>
+              <div class="app-placeholder" style="margin-top: 0.5rem;">Placeholder — build export here.</div>
+            </div>
+          </div>
+          <div id="settings-panel-backup" class="settings-panel">
+            <div class="settings-block">
+              <h2>Backup</h2>
+              <p class="help">Backup all app data to a file. Optional: import from a previous backup to restore.</p>
+              <div class="app-placeholder" style="margin-top: 0.5rem;">Placeholder — build backup/restore here.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="settings-actions">
+        <p id="settings_status" class="status">Saving to GitHub…</p>
+        <button type="button" id="btn_save_locally" class="btn secondary">Download</button>
+        <button type="button" id="btn_publish" class="btn">Publish</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add admin / password prompt -->
+  <div id="password_wrapper" class="password-wrapper">
+    <div class="card">
+      <h1 id="password_prompt_title">Add admin</h1>
+      <form id="password_form" autocomplete="off">
+        <label for="password_username" id="label_password_username" style="display: block;">Username</label>
+        <input type="text" id="password_username" name="username" placeholder="Username" style="display: block;">
+        <label for="password_input">Password</label>
+        <input type="password" id="password_input" name="password" placeholder="Password">
+        <label for="password_repeat" id="label_password_repeat" style="display: block;">Repeat password</label>
+        <input type="password" id="password_repeat" name="password2" placeholder="Repeat password" style="display: block;">
+        <button type="submit" id="password_submit" class="btn">Submit</button>
+        <button type="button" id="password_cancel" class="btn secondary" style="display: block;">Cancel</button>
+      </form>
+      <p id="password_prompt_status" class="status err"></p>
+    </div>
+  </div>
+
+  <!-- Config: either encrypted blob only (nothing visible) or legacy plaintext -->
+  <script type="application/json" id="honey-config">{"encrypted":true,"blobs":[{"salt":"AeCGm2BxQ5QFbHEZFMfL+Q==","iv":"hzf0Kl5GJ7lRYKPh","ciphertext":"UNatugRj1heoprffvDQxagwUFGc/dbF7CX1N+Ui+CvGBpBbwLU37VLiqj/OnXzrUWbcTdRB2aP6KBvjyV6U365LENfm9AUJyY0ZPQljfNqbIlYuu9NMxyQGx58x8g9+VyZABa4zmK41n50ySzNg9bgd6w6DppqjIMMuFErqweddR5UIzxZNyPmitJ5UmapoDKULybhZAdg1nWfqU8DUCXepxC9QM"}]}</script>
+
+  <script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var sessionPassphrase = null;
+  var decryptedConfig = null;
+  var sessionBlobIndex = -1;
+
+  // App specs: id, title, full description (for placeholders; build one by one)
+  var HONEY_APPS = [
+    { id: 'database', title: 'Database', icon: '📦', desc: 'Stores prices for everything you buy or sell: equipment, supplies, and finished products. Each entry has a name, category (e.g. equipment / supplies / product), price, and optional notes. Single source of truth for unit costs so Cost calculator, Inventory, and Sales log can reference it. Features: add, edit, delete entries; list and filter by category.' },
+    { id: 'projects', title: 'Projects', icon: '📋', desc: 'Manages multi-step initiatives and their timelines. Each project has a name, optional due date, status (e.g. planning / in progress / done), and can have phases or milestones. For planning and tracking bigger efforts, not day-to-day tasks. Features: create projects, set due dates, update status; optional list of phases or milestones.' },
+    { id: 'inventory', title: 'Inventory', icon: '📊', desc: 'Tracks stock levels: what you\'ve made or bought (in) and what you\'ve sold or used (out). Each item links to a product or supply (ideally from Database). Records quantity on hand and optional movements (add/remove with reason and date). Features: list items with quantities; log in/out movements; simple current-stock view.' },
+    { id: 'graphs', title: 'Graphs', icon: '📈', desc: 'Visualizes data from the app, especially sales (from Sales log) and optionally inventory or costs. E.g. sales over time, by product, or simple comparisons. Read-only; no new data entry. Features: one or more charts (e.g. line/bar) driven by Sales log and later other sources.' },
+    { id: 'predictions', title: 'Predictions', icon: '🎯', desc: 'Set targets (e.g. revenue, units sold, profit) and see what\'s needed to get there (e.g. units to sell, price or cost assumptions). Uses data from Sales log, Database, and optionally Inventory. Features: set target and timeframe; show gap vs current trend and simple "required per day/unit" metrics.' },
+    { id: 'cost-calculator', title: 'Cost calculator', icon: '🧮', desc: 'Uses Database prices to compute cost of a recipe or batch: pick items and quantities, app sums total cost (and optional unit cost per output). No new price storage—only reads from Database. Features: select items and quantities; show total and optional per-unit cost.' },
+    { id: 'orders', title: 'Sales log', icon: '🛒', desc: 'Logs individual sales: who, when, what product(s), quantity, price/revenue, optional customer or note. Transaction log that Graphs and Predictions use; Inventory may deduct from stock when you record a sale. Features: add/edit sales with date, items, quantities, amounts; list and filter by date or product.' },
+    { id: 'suppliers', title: 'Suppliers', icon: '🏭', desc: 'Stores supplier info: name, contact (phone/email), optional address, notes, and which items (from Database or Inventory) they supply. For finding who to reorder from; prices stay in Database. Features: add, edit, delete suppliers; link to products/supplies; simple list and search.' },
+    { id: 'tasks', title: 'Tasks', icon: '✅', desc: 'Day-to-day to-dos (e.g. order wax, ship order, update listing). Each task has a title, optional due date, and done/not done. Separate from Projects: tasks are small actionable items; Projects are larger efforts with timelines. Features: add, complete, delete tasks; optional due date and list view.' },
+    { id: 'notes', title: 'Notes', icon: '📝', desc: 'Freeform text: notes, recipes, procedures, or any text you want to keep. Each note has a title and body; optional tags or categories. No calculations—just store and retrieve text. Features: create, edit, delete notes; list by title or tag; simple viewer.' },
+    { id: 'calendar', title: 'Calendar', icon: '📅', desc: 'Shows dates and events (e.g. markets, deliveries, deadlines). Events have title, date, optional time and description. Complements Projects (project due dates) and Tasks (task due dates) with a calendar view. Features: add/edit events; month or week view; optional list view.' },
+    { id: 'dashboard', title: 'Dashboard', icon: '🏠', desc: 'Single overview screen: KPIs and summaries from other apps (e.g. sales this month, low stock, overdue tasks, upcoming events). No data entry—only reads from Sales log, Inventory, Tasks, Calendar, etc. Features: summary cards or numbers; links or short lists (e.g. recent sales, alerts).' }
+  ];
+
+  function getDefaultAppData() {
+    return {
+      database: [],
+      projects: [],
+      inventory: [],
+      orders: [],
+      suppliers: [],
+      tasks: [],
+      notes: [],
+      calendar: []
+    };
+  }
+
+  function ensureAppDataInConfig(cfg) {
+    if (!cfg || typeof cfg !== 'object') return cfg;
+    var defaults = getDefaultAppData();
+    Object.keys(defaults).forEach(function (k) {
+      if (!Array.isArray(cfg[k])) cfg[k] = defaults[k];
+    });
+    return cfg;
+  }
+
+  function getConfig() {
+    var el = $('honey-config');
+    if (!el || !el.textContent) return { github: { repo: '', filename: 'index.html', branch: 'master', path: '/', username: '' }, encryptionEnabled: false, admin: null, admins: [] };
+    try {
+      var c = JSON.parse(el.textContent);
+      if (c.encrypted === true) {
+        if (c.blobs && Array.isArray(c.blobs) && c.blobs.length) return { encrypted: true, blobs: c.blobs };
+        if (c.salt && c.iv && c.ciphertext) return { encrypted: true, blobs: [{ salt: c.salt, iv: c.iv, ciphertext: c.ciphertext }] };
+        return { encrypted: true, blobs: [] };
+      }
+      c.github = c.github || {};
+      c.github.repo = c.github.repo || '';
+      c.github.filename = c.github.filename || 'index.html';
+      c.github.branch = c.github.branch || 'master';
+      c.github.path = c.github.path != null ? c.github.path : '/';
+      c.github.username = c.github.username || '';
+      if (c.passwordSet !== undefined) { c.encryptionEnabled = !!c.passwordSet; c.admin = c.admin || null; }
+      if (!Array.isArray(c.admins)) c.admins = [];
+      return c;
+    } catch (e) { return { github: { repo: '', filename: 'index.html', branch: 'master', path: '/', username: '' }, encryptionEnabled: false, admin: null, admins: [] }; }
+  }
+
+  function getDecryptedConfig() { return decryptedConfig; }
+
+  function setEncryptedConfig(blobOrBlobs) {
+    var el = $('honey-config');
+    if (!el) return;
+    var blobs = Array.isArray(blobOrBlobs) ? blobOrBlobs : [blobOrBlobs];
+    el.textContent = JSON.stringify({ encrypted: true, blobs: blobs });
+  }
+
+  function getAdminList(config) {
+    var c = config || getConfig();
+    if (c.encrypted) return [];
+    if (c.admins && c.admins.length) return c.admins;
+    if (c.admin && c.admin.salt && c.admin.iv && c.admin.ciphertext) return [c.admin];
+    return [];
+  }
+
+  function hasAnyAdmin(config) {
+    var c = config || getConfig();
+    if (c.encrypted) return true;
+    return getAdminList(c).length > 0;
+  }
+
+  function b64enc(buf) {
+    var binary = '';
+    var bytes = new Uint8Array(buf);
+    for (var i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+    return btoa(binary);
+  }
+  function b64dec(str) {
+    var binary = atob(str);
+    var bytes = new Uint8Array(binary.length);
+    for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return bytes.buffer;
+  }
+
+  async function sha256Hex(text) {
+    var enc = new TextEncoder();
+    var hash = await crypto.subtle.digest('SHA-256', enc.encode(text));
+    var h = Array.from(new Uint8Array(hash)).map(function (b) { return ('0' + b.toString(16)).slice(-2); });
+    return h.join('');
+  }
+
+  async function deriveKey(password, salt) {
+    var enc = new TextEncoder();
+    var key = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveBits']);
+    var bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', salt: salt, iterations: 100000, hash: 'SHA-256' }, key, 256);
+    return crypto.subtle.importKey('raw', bits, { name: 'AES-GCM' }, false, ['encrypt', 'decrypt']);
+  }
+
+  async function encryptState(state, password) {
+    var salt = crypto.getRandomValues(new Uint8Array(16));
+    var iv = crypto.getRandomValues(new Uint8Array(12));
+    var key = await deriveKey(password, salt);
+    var enc = new TextEncoder();
+    var ct = await crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, key, enc.encode(JSON.stringify(state)));
+    return { salt: b64enc(salt), iv: b64enc(iv), ciphertext: b64enc(ct) };
+  }
+
+  async function decryptState(blob, password) {
+    var key = await deriveKey(password, new Uint8Array(b64dec(blob.salt)));
+    var pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: new Uint8Array(b64dec(blob.iv)) }, key, b64dec(blob.ciphertext));
+    return JSON.parse(new TextDecoder().decode(pt));
+  }
+
+  function setConfig(config) {
+    var el = $('honey-config');
+    if (el) el.textContent = JSON.stringify(config);
+  }
+
+  function loadConfigIntoForm() {
+    var c = decryptedConfig || getConfig();
+    if (c.encrypted && !decryptedConfig) return;
+    var g = c.github || {};
+    if ($('github_repo')) $('github_repo').value = g.repo || '';
+    if ($('github_filename')) $('github_filename').value = g.filename || 'index.html';
+    if ($('github_branch')) $('github_branch').value = g.branch || 'master';
+    if ($('github_path')) $('github_path').value = g.path != null ? g.path : '/';
+    if ($('github_username')) $('github_username').value = g.username || '';
+    if ($('github_token')) $('github_token').value = ''; // never prefill token
+  }
+
+  function getToken() {
+    var input = $('github_token') && $('github_token').value;
+    if (input && input.trim() && input !== '••••••••') return input.trim();
+    try { return localStorage.getItem('honey_github_token') || ''; } catch (e) { return ''; }
+  }
+
+  function githubAuthHeaders(token) {
+    var auth = (token && token.indexOf('ghp_') === 0) ? 'token ' + token : 'Bearer ' + (token || '');
+    return { 'Authorization': auth, 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
+  }
+
+  async function validateGitHubToken(token) {
+    if (!token || !token.trim()) return { ok: false, message: 'Enter a token.' };
+    if (!navigator.onLine) return { ok: false, message: 'No internet. Check connection and try again.' };
+    try {
+      var res = await fetch('https://api.github.com/user', { headers: githubAuthHeaders(token.trim()) });
+      if (res.ok) return { ok: true };
+      if (res.status === 401 || res.status === 403) return { ok: false, message: 'Token is invalid or expired.' };
+      return { ok: false, message: 'Token check failed. Try again.' };
+    } catch (e) {
+      return { ok: false, message: 'Could not check token. Check your connection.' };
+    }
+  }
+
+  async function tryShowAppOrTokenGate() {
+    var token = getToken();
+    if (!token) {
+      showScreen('screen-token-gate');
+      if ($('token_gate_status')) { $('token_gate_status').textContent = ''; $('token_gate_status').className = 'status'; }
+      return;
+    }
+    var result = await validateGitHubToken(token);
+    if (result.ok) {
+      showScreen('screen-app');
+      showHomeTab();
+      return;
+    }
+    try { localStorage.removeItem('honey_github_token'); } catch (e) {}
+    showScreen('screen-token-gate');
+    if ($('token_gate_status')) { $('token_gate_status').textContent = result.message; $('token_gate_status').className = 'status err'; }
+  }
+
+  async function saveToGitHub() {
+    var statusEl = $('settings_status') || $('github_status');
+    function setStatus(msg, ok) {
+      if (statusEl) { statusEl.textContent = msg; statusEl.className = 'status' + (ok === true ? ' ok' : ok === false ? ' err' : ''); }
+    }
+    saveSettingsToConfig();
+    if (decryptedConfig && sessionPassphrase) {
+      try {
+        var blob = await encryptState(decryptedConfig, sessionPassphrase);
+        var cfg = getConfig();
+        var blobs = (cfg.blobs || []).slice();
+        if (sessionBlobIndex >= 0 && sessionBlobIndex < blobs.length) blobs[sessionBlobIndex] = blob;
+        else blobs = [blob];
+        setEncryptedConfig(blobs);
+      } catch (e) { setStatus('Encryption failed.', false); return; }
+    }
+    var config = getDecryptedConfig() || getConfig();
+    var g = config.github || {};
+    var repo = (g.repo || '').trim();
+    var filename = (g.filename || 'index.html').trim();
+    var branch = (g.branch || 'master').trim();
+    var pathStr = (g.path != null ? g.path : '/').trim();
+    if (pathStr === '') pathStr = '/';
+    var tokenFromInput = ($('github_token') && $('github_token').value || '').trim();
+    if (tokenFromInput && tokenFromInput !== '••••••••') try { localStorage.setItem('honey_github_token', tokenFromInput); } catch (e) {}
+    var pathNorm = pathStr.replace(/^\//, '').replace(/\/$/, '');
+    var filePath = pathNorm ? pathNorm + '/' + filename : filename;
+    var token = getToken();
+    if (!repo || !token) {
+      setStatus('Enter repository (owner/repo) and token, then Publish.', false);
+      return;
+    }
+    var parts = repo.split('/').map(function (s) { return s.trim(); });
+    var owner = parts[0];
+    var repoName = parts[1];
+    if (!owner || !repoName) {
+      setStatus('Repository must be owner/repo (e.g. username/HoneyApp).', false);
+      return;
+    }
+    if (!navigator.onLine) {
+      setStatus('Need internet to save to GitHub.', false);
+      return;
+    }
+    setStatus('Saving to GitHub…', null);
+    var branchToUse = branch;
+    try {
+      var repoRes = await fetch('https://api.github.com/repos/' + owner + '/' + repoName, { headers: githubAuthHeaders(token) });
+      if (repoRes.ok) {
+        var repoJson = await repoRes.json();
+        if (repoJson.default_branch) branchToUse = repoJson.default_branch;
+      }
+    } catch (e) {}
+    var tokenInput = $('github_token');
+    var prevTokenVal = tokenInput ? tokenInput.value : '';
+    if (tokenInput) tokenInput.value = '';
+    var html = document.documentElement.outerHTML;
+    if (tokenInput) tokenInput.value = prevTokenVal;
+    var content = btoa(unescape(encodeURIComponent(html)));
+    var sha = null;
+    try {
+      var r = await fetch('https://api.github.com/repos/' + owner + '/' + repoName + '/contents/' + encodeURIComponent(filePath) + '?ref=' + encodeURIComponent(branchToUse), { headers: githubAuthHeaders(token) });
+      if (r.ok) { var j = await r.json(); sha = j.sha; }
+    } catch (e) {}
+    try {
+      var putRes = await fetch('https://api.github.com/repos/' + owner + '/' + repoName + '/contents/' + encodeURIComponent(filePath), {
+        method: 'PUT',
+        headers: Object.assign({ 'Content-Type': 'application/json' }, githubAuthHeaders(token)),
+        body: JSON.stringify({ message: 'HoneyApp save', content: content, sha: sha || undefined, branch: branchToUse })
+      });
+      if (!putRes.ok) {
+        var errJson = await putRes.json();
+        throw new Error(errJson.message || putRes.statusText);
+      }
+      setStatus('Saved to GitHub.', true);
+    } catch (e) {
+      setStatus('Save failed: ' + (e.message || e), false);
+    }
+  }
+
+  // Password prompt
+  var passwordPrompt = {
+    wrapper: null,
+    options: null,
+    show: function (opts) {
+      this.options = opts || {};
+      this.wrapper = $('password_wrapper');
+      if (!$('password_prompt_title')) return;
+      $('password_prompt_title').textContent = this.options.serviceName || 'Enter password';
+      $('password_input').value = '';
+      $('password_repeat').value = '';
+      if ($('password_username')) $('password_username').value = '';
+      var showUser = !this.options.noUserName;
+      if ($('label_password_username')) $('label_password_username').style.display = showUser ? 'block' : 'none';
+      if ($('password_username')) $('password_username').style.display = showUser ? 'block' : 'none';
+      var repeat = !!this.options.repeatPassword;
+      $('label_password_repeat').style.display = repeat ? 'block' : 'none';
+      $('password_repeat').style.display = repeat ? 'block' : 'none';
+      $('password_cancel').style.display = this.options.canCancel ? 'block' : 'none';
+      $('password_prompt_status').textContent = '';
+      if (this.wrapper) this.wrapper.classList.add('active');
+      setTimeout(function () { if (showUser && $('password_username')) $('password_username').focus(); else if ($('password_input')) $('password_input').focus(); }, 50);
+    },
+    hide: function () {
+      if (this.wrapper) this.wrapper.classList.remove('active');
+    },
+    submit: function (data) {
+      var self = this;
+      var cb = this.options && this.options.callback;
+      if (cb && data) {
+        var remove = cb(data);
+        if (remove) self.hide();
+      } else if (this.options && this.options.callback && !data) {
+        this.options.callback(null);
+        self.hide();
+      }
+    }
+  };
+
+  if ($('password_form')) {
+    $('password_form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var repeat = passwordPrompt.options && passwordPrompt.options.repeatPassword;
+      var p1 = $('password_input') && $('password_input').value;
+      var p2 = $('password_repeat') && $('password_repeat').value;
+      if (repeat && p1 !== p2) {
+        $('password_prompt_status').textContent = 'Passwords do not match.';
+        $('password_prompt_status').className = 'status err';
+        return;
+      }
+      var usernameEl = $('password_username');
+      var username = (usernameEl && usernameEl.value || '').trim();
+      passwordPrompt.submit({ username: username, password: p1 });
+    });
+  }
+  if ($('password_cancel')) {
+    $('password_cancel').addEventListener('click', function () {
+      passwordPrompt.submit(null);
+    });
+  }
+
+  // Tabs
+  document.querySelectorAll('.tabs button').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.tabs button').forEach(function (b) { b.classList.remove('active'); });
+      document.querySelectorAll('.sheet').forEach(function (s) { s.classList.remove('active'); });
+      btn.classList.add('active');
+      var sheet = $('sheet-' + btn.dataset.tab);
+      if (sheet) sheet.classList.add('active');
+      showHomeView('grid');
+    });
+  });
+
+  function showHomeView(view) {
+    var grid = $('home-app-grid');
+    var sheets = document.querySelectorAll('#sheet-home .app-sheet');
+    if (view === 'grid') {
+      if (grid) grid.style.display = '';
+      sheets.forEach(function (s) { s.classList.remove('active'); });
+    } else {
+      if (grid) grid.style.display = 'none';
+      sheets.forEach(function (s) {
+        s.classList.toggle('active', s.getAttribute('data-app') === view);
+      });
+    }
+  }
+
+  document.querySelectorAll('.app-card[data-app]').forEach(function (card) {
+    card.addEventListener('click', function () { showHomeView(card.getAttribute('data-app')); });
+    card.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showHomeView(card.getAttribute('data-app')); }
+    });
+  });
+  document.querySelectorAll('.app-sheet [data-app-back]').forEach(function (btn) {
+    btn.addEventListener('click', function () { showHomeView('grid'); });
+  });
+
+  // Settings nav: switch panel
+  document.querySelectorAll('.settings-nav button[data-settings-panel]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var panelId = btn.dataset.settingsPanel;
+      document.querySelectorAll('.settings-nav button[data-settings-panel]').forEach(function (b) { b.classList.remove('active'); });
+      document.querySelectorAll('.settings-panel').forEach(function (p) { p.classList.remove('active'); });
+      btn.classList.add('active');
+      var panel = $('settings-panel-' + panelId);
+      if (panel) panel.classList.add('active');
+    });
+  });
+
+  function saveSettingsToConfig() {
+    var repo = ($('github_repo') && $('github_repo').value || '').trim();
+    var filename = ($('github_filename') && $('github_filename').value || '').trim() || 'index.html';
+    var branch = ($('github_branch') && $('github_branch').value || '').trim() || 'master';
+    var path = ($('github_path') && $('github_path').value || '').trim();
+    if (path === '') path = '/';
+    var username = ($('github_username') && $('github_username').value || '').trim();
+    var token = ($('github_token') && $('github_token').value || '').trim();
+    if (decryptedConfig) {
+      decryptedConfig.github = { repo: repo, filename: filename, branch: branch, path: path, username: username };
+    } else {
+      var config = getConfig();
+      if (!config.encrypted) {
+        config.github = { repo: repo, filename: filename, branch: branch, path: path, username: username };
+        setConfig(config);
+      }
+    }
+    if (token && token !== '••••••••') try { localStorage.setItem('honey_github_token', token); } catch (e) {}
+    if ($('github_token')) $('github_token').value = token ? '••••••••' : '';
+  }
+
+  function setSettingsStatus(msg, ok) {
+    var el = $('settings_status');
+    if (el) { el.textContent = msg; el.className = 'status' + (ok === true ? ' ok' : ok === false ? ' err' : ''); }
+  }
+
+  if ($('btn_save_locally')) {
+    $('btn_save_locally').addEventListener('click', function () {
+      saveSettingsToConfig();
+      if (decryptedConfig && sessionPassphrase) {
+        (async function () {
+          try {
+            var encBlob = await encryptState(decryptedConfig, sessionPassphrase);
+            var cfg = getConfig();
+            var blobs = (cfg.blobs || []).slice();
+            if (sessionBlobIndex >= 0 && sessionBlobIndex < blobs.length) blobs[sessionBlobIndex] = encBlob;
+            else blobs = [encBlob];
+            setEncryptedConfig(blobs);
+          } catch (e) { setSettingsStatus('Encryption failed.', false); return; }
+          var tokenInput = $('github_token');
+          var prevVal = tokenInput ? tokenInput.value : '';
+          if (tokenInput) tokenInput.value = '';
+          var html = document.documentElement.outerHTML;
+          if (tokenInput) tokenInput.value = prevVal;
+          var blob = new Blob([html], { type: 'text/html' });
+          var a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = 'index.html';
+          a.click();
+          URL.revokeObjectURL(a.href);
+          setSettingsStatus('File saved locally.', true);
+        })();
+        return;
+      }
+      var tokenInput = $('github_token');
+      var prevVal = tokenInput ? tokenInput.value : '';
+      if (tokenInput) tokenInput.value = '';
+      var html = document.documentElement.outerHTML;
+      if (tokenInput) tokenInput.value = prevVal;
+      var blob = new Blob([html], { type: 'text/html' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'index.html';
+      a.click();
+      URL.revokeObjectURL(a.href);
+      setSettingsStatus('File saved locally.', true);
+    });
+  }
+
+  if ($('btn_publish')) {
+    $('btn_publish').addEventListener('click', function () {
+      saveSettingsToConfig();
+      saveToGitHub();
+    });
+  }
+
+  // Add admin: username + password, encrypt state, store in config, then show gate
+  if ($('btn_add_admin')) {
+    $('btn_add_admin').addEventListener('click', function () {
+      passwordPrompt.show({
+        serviceName: 'Add admin',
+        noUserName: false,
+        repeatPassword: true,
+        canCancel: true,
+        callback: function (data) {
+          if (!data) { $('admin_status').textContent = 'Cancelled.'; return true; }
+          var username = (data.username || '').trim();
+          if (!username) {
+            $('password_prompt_status').textContent = 'Enter a username.';
+            $('password_prompt_status').className = 'status err';
+            return false;
+          }
+          if (!data.password || data.password.length < 4) {
+            $('password_prompt_status').textContent = 'Password must be at least 4 characters.';
+            $('password_prompt_status').className = 'status err';
+            return false;
+          }
+          passwordPrompt.hide();
+          $('admin_status').textContent = 'Adding admin…';
+          (async function () {
+            try {
+              var config = getConfig();
+              if (decryptedConfig) {
+                decryptedConfig.admins = decryptedConfig.admins || [];
+                decryptedConfig.admins.push(username);
+                var newBlob = await encryptState(decryptedConfig, data.password);
+                var config = getConfig();
+                var blobs = (config.blobs || []).slice();
+                blobs.push(newBlob);
+                setEncryptedConfig(blobs);
+                $('admin_status').textContent = 'Admin added. They can unlock with this username and the password you just entered.';
+                $('admin_status').className = 'status ok';
+                return;
+              }
+              if (!hasAnyAdmin(config)) {
+                var g = config.github || { repo: '', filename: 'index.html', branch: 'master', path: '/', username: '' };
+                var payload = { github: g, admins: [username] };
+                var appDefaults = getDefaultAppData();
+                Object.keys(appDefaults).forEach(function (k) { payload[k] = appDefaults[k]; });
+                var blob = await encryptState(payload, data.password);
+                setEncryptedConfig(blob);
+                sessionPassphrase = data.password;
+                decryptedConfig = ensureAppDataInConfig(payload);
+                $('admin_status').textContent = 'Admin added. All settings are now encrypted. Unlock with this username and password.';
+                $('admin_status').className = 'status ok';
+                updateAdminSection();
+                showScreen('screen-gate');
+                return;
+              }
+              var state = { username: username };
+              var blob = await encryptState(state, data.password);
+              config.encryptionEnabled = true;
+              var entry = { salt: blob.salt, iv: blob.iv, ciphertext: blob.ciphertext };
+              if (config.admins && config.admins.length) {
+                config.admins.push(entry);
+              } else if (config.admin && config.admin.salt && config.admin.iv && config.admin.ciphertext) {
+                config.admins = [config.admin, entry];
+                config.admin = null;
+              } else {
+                config.admins = [entry];
+                config.admin = null;
+              }
+              setConfig(config);
+              $('admin_status').textContent = 'Admin added. You can add more admins or unlock with this username and password.';
+              $('admin_status').className = 'status ok';
+              updateAdminSection();
+              showScreen('screen-gate');
+            } catch (e) {
+              $('admin_status').textContent = 'Error: ' + (e.message || e);
+              $('admin_status').className = 'status err';
+            }
+          })();
+          return true;
+        }
+      });
+    });
+  }
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(function (s) { s.classList.remove('active'); });
+    var el = $(id);
+    if (el) el.classList.add('active');
+  }
+
+  function showHomeTab() {
+    document.querySelectorAll('.tabs button').forEach(function (b) { b.classList.remove('active'); });
+    document.querySelectorAll('.sheet').forEach(function (s) { s.classList.remove('active'); });
+    var homeBtn = document.querySelector('.tabs button[data-tab="home"]');
+    var homeSheet = $('sheet-home');
+    if (homeBtn) homeBtn.classList.add('active');
+    if (homeSheet) homeSheet.classList.add('active');
+  }
+
+  // Unlock: verify username + password, decrypt, show app (supports encrypted blob-only format and legacy)
+  async function doUnlock() {
+    var username = ($('unlock_username') && $('unlock_username').value || '').trim();
+    var password = $('unlock_password') ? $('unlock_password').value : '';
+    if (!username || !password) {
+      $('gate_status').textContent = 'Enter username and password.';
+      $('gate_status').className = 'status err';
+      return;
+    }
+    var config = getConfig();
+    if (config.encrypted) {
+      var blobs = config.blobs || [];
+      for (var i = 0; i < blobs.length; i++) {
+        try {
+          var decrypted = await decryptState(blobs[i], password);
+          var admins = decrypted && decrypted.admins;
+          if (admins && admins.indexOf(username) !== -1) {
+            decryptedConfig = ensureAppDataInConfig(decrypted);
+            sessionPassphrase = password;
+            sessionBlobIndex = i;
+            if ($('unlock_keep_session') && $('unlock_keep_session').checked) {
+              try {
+                sessionStorage.setItem('honey_session_username', username);
+                sessionStorage.setItem('honey_session_passphrase', password);
+                sessionStorage.setItem('honey_session_blob_index', String(i));
+                sessionStorage.setItem('honey_session_encrypted', '1');
+              } catch (err) {}
+            } else {
+              try { sessionStorage.removeItem('honey_session_username'); sessionStorage.removeItem('honey_session_passphrase'); sessionStorage.removeItem('honey_session_blob_index'); sessionStorage.removeItem('honey_session_encrypted'); } catch (err) {}
+            }
+            loadConfigIntoForm();
+            loadTokenIntoForm();
+            updateAdminSection();
+            $('gate_status').textContent = '';
+            $('unlock_password').value = '';
+            tryShowAppOrTokenGate();
+            return;
+          }
+        } catch (e) {}
+      }
+      $('gate_status').textContent = 'Wrong username or password.';
+      $('gate_status').className = 'status err';
+      return;
+    }
+    var list = getAdminList(config);
+    if (!config.encryptionEnabled || list.length === 0) {
+      $('gate_status').textContent = 'No admin set.';
+      $('gate_status').className = 'status err';
+      return;
+    }
+    var oldFormatSingle = list.length === 1 && list[0].username != null && list[0].passwordHash != null;
+    if (oldFormatSingle) {
+      var admin = list[0];
+      if (admin.username !== username) {
+        $('gate_status').textContent = 'Wrong username or password.';
+        $('gate_status').className = 'status err';
+        return;
+      }
+      var hashHex = await sha256Hex(password);
+      if (hashHex !== admin.passwordHash) {
+        $('gate_status').textContent = 'Wrong username or password.';
+        $('gate_status').className = 'status err';
+        return;
+      }
+      var blob = { salt: admin.salt, iv: admin.iv, ciphertext: admin.ciphertext };
+      try {
+        await decryptState(blob, password);
+        if ($('unlock_keep_session') && $('unlock_keep_session').checked) {
+          try {
+            sessionStorage.setItem('honey_session_username', username);
+            sessionStorage.setItem('honey_session_passphrase', password);
+            sessionStorage.setItem('honey_session_blob_index', '0');
+            sessionStorage.setItem('honey_session_encrypted', '0');
+          } catch (err) {}
+        } else {
+          try { sessionStorage.removeItem('honey_session_username'); sessionStorage.removeItem('honey_session_passphrase'); sessionStorage.removeItem('honey_session_blob_index'); sessionStorage.removeItem('honey_session_encrypted'); } catch (err) {}
+        }
+        loadConfigIntoForm();
+        loadTokenIntoForm();
+        updateAdminSection();
+        $('gate_status').textContent = '';
+        $('unlock_password').value = '';
+        tryShowAppOrTokenGate();
+      } catch (e) {
+        $('gate_status').textContent = 'Wrong username or password.';
+        $('gate_status').className = 'status err';
+      }
+      return;
+    }
+    for (var i = 0; i < list.length; i++) {
+      var b = list[i];
+      if (!b.salt || !b.iv || !b.ciphertext) continue;
+      try {
+        var decrypted = await decryptState(b, password);
+        var decryptedUsername = decrypted && decrypted.username;
+        if (decryptedUsername != null && decryptedUsername === username) {
+          if ($('unlock_keep_session') && $('unlock_keep_session').checked) {
+            try {
+              sessionStorage.setItem('honey_session_username', username);
+              sessionStorage.setItem('honey_session_passphrase', password);
+              sessionStorage.setItem('honey_session_blob_index', String(i));
+              sessionStorage.setItem('honey_session_encrypted', '1');
+            } catch (err) {}
+          } else {
+            try { sessionStorage.removeItem('honey_session_username'); sessionStorage.removeItem('honey_session_passphrase'); sessionStorage.removeItem('honey_session_blob_index'); sessionStorage.removeItem('honey_session_encrypted'); } catch (err) {}
+          }
+          loadConfigIntoForm();
+          loadTokenIntoForm();
+          updateAdminSection();
+          $('gate_status').textContent = '';
+          $('unlock_password').value = '';
+          tryShowAppOrTokenGate();
+          return;
+        }
+      } catch (e) {}
+    }
+    $('gate_status').textContent = 'Wrong username or password.';
+    $('gate_status').className = 'status err';
+  }
+
+  async function tryRestoreSession() {
+    var config = getConfig();
+    if (!config.encrypted && !(config.encryptionEnabled && hasAnyAdmin(config))) return false;
+    try {
+      var username = sessionStorage.getItem('honey_session_username');
+      var passphrase = sessionStorage.getItem('honey_session_passphrase');
+      var blobIndexStr = sessionStorage.getItem('honey_session_blob_index');
+      var encrypted = sessionStorage.getItem('honey_session_encrypted');
+      if (!username || !passphrase) return false;
+      if (config.encrypted) {
+        var blobs = config.blobs || [];
+        var i = blobIndexStr !== null ? parseInt(blobIndexStr, 10) : 0;
+        if (i < 0 || i >= blobs.length) return false;
+        var decrypted = await decryptState(blobs[i], passphrase);
+        var admins = decrypted && decrypted.admins;
+        if (!admins || admins.indexOf(username) === -1) return false;
+        decryptedConfig = ensureAppDataInConfig(decrypted);
+        sessionPassphrase = passphrase;
+        sessionBlobIndex = i;
+        loadConfigIntoForm();
+        loadTokenIntoForm();
+        updateAdminSection();
+        tryShowAppOrTokenGate();
+        return true;
+      }
+      var list = getAdminList(config);
+      for (var j = 0; j < list.length; j++) {
+        var b = list[j];
+        if (!b.salt || !b.iv || !b.ciphertext) continue;
+        try {
+          var dec = await decryptState(b, passphrase);
+          if (dec && dec.username === username) {
+            loadConfigIntoForm();
+            loadTokenIntoForm();
+            updateAdminSection();
+            tryShowAppOrTokenGate();
+            return true;
+          }
+        } catch (e) {}
+      }
+      return false;
+    } catch (e) { return false; }
+  }
+
+  if ($('token_gate_form')) {
+    $('token_gate_form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var input = $('token_gate_input');
+      var token = (input && input.value || '').trim();
+      if (!token) {
+        if ($('token_gate_status')) { $('token_gate_status').textContent = 'Enter a token.'; $('token_gate_status').className = 'status err'; }
+        return;
+      }
+      if ($('token_gate_status')) { $('token_gate_status').textContent = 'Checking token…'; $('token_gate_status').className = 'status'; }
+      validateGitHubToken(token).then(function (result) {
+        if (result.ok) {
+          try { localStorage.setItem('honey_github_token', token); } catch (err) {}
+          if (input) input.value = '';
+          if ($('token_gate_status')) { $('token_gate_status').textContent = ''; $('token_gate_status').className = 'status'; }
+          loadTokenIntoForm();
+          showScreen('screen-app');
+          showHomeTab();
+        } else {
+          if ($('token_gate_status')) { $('token_gate_status').textContent = result.message; $('token_gate_status').className = 'status err'; }
+        }
+      });
+    });
+  }
+
+  if ($('unlock_form')) {
+    $('unlock_form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      doUnlock();
+    });
+  }
+
+  // Load token from localStorage into form (masked)
+  function loadTokenIntoForm() {
+    try {
+      var t = localStorage.getItem('honey_github_token');
+      if (t && $('github_token')) $('github_token').value = '••••••••';
+    } catch (e) {}
+  }
+
+  loadConfigIntoForm();
+  loadTokenIntoForm();
+
+  function updateAdminSection() {
+    var config = getConfig();
+    var hasAdmins = config.encrypted ? (decryptedConfig && decryptedConfig.admins && decryptedConfig.admins.length) : hasAnyAdmin(config);
+    if ($('btn_add_admin')) $('btn_add_admin').style.display = '';
+    if ($('admin_help')) $('admin_help').style.display = hasAdmins ? 'none' : 'block';
+    if ($('admin_locked_msg')) $('admin_locked_msg').style.display = hasAdmins ? 'block' : 'none';
+    var listEl = $('admin_list');
+    var labelEl = $('admin_list_label');
+    if (listEl && labelEl) {
+      var items = [];
+      if (decryptedConfig && decryptedConfig.admins && decryptedConfig.admins.length) {
+        decryptedConfig.admins.forEach(function (n) { items.push({ name: n, username: n }); });
+      } else if (!config.encrypted) {
+        var list = getAdminList(config);
+        for (var i = 0; i < list.length; i++) {
+          var label = list[i].username ? list[i].username : 'Admin ' + (i + 1);
+          items.push({ name: label, index: i });
+        }
+      }
+      if (items.length) {
+        labelEl.style.display = 'block';
+        listEl.style.display = 'block';
+        listEl.innerHTML = items.map(function (item) {
+          var removeAttr = item.username != null
+            ? ' data-remove-username="' + escapeHtml(item.username) + '"'
+            : ' data-remove-index="' + item.index + '"';
+          return '<li class="admin-list-item"><span>' + escapeHtml(item.name) + '</span><button type="button" class="btn btn-remove"' + removeAttr + '>Remove</button></li>';
+        }).join('');
+      } else {
+        labelEl.style.display = 'none';
+        listEl.style.display = 'none';
+        listEl.innerHTML = '';
+      }
+    }
+  }
+
+  function removeAdmin(identifier) {
+    var config = getConfig();
+    if (config.encrypted && decryptedConfig) {
+      var j = typeof identifier === 'string' ? decryptedConfig.admins.indexOf(identifier) : identifier;
+      if (j < 0) return;
+      decryptedConfig.admins.splice(j, 1);
+      if (!decryptedConfig.admins.length) {
+        var legacy = { github: decryptedConfig.github || { repo: '', filename: 'index.html', branch: 'master', path: '/', username: '' }, encryptionEnabled: false, admin: null, admins: [] };
+        setConfig(legacy);
+        decryptedConfig = null;
+        sessionPassphrase = null;
+        sessionBlobIndex = -1;
+        loadConfigIntoForm();
+        updateAdminSection();
+        if ($('admin_status')) { $('admin_status').textContent = 'All admins removed. Encryption is off.'; $('admin_status').className = 'status ok'; }
+        return;
+      }
+      var blobs = (config.blobs || []).slice();
+      blobs.splice(j, 1);
+      if (j === sessionBlobIndex) {
+        setEncryptedConfig(blobs);
+        decryptedConfig = null;
+        sessionPassphrase = null;
+        sessionBlobIndex = -1;
+        updateAdminSection();
+        showScreen('screen-gate');
+        if ($('admin_status')) { $('admin_status').textContent = 'You removed yourself. Unlock with another admin.'; $('admin_status').className = 'status ok'; }
+        return;
+      }
+      if (j < sessionBlobIndex) sessionBlobIndex--;
+      (async function () {
+        try {
+          var blob = await encryptState(decryptedConfig, sessionPassphrase);
+          blobs[sessionBlobIndex] = blob;
+          setEncryptedConfig(blobs);
+          updateAdminSection();
+          if ($('admin_status')) { $('admin_status').textContent = 'Admin removed.'; $('admin_status').className = 'status ok'; }
+        } catch (e) {
+          if ($('admin_status')) { $('admin_status').textContent = 'Error: ' + (e.message || e); $('admin_status').className = 'status err'; }
+        }
+      })();
+      return;
+    }
+    if (!config.encrypted) {
+      var list = getAdminList(config);
+      var idx = typeof identifier === 'number' ? identifier : list.findIndex(function (a) { return a.username === identifier; });
+      if (idx < 0) return;
+      if (config.admins && config.admins.length) {
+        config.admins.splice(idx, 1);
+        if (config.admins.length === 0) { config.admin = null; config.encryptionEnabled = false; }
+      } else if (config.admin) {
+        config.admin = null;
+        config.encryptionEnabled = false;
+      }
+      setConfig(config);
+      updateAdminSection();
+      if ($('admin_status')) { $('admin_status').textContent = 'Admin removed.'; $('admin_status').className = 'status ok'; }
+    }
+  }
+
+  function escapeHtml(s) {
+    var div = document.createElement('div');
+    div.textContent = s;
+    return div.innerHTML;
+  }
+
+  if ($('admin_list')) {
+    $('admin_list').addEventListener('click', function (e) {
+      var btn = e.target && e.target.closest && e.target.closest('button.btn-remove');
+      if (!btn) return;
+      var username = btn.getAttribute('data-remove-username');
+      var indexStr = btn.getAttribute('data-remove-index');
+      if (username != null) removeAdmin(username);
+      else if (indexStr != null) removeAdmin(parseInt(indexStr, 10));
+    });
+  }
+
+  // Init: try session restore, else show gate if encrypted or token gate then app
+  (function init() {
+    var config = getConfig();
+    updateAdminSection();
+    if (config.encrypted || (config.encryptionEnabled && hasAnyAdmin(config))) {
+      tryRestoreSession().then(function (restored) {
+        if (!restored) showScreen('screen-gate');
+      });
+    } else {
+      tryShowAppOrTokenGate();
+    }
+  })();
+})();
+  </script>
+
+
+<div popover="manual" style="z-index: 2147483647 !important; padding: 0px !important; margin: 0px !important; border-radius: 8px !important; position: fixed !important; color-scheme: normal !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px, rgba(0, 0, 0, 0.18) 0px 8px 15px 6px !important; border: 1px solid rgba(0, 0, 0, 0.2) !important; overflow: hidden !important; backdrop-filter: blur(20px) !important; background-color: rgba(230, 230, 230, 0.8) !important; top: 678px !important; left: 402px !important; opacity: 0 !important; visibility: hidden !important;"></div><div popover="manual" style="z-index: 2147483647 !important; padding: 0px !important; margin: 0px !important; border-radius: 8px !important; position: fixed !important; color-scheme: normal !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px, rgba(0, 0, 0, 0.18) 0px 8px 15px 6px !important; border: 1px solid rgba(0, 0, 0, 0.2) !important; overflow: hidden !important; backdrop-filter: blur(20px) !important; background-color: rgba(230, 230, 230, 0.8) !important; top: 678px !important; left: 402px !important; opacity: 0 !important; visibility: hidden !important;"></div><!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+<div popover="manual" style="z-index: 2147483647 !important; padding: 0px !important; margin: 0px !important; border-radius: 8px !important; position: fixed !important; color-scheme: normal !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px, rgba(0, 0, 0, 0.18) 0px 8px 15px 6px !important; border: 1px solid rgba(0, 0, 0, 0.2) !important; overflow: hidden !important; backdrop-filter: blur(20px) !important; background-color: rgba(230, 230, 230, 0.8) !important; top: 190px !important; left: 247px !important; opacity: 0 !important; visibility: hidden !important;"></div><div popover="manual" style="z-index: 2147483647 !important; padding: 0px !important; margin: 0px !important; border-radius: 8px !important; position: fixed !important; color-scheme: normal !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px, rgba(0, 0, 0, 0.18) 0px 8px 15px 6px !important; border: 1px solid rgba(0, 0, 0, 0.2) !important; overflow: hidden !important; backdrop-filter: blur(20px) !important; background-color: rgba(230, 230, 230, 0.8) !important; top: 190px !important; left: 247px !important; opacity: 0 !important; visibility: hidden !important;"></div><div popover="manual" style="z-index: 2147483647 !important; padding: 0px !important; margin: 0px !important; border-radius: 8px !important; position: fixed !important; color-scheme: normal !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px, rgba(0, 0, 0, 0.18) 0px 8px 15px 6px !important; border: 1px solid rgba(0, 0, 0, 0.2) !important; overflow: hidden !important; backdrop-filter: blur(20px) !important; background-color: rgba(230, 230, 230, 0.8) !important; top: 190px !important; left: 247px !important; opacity: 0 !important; visibility: hidden !important;"></div><div popover="manual" style="z-index: 2147483647 !important; padding: 0px !important; margin: 0px !important; border-radius: 8px !important; position: fixed !important; color-scheme: normal !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px, rgba(0, 0, 0, 0.18) 0px 8px 15px 6px !important; border: 1px solid rgba(0, 0, 0, 0.2) !important; overflow: hidden !important; backdrop-filter: blur(20px) !important; background-color: rgba(230, 230, 230, 0.8) !important; top: 190px !important; left: 247px !important; opacity: 0 !important; visibility: hidden !important;"></div><div popover="manual" style="z-index: 2147483647 !important; padding: 0px !important; margin: 0px !important; border-radius: 8px !important; position: fixed !important; color-scheme: normal !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px, rgba(0, 0, 0, 0.18) 0px 8px 15px 6px !important; border: 1px solid rgba(0, 0, 0, 0.2) !important; overflow: hidden !important; backdrop-filter: blur(20px) !important; background-color: rgba(230, 230, 230, 0.8) !important; top: 0px !important; left: 0px !important; opacity: 0 !important; visibility: hidden !important; height: 69.5px !important; width: 305px !important;"></div><!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+<div popover="manual" style="z-index: 2147483647 !important; padding: 0px !important; margin: 0px !important; border-radius: 8px !important; position: fixed !important; color-scheme: normal !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px, rgba(0, 0, 0, 0.18) 0px 8px 15px 6px !important; border: 1px solid rgba(0, 0, 0, 0.2) !important; overflow: hidden !important; backdrop-filter: blur(20px) !important; background-color: rgba(230, 230, 230, 0.8) !important; top: 190px !important; left: 247px !important; opacity: 0 !important; visibility: hidden !important;"></div><div popover="manual" style="z-index: 2147483647 !important; padding: 0px !important; margin: 0px !important; border-radius: 8px !important; position: fixed !important; color-scheme: normal !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px, rgba(0, 0, 0, 0.18) 0px 8px 15px 6px !important; border: 1px solid rgba(0, 0, 0, 0.2) !important; overflow: hidden !important; backdrop-filter: blur(20px) !important; background-color: rgba(230, 230, 230, 0.8) !important; top: 190px !important; left: 247px !important; opacity: 0 !important; visibility: hidden !important;"></div><div popover="manual" style="z-index: 2147483647 !important; padding: 0px !important; margin: 0px !important; border-radius: 8px !important; position: fixed !important; color-scheme: normal !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px, rgba(0, 0, 0, 0.18) 0px 8px 15px 6px !important; border: 1px solid rgba(0, 0, 0, 0.2) !important; overflow: hidden !important; backdrop-filter: blur(20px) !important; background-color: rgba(230, 230, 230, 0.8) !important; top: 190px !important; left: 247px !important; opacity: 0 !important; visibility: hidden !important;"></div><div popover="manual" style="z-index: 2147483647 !important; padding: 0px !important; margin: 0px !important; border-radius: 8px !important; position: fixed !important; color-scheme: normal !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px, rgba(0, 0, 0, 0.18) 0px 8px 15px 6px !important; border: 1px solid rgba(0, 0, 0, 0.2) !important; overflow: hidden !important; backdrop-filter: blur(20px) !important; background-color: rgba(230, 230, 230, 0.8) !important; top: 263px !important; left: 247px !important; opacity: 1 !important; visibility: visible !important; height: 69.5px !important; width: 305px !important;"></div><!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+<div popover="manual" style="z-index: 2147483647 !important; padding: 0px !important; margin: 0px !important; border-radius: 8px !important; position: fixed !important; color-scheme: normal !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px, rgba(0, 0, 0, 0.18) 0px 8px 15px 6px !important; border: 1px solid rgba(0, 0, 0, 0.2) !important; overflow: hidden !important; backdrop-filter: blur(20px) !important; background-color: rgba(230, 230, 230, 0.8) !important; top: 190px !important; left: 247px !important; opacity: 0 !important; visibility: hidden !important;"></div><div popover="manual" style="z-index: 2147483647 !important; padding: 0px !important; margin: 0px !important; border-radius: 8px !important; position: fixed !important; color-scheme: normal !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px, rgba(0, 0, 0, 0.18) 0px 8px 15px 6px !important; border: 1px solid rgba(0, 0, 0, 0.2) !important; overflow: hidden !important; backdrop-filter: blur(20px) !important; background-color: rgba(230, 230, 230, 0.8) !important; top: 190px !important; left: 247px !important; opacity: 0 !important; visibility: hidden !important;"></div><!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+<div popover="manual" style="z-index: 2147483647 !important; padding: 0px !important; margin: 0px !important; border-radius: 8px !important; position: fixed !important; color-scheme: normal !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px, rgba(0, 0, 0, 0.18) 0px 8px 15px 6px !important; border: 1px solid rgba(0, 0, 0, 0.2) !important; overflow: hidden !important; backdrop-filter: blur(20px) !important; background-color: rgba(230, 230, 230, 0.8) !important; top: 0px !important; left: 0px !important; opacity: 0 !important; visibility: hidden !important; height: 69.5px !important; width: 305px !important;"></div><!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+<div popover="manual" style="z-index: 2147483647 !important; padding: 0px !important; margin: 0px !important; border-radius: 8px !important; position: fixed !important; color-scheme: normal !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px, rgba(0, 0, 0, 0.18) 0px 8px 15px 6px !important; border: 1px solid rgba(0, 0, 0, 0.2) !important; overflow: hidden !important; backdrop-filter: blur(20px) !important; background-color: rgba(230, 230, 230, 0.8) !important; top: 0px !important; left: 0px !important; opacity: 0 !important; visibility: hidden !important; height: 69.5px !important; width: 305px !important;"></div><!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+<div popover="manual" style="z-index: 2147483647 !important; padding: 0px !important; margin: 0px !important; border-radius: 8px !important; position: fixed !important; color-scheme: normal !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px, rgba(0, 0, 0, 0.18) 0px 8px 15px 6px !important; border: 1px solid rgba(0, 0, 0, 0.2) !important; overflow: hidden !important; backdrop-filter: blur(20px) !important; background-color: rgba(230, 230, 230, 0.8) !important; top: 0px !important; left: 0px !important; opacity: 0 !important; visibility: hidden !important; height: 69.5px !important; width: 305px !important;"></div><!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+<div popover="manual" style="z-index: 2147483647 !important; padding: 0px !important; margin: 0px !important; border-radius: 8px !important; position: fixed !important; color-scheme: normal !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px, rgba(0, 0, 0, 0.18) 0px 8px 15px 6px !important; border: 1px solid rgba(0, 0, 0, 0.2) !important; overflow: hidden !important; backdrop-filter: blur(20px) !important; background-color: rgba(230, 230, 230, 0.8) !important; top: 190px !important; left: 247px !important; opacity: 0 !important; visibility: hidden !important;"></div><div popover="manual" style="z-index: 2147483647 !important; padding: 0px !important; margin: 0px !important; border-radius: 8px !important; position: fixed !important; color-scheme: normal !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px, rgba(0, 0, 0, 0.18) 0px 8px 15px 6px !important; border: 1px solid rgba(0, 0, 0, 0.2) !important; overflow: hidden !important; backdrop-filter: blur(20px) !important; background-color: rgba(230, 230, 230, 0.8) !important; top: 190px !important; left: 247px !important; opacity: 0 !important; visibility: hidden !important;"></div><div popover="manual" style="z-index: 2147483647 !important; padding: 0px !important; margin: 0px !important; border-radius: 8px !important; position: fixed !important; color-scheme: normal !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px, rgba(0, 0, 0, 0.18) 0px 8px 15px 6px !important; border: 1px solid rgba(0, 0, 0, 0.2) !important; overflow: hidden !important; backdrop-filter: blur(20px) !important; background-color: rgba(230, 230, 230, 0.8) !important; top: 0px !important; left: 0px !important; opacity: 0 !important; visibility: hidden !important; height: 69.5px !important; width: 305px !important;"></div><div popover="manual" style="z-index: 2147483647 !important; padding: 0px !important; margin: 0px !important; border-radius: 8px !important; position: fixed !important; color-scheme: normal !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px, rgba(0, 0, 0, 0.18) 0px 8px 15px 6px !important; border: 1px solid rgba(0, 0, 0, 0.2) !important; overflow: hidden !important; backdrop-filter: blur(20px) !important; background-color: rgba(230, 230, 230, 0.8) !important; top: 190px !important; left: 247px !important; opacity: 0 !important; visibility: hidden !important;"></div><div popover="manual" style="z-index: 2147483647 !important; padding: 0px !important; margin: 0px !important; border-radius: 8px !important; position: fixed !important; color-scheme: normal !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px, rgba(0, 0, 0, 0.18) 0px 8px 15px 6px !important; border: 1px solid rgba(0, 0, 0, 0.2) !important; overflow: hidden !important; backdrop-filter: blur(20px) !important; background-color: rgba(230, 230, 230, 0.8) !important; top: 190px !important; left: 247px !important; opacity: 0 !important; visibility: hidden !important;"></div><div popover="manual" style="z-index: 2147483647 !important; padding: 0px !important; margin: 0px !important; border-radius: 8px !important; position: fixed !important; color-scheme: normal !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px, rgba(0, 0, 0, 0.18) 0px 8px 15px 6px !important; border: 1px solid rgba(0, 0, 0, 0.2) !important; overflow: hidden !important; backdrop-filter: blur(20px) !important; background-color: rgba(230, 230, 230, 0.8) !important; top: 190px !important; left: 247px !important; opacity: 0 !important; visibility: hidden !important;"></div></body></html>
