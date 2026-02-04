@@ -239,7 +239,9 @@
     .app-profile-logout { display: block; width: 100%; text-align: left; padding: 0.5rem 0.75rem; border: none; background: none; font-size: 0.9rem; color: var(--text); cursor: pointer; }
     .app-profile-logout:hover { background: var(--wax); }
     @media (min-width: 768px) and (hover: none) and (pointer: coarse) {
-      .app-top-bar { display: flex; align-items: center; justify-content: flex-end; gap: 0.5rem; padding: 0.5rem 1rem; position: absolute; top: 0; right: 0; z-index: 100; }
+      .app-top-bar { display: flex; align-items: center; justify-content: flex-start; gap: 0.5rem; padding: 0.5rem 1rem; position: absolute; top: 0; left: 0; right: auto; z-index: 100; }
+      #screen-app { padding-top: 3.5rem; }
+      .app-profile-dropdown { left: 0; right: auto; }
       .home-refresh-wrap { display: none; }
     }
     @media (max-width: 767px) {
@@ -703,30 +705,30 @@
         <div class="card">
           <div id="database-new-item-content">
             <div id="db-form-supplies" class="database-add-form">
-              <div class="form-row"><label>Name</label><input type="text" id="db-supply-name" placeholder="e.g. 500g Jar"></div>
-              <div class="form-row"><label>Category</label><select id="db-supply-category"><option value="Packaging">Packaging</option><option value="Hive Treatments">Hive Treatments</option><option value="Labels">Labels</option><option value="Sugar for feeding">Sugar for feeding</option></select></div>
-              <div class="form-row"><label>Unit Type</label><input type="text" id="db-supply-unit-type" placeholder="e.g. Box of 100, 20kg Pail"></div>
-              <div class="form-row"><label>Cost per Unit</label><input type="number" id="db-supply-cost" step="0.01" min="0" placeholder="0.00"></div>
-              <div class="form-row"><label>Supplier Link (ID)</label><input type="text" id="db-supply-supplier-id" placeholder="Supplier ID from Suppliers app"></div>
-              <div class="form-row"><label>Min Stock Level</label><input type="number" id="db-supply-min-stock" min="0" placeholder="0"></div>
+              <div class="form-row"><label for="db-supply-name">Name</label><input type="text" id="db-supply-name" placeholder="e.g. 500g Jar"></div>
+              <div class="form-row"><label for="db-supply-category">Category</label><select id="db-supply-category"><option value="Packaging">Packaging</option><option value="Hive Treatments">Hive Treatments</option><option value="Labels">Labels</option><option value="Sugar for feeding">Sugar for feeding</option></select></div>
+              <div class="form-row"><label for="db-supply-unit-type">Unit Type</label><input type="text" id="db-supply-unit-type" placeholder="e.g. Box of 100, 20kg Pail"></div>
+              <div class="form-row"><label for="db-supply-cost">Cost per Unit</label><input type="number" id="db-supply-cost" step="0.01" min="0" placeholder="0.00"></div>
+              <div class="form-row"><label for="db-supply-supplier-id">Supplier Link (ID)</label><input type="text" id="db-supply-supplier-id" placeholder="Supplier ID from Suppliers app"></div>
+              <div class="form-row"><label for="db-supply-min-stock">Min Stock Level</label><input type="number" id="db-supply-min-stock" min="0" placeholder="0"></div>
               <div class="form-actions"><button type="button" class="btn" id="db-supply-save">Save</button> <button type="button" class="btn secondary" id="db-supply-cancel">Cancel</button></div>
             </div>
             <div id="db-form-equipment" class="database-add-form">
-              <div class="form-row"><label>Category</label><select id="db-equipment-category"><option value="Extractors">Extractors</option><option value="Hive Boxes">Hive Boxes</option><option value="Protective Suits">Protective Suits</option><option value="Vehicles">Vehicles</option></select></div>
+              <div class="form-row"><label for="db-equipment-category">Category</label><select id="db-equipment-category"><option value="Extractors">Extractors</option><option value="Hive Boxes">Hive Boxes</option><option value="Protective Suits">Protective Suits</option><option value="Vehicles">Vehicles</option></select></div>
               <div class="form-row"><label>Purchase Date</label><input type="date" id="db-equipment-purchase-date"></div>
               <div class="form-row"><label>Depreciation</label><input type="text" id="db-equipment-depreciation" placeholder="e.g. 5 years"></div>
               <div class="form-row"><label>Maintenance Schedule</label><input type="text" id="db-equipment-maintenance" placeholder="e.g. Clean extractor every August"></div>
               <div class="form-row"><label>Condition</label><select id="db-equipment-condition"><option value="New">New</option><option value="Used">Used</option><option value="Needs Repair">Needs Repair</option></select></div>
-              <div class="form-row"><label>Storage Location</label><input type="text" id="db-equipment-storage" placeholder="e.g. Garage"></div>
+              <div class="form-row"><label for="db-equipment-storage">Storage Location</label><input type="text" id="db-equipment-storage" placeholder="e.g. Garage"></div>
               <div class="form-actions"><button type="button" class="btn" id="db-equipment-save">Save</button> <button type="button" class="btn secondary" id="db-equipment-cancel">Cancel</button></div>
             </div>
             <div id="db-form-products" class="database-add-form">
-              <div class="form-row"><label>Category</label><select id="db-product-category"><option value="Honey Jars">Honey Jars</option><option value="Beeswax Candles">Beeswax Candles</option><option value="Gift Sets">Gift Sets</option><option value="Pollen">Pollen</option></select></div>
-              <div class="form-row"><label>Batch ID Link</label><input type="text" id="db-product-batch-id" placeholder="Which harvest did this come from?"></div>
-              <div class="form-row"><label>Retail Price</label><input type="number" id="db-product-retail" step="0.01" min="0" placeholder="0.00"></div>
-              <div class="form-row"><label>Wholesale Price</label><input type="number" id="db-product-wholesale" step="0.01" min="0" placeholder="0.00"></div>
-              <div class="form-row"><label>Weight/Volume</label><input type="text" id="db-product-weight" placeholder="e.g. 250g, 500g"></div>
-              <div class="form-row"><label>Recipe Link</label><input type="text" id="db-product-recipe" placeholder="Link to Cost Calculator"></div>
+              <div class="form-row"><label for="db-product-category">Category</label><select id="db-product-category"><option value="Honey Jars">Honey Jars</option><option value="Beeswax Candles">Beeswax Candles</option><option value="Gift Sets">Gift Sets</option><option value="Pollen">Pollen</option></select></div>
+              <div class="form-row"><label for="db-product-batch-id">Batch ID Link</label><input type="text" id="db-product-batch-id" placeholder="Which harvest did this come from?"></div>
+              <div class="form-row"><label for="db-product-retail">Retail Price</label><input type="number" id="db-product-retail" step="0.01" min="0" placeholder="0.00"></div>
+              <div class="form-row"><label for="db-product-wholesale">Wholesale Price</label><input type="number" id="db-product-wholesale" step="0.01" min="0" placeholder="0.00"></div>
+              <div class="form-row"><label for="db-product-weight">Weight/Volume</label><input type="text" id="db-product-weight" placeholder="e.g. 250g, 500g"></div>
+              <div class="form-row"><label for="db-product-recipe">Recipe Link</label><input type="text" id="db-product-recipe" placeholder="Link to Cost Calculator"></div>
               <div class="form-actions"><button type="button" class="btn" id="db-product-save">Save</button> <button type="button" class="btn secondary" id="db-product-cancel">Cancel</button></div>
             </div>
           </div>
