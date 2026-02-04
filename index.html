@@ -211,10 +211,11 @@
       .app-icon-wrap { width: 132px; height: 132px; border-radius: 30px; }
       .app-card .app-icon { font-size: 4.1rem; }
       .app-card .app-title { font-size: 1rem; margin-top: 0.75rem; }
+      .home-header-bar { width: 250px; max-height: none; height: auto; }
       }
     .home-header-bar { flex: 0 0 auto; width: 200px; min-height: 3rem; max-height: 80vh; overflow-y: auto; background: var(--honey-dark); color: #fff; border-radius: 10px; padding: 0.75rem 1rem; margin-bottom: 0; box-sizing: border-box; display: flex; flex-direction: column; gap: 1rem; }
     @media (max-width: 767px) {
-      .home-header-bar { flex: 0 0 auto; width: calc(100% + 2rem); max-width: none; margin-left: -1rem; margin-right: -1rem; max-height: 45vh; box-sizing: border-box; order: -1; padding: 1rem; }
+      .home-header-bar { flex: 0 0 auto; width: calc(100% + 2rem); max-width: none; margin-left: -1rem; margin-right: -1rem; max-height: none; height: auto; box-sizing: border-box; order: -1; padding: 1rem 2rem; }
     }
     .home-header-bar.empty { display: none; }
     .home-layout:has(.app-sheet.active) .home-header-bar { display: none; }
@@ -223,6 +224,7 @@
     .home-header-bar .home-today-empty, .home-header-bar .home-upcoming-empty { display: flex; align-items: center; justify-content: center; min-height: 2.5rem; font-size: 0.9rem; color: rgba(255,255,255,0.9); }
     .home-header-bar .home-today-events, .home-header-bar .home-upcoming-events { list-style: none; padding: 0; margin: 0; width: 100%; }
     .home-header-bar .home-today-event, .home-header-bar .home-upcoming-event { padding: 0.35rem 0; border-bottom: 1px solid rgba(255,255,255,0.25); font-size: 0.85rem; display: block; width: 100%; box-sizing: border-box; }
+    .home-header-bar .home-event-pill, .home-header-bar .home-task-pill { cursor: pointer; }
     .home-header-bar .home-today-event:last-child, .home-header-bar .home-upcoming-event:last-child { border-bottom: none; }
     .home-header-bar .home-event-day { display: block; font-size: 0.7rem; opacity: 0.85; margin-bottom: 0.15rem; }
     .home-event-pill { display: block; width: 100%; box-sizing: border-box; border: 1px solid rgba(255,255,255,0.55); border-radius: 6px; padding: 0.35rem 0.5rem; font-size: 0.85rem; background: rgba(255,255,255,0.55); color: #2c2416; text-align: center; }
@@ -1227,11 +1229,11 @@
     if (todayEvents.length > 0 || todayTasks.length > 0) {
       leftHtml += '<ul class="home-today-events">';
       todayEvents.forEach(function (ev) {
-        leftHtml += '<li class="home-today-event"><span class="home-event-pill"><strong>EVENT</strong> - ' + escapeHtml(ev.title || '') + '</span></li>';
+        leftHtml += '<li class="home-today-event"><span class="home-event-pill" data-type="event" data-event-id="' + escapeHtml(ev.id || '') + '" data-date="' + escapeHtml(todayKey) + '"><strong>EVENT</strong> - ' + escapeHtml(ev.title || '') + '</span></li>';
       });
       todayTasks.forEach(function (t) {
         var pri = (t.priority || 'low');
-        leftHtml += '<li class="home-today-event"><span class="home-task-pill priority-' + escapeHtml(pri) + '"><strong>TASK</strong> - ' + escapeHtml(t.title || '') + '</span></li>';
+        leftHtml += '<li class="home-today-event"><span class="home-task-pill priority-' + escapeHtml(pri) + '" data-type="task" data-task-id="' + escapeHtml(t.id || '') + '" data-date="' + escapeHtml(todayKey) + '"><strong>TASK</strong> - ' + escapeHtml(t.title || '') + '</span></li>';
       });
       leftHtml += '</ul>';
     } else {
@@ -1245,14 +1247,14 @@
         var ev = item.event;
         var instanceD = parseDateKey(item.instanceDate);
         var dayLabel = instanceD ? dayLabels[instanceD.getDay()] : '';
-        rightHtml += '<li class="home-upcoming-event"><span class="home-event-day">' + escapeHtml(dayLabel) + '</span> <span class="home-event-pill"><strong>EVENT</strong> - ' + escapeHtml(ev.title || '') + '</span></li>';
+        rightHtml += '<li class="home-upcoming-event"><span class="home-event-day">' + escapeHtml(dayLabel) + '</span> <span class="home-event-pill" data-type="event" data-event-id="' + escapeHtml(ev.id || '') + '" data-date="' + escapeHtml(item.instanceDate || '') + '"><strong>EVENT</strong> - ' + escapeHtml(ev.title || '') + '</span></li>';
       });
       upcomingTasks.forEach(function (t) {
         var k = (t.date || '').substring(0, 10);
         var d = parseDateKey(k);
         var dayLabel = d ? dayLabels[d.getDay()] : '';
         var pri = (t.priority || 'low');
-        rightHtml += '<li class="home-upcoming-event"><span class="home-event-day">' + escapeHtml(dayLabel) + '</span> <span class="home-task-pill priority-' + escapeHtml(pri) + '"><strong>TASK</strong> - ' + escapeHtml(t.title || '') + '</span></li>';
+        rightHtml += '<li class="home-upcoming-event"><span class="home-event-day">' + escapeHtml(dayLabel) + '</span> <span class="home-task-pill priority-' + escapeHtml(pri) + '" data-type="task" data-task-id="' + escapeHtml(t.id || '') + '" data-date="' + escapeHtml(k || '') + '"><strong>TASK</strong> - ' + escapeHtml(t.title || '') + '</span></li>';
       });
       rightHtml += '</ul>';
     } else {
@@ -2101,6 +2103,34 @@
       showHomeView('grid');
     });
   });
+
+  var homeHeaderEl = $('home-header');
+  if (homeHeaderEl) {
+    homeHeaderEl.addEventListener('click', function (e) {
+      var pill = e.target.closest('[data-type="event"], [data-type="task"]');
+      if (!pill) return;
+      var type = pill.getAttribute('data-type');
+      var dateKey = pill.getAttribute('data-date');
+      if (type === 'event' && dateKey) {
+        showHomeView('calendar');
+        var d = parseDateKey(dateKey);
+        if (d) {
+          calendarState.currentDate = d;
+          calendarState.viewMode = 'day';
+          showCalendarView('day');
+        }
+      } else if (type === 'task') {
+        var taskId = pill.getAttribute('data-task-id');
+        if (!taskId) return;
+        showHomeView('tasks');
+        var task = getTasks().filter(function (t) { return t.id === taskId; })[0];
+        if (task) {
+          ensureTasksFormInList();
+          tasksShowForm(task);
+        }
+      }
+    });
+  }
 
   // Settings nav: switch panel
   document.querySelectorAll('.settings-nav button[data-settings-panel]').forEach(function (btn) {
