@@ -144,6 +144,7 @@
     .tasks-form-wrap input[type="date"] { background: var(--card) !important; color: var(--text) !important; font-size: 1rem; }
     .tasks-form-wrap .form-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
     .tasks-form-wrap .form-actions .btn { width: auto; }
+    #task-cancel { background: #fff; color: var(--honey-dark); border: 1px solid var(--honey-dark); }
     .tasks-name-priority-row { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 0.5rem 1rem; margin-bottom: 0.5rem; }
     .tasks-name-priority-row .tasks-field { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; }
     .tasks-name-priority-row .tasks-field label { margin-top: 0; line-height: 1.25; }
@@ -154,10 +155,13 @@
     .tasks-date-repeat-row .tasks-field label { margin-top: 0; line-height: 1.25; }
     .tasks-field-date { flex: 0 0 auto; width: 10rem; max-width: 10rem; }
     .tasks-field-date input[type="date"] { width: 100%; max-width: 100%; min-width: 0; }
-    /* iPad / touch only: narrower date column, space before repeat, smaller height (iOS may override height) */
+    /* iPad / touch only: narrower date column, space before repeat, same 2rem height for all task form controls */
     @media (hover: none) and (pointer: coarse) {
       .tasks-field-date { width: 9rem; max-width: 9rem; margin-right: 1rem; }
       .tasks-date-repeat-row { gap: 0.5rem 1rem; }
+      .tasks-form-wrap #task-title,
+      .tasks-form-wrap #task-priority,
+      .tasks-form-wrap #task-repeat,
       .tasks-date-repeat-row #task-date { height: 2rem !important; min-height: 2rem !important; max-height: 2rem !important; }
       .tasks-field-date input[type="date"] { width: 100% !important; max-width: 100% !important; min-width: 0 !important; }
     }
