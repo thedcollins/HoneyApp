@@ -176,10 +176,10 @@
     .home-layout { display: flex; flex-direction: row; gap: 1rem; width: 100%; min-height: 0; }
     .home-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
     @media (min-width: 768px) and (hover: none) and (pointer: coarse) {
-      #screen-app.active { height: 100vh; height: 100dvh; display: flex; flex-direction: column; min-height: 0; }
+      #screen-app.active { height: calc(100vh - 200px); height: calc(100dvh - 200px); display: flex; flex-direction: column; min-height: 0; }
       #screen-app.active .home-layout { flex: 1; min-height: 0; display: flex; }
-      #screen-app.active .home-main { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; margin-bottom: -5rem; }
-      #screen-app.active #sheet-home { flex: 1; min-height: 0; overflow: auto; }
+      #screen-app.active .home-main { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+      #screen-app.active #sheet-home { flex: 1; min-height: 0; overflow: auto; padding-bottom: 5rem; }
       #sheet-home .app-grid { gap: 2.75rem 1.75rem; }
       .app-icon-wrap { width: 132px; height: 132px; border-radius: 30px; }
       .app-card .app-icon { font-size: 4.1rem; }
