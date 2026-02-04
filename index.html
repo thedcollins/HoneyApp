@@ -71,6 +71,10 @@
     .tasks-unsaved-wrapper .card { max-width: 360px; margin: 0; }
     .tasks-unsaved-wrapper .form-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
     .tasks-unsaved-wrapper .form-actions .btn { width: auto; }
+    .tasks-new-task-wrapper { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1000; align-items: center; justify-content: center; padding: 1rem; }
+    .tasks-new-task-wrapper.active { display: flex; }
+    .tasks-new-task-wrapper .card { max-width: 420px; margin: 0; width: 100%; }
+    .tasks-new-task-wrapper .tasks-form-wrap { margin-bottom: 0; }
     .calendar-unsaved-wrapper { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1000; align-items: center; justify-content: center; padding: 1rem; }
     .calendar-unsaved-wrapper.active { display: flex; }
     .calendar-unsaved-wrapper .card { max-width: 360px; margin: 0; }
@@ -131,6 +135,7 @@
       .calendar-view-switcher button { flex: 1; }
       .calendar-nav { width: 100%; margin-left: 0; }
       .calendar-nav .calendar-label { flex: 1; min-width: 0; }
+      .calendar-nav button { flex-shrink: 0; padding: 0.5rem 0.85rem; min-width: 2.75rem; }
     }
     :root { --cal-cell-height: 95px; --cal-header-height: 2rem; --cal-five-rows-height: calc(var(--cal-header-height) + 5 * var(--cal-cell-height)); }
     .calendar-month { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; min-height: var(--cal-five-rows-height); }
@@ -425,7 +430,8 @@
           <button type="button" id="tasks-view-scheduled" class="active">Scheduled</button>
           <button type="button" id="tasks-view-completed">Completed</button>
         </div>
-        <div id="tasks-form-wrap" class="tasks-form-wrap" style="display: none;">
+        <div id="tasks-form-placeholder">
+          <div id="tasks-form-wrap" class="tasks-form-wrap" style="display: none;">
           <div class="tasks-name-priority-row">
             <div class="tasks-field tasks-field-name">
               <label for="task-title">Name</label>
@@ -476,7 +482,14 @@
             <button type="button" class="btn btn-remove" id="task-delete" style="display: none;">Delete</button>
           </div>
         </div>
+        </div>
         <div id="tasks-list-container"></div>
+      </div>
+      <div id="tasks-new-task-wrapper" class="tasks-new-task-wrapper" aria-hidden="true">
+        <div class="card">
+          <h2 style="margin: 0 0 0.5rem 0; font-size: 1.2rem;">New task</h2>
+          <div id="tasks-new-task-content"></div>
+        </div>
       </div>
       <div id="tasks-unsaved-wrapper" class="tasks-unsaved-wrapper" aria-hidden="true">
         <div class="card">
@@ -1673,6 +1686,7 @@
     var wrap = $('tasks-form-wrap');
     var delBtn = $('task-delete');
     if (!wrap) return;
+    if (task) ensureTasksFormInList();
     if (task) {
       tasksState.editingTaskId = task.id;
       if ($('task-title')) $('task-title').value = task.title || '';
@@ -1714,6 +1728,38 @@
     var wrap = $('tasks-form-wrap');
     if (wrap) wrap.style.display = 'none';
     tasksState.editingTaskId = null;
+  }
+  function ensureTasksFormInList() {
+    var formWrap = $('tasks-form-wrap');
+    var content = $('tasks-new-task-content');
+    var placeholder = $('tasks-form-placeholder');
+    var modalWrap = $('tasks-new-task-wrapper');
+    if (formWrap && content && placeholder && formWrap.parentElement === content) {
+      placeholder.appendChild(formWrap);
+      if (modalWrap) { modalWrap.classList.remove('active'); modalWrap.setAttribute('aria-hidden', 'true'); }
+    }
+  }
+  function openTasksNewTaskModal() {
+    var formWrap = $('tasks-form-wrap');
+    var content = $('tasks-new-task-content');
+    var placeholder = $('tasks-form-placeholder');
+    var modalWrap = $('tasks-new-task-wrapper');
+    if (!formWrap || !content || !placeholder || !modalWrap) return;
+    content.appendChild(formWrap);
+    modalWrap.classList.add('active');
+    modalWrap.setAttribute('aria-hidden', 'false');
+    tasksShowForm(null);
+  }
+  function closeTasksNewTaskModal() {
+    var formWrap = $('tasks-form-wrap');
+    var content = $('tasks-new-task-content');
+    var placeholder = $('tasks-form-placeholder');
+    var modalWrap = $('tasks-new-task-wrapper');
+    if (formWrap && content && placeholder && modalWrap && formWrap.parentElement === content) {
+      placeholder.appendChild(formWrap);
+      modalWrap.classList.remove('active');
+      modalWrap.setAttribute('aria-hidden', 'true');
+    }
   }
   function taskSave() {
     var title = ($('task-title') && $('task-title').value || '').trim();
@@ -1786,9 +1832,9 @@
     if ($('tasks-view-completed')) $('tasks-view-completed').classList.add('active');
     renderTasksList();
   });
-  if ($('tasks-add-btn')) $('tasks-add-btn').addEventListener('click', function () { tasksShowForm(null); });
-  if ($('task-save')) $('task-save').addEventListener('click', taskSave);
-  if ($('task-cancel')) $('task-cancel').addEventListener('click', tasksHideForm);
+  if ($('tasks-add-btn')) $('tasks-add-btn').addEventListener('click', openTasksNewTaskModal);
+  if ($('task-save')) $('task-save').addEventListener('click', function () { if (taskSave()) closeTasksNewTaskModal(); });
+  if ($('task-cancel')) $('task-cancel').addEventListener('click', function () { closeTasksNewTaskModal(); tasksHideForm(); });
   if ($('task-delete')) $('task-delete').addEventListener('click', taskDelete);
   if ($('task-repeat')) $('task-repeat').addEventListener('change', function () {
     var wrap = $('tasks-repeat-custom-wrap');
@@ -1954,10 +2000,11 @@
   }
   if ($('tasks-unsaved-save')) $('tasks-unsaved-save').addEventListener('click', function () {
     hideTasksUnsavedDialog();
-    if (taskSave()) showHomeView('grid');
+    if (taskSave()) { closeTasksNewTaskModal(); showHomeView('grid'); }
   });
   if ($('tasks-unsaved-cancel')) $('tasks-unsaved-cancel').addEventListener('click', function () {
     hideTasksUnsavedDialog();
+    closeTasksNewTaskModal();
     tasksHideForm();
     showHomeView('grid');
   });
