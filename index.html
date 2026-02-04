@@ -125,7 +125,7 @@
     .calendar-nav { display: flex; align-items: center; gap: 0.5rem; margin-left: auto; }
     .calendar-nav button { padding: 0.35rem 0.6rem; min-height: auto; width: auto; font-size: 1rem; }
     .calendar-nav .calendar-label { font-weight: 600; color: var(--honey-dark); min-width: 140px; text-align: center; font-size: 0.95rem; display: inline-block; }
-    :root { --cal-cell-height: 100px; --cal-header-height: 2rem; --cal-five-rows-height: calc(var(--cal-header-height) + 5 * var(--cal-cell-height)); }
+    :root { --cal-cell-height: 95px; --cal-header-height: 2rem; --cal-five-rows-height: calc(var(--cal-header-height) + 5 * var(--cal-cell-height)); }
     .calendar-month { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; min-height: var(--cal-five-rows-height); }
     .calendar-month .cal-weekday { padding: 0.35rem; text-align: center; font-size: 0.7rem; font-weight: 600; color: var(--muted); background: var(--wax); }
     .calendar-month .cal-day { min-height: var(--cal-cell-height); padding: 0.35rem; background: var(--card); font-size: 0.8rem; }
@@ -141,8 +141,8 @@
     .calendar-week .cal-day-header { padding: 0.35rem; text-align: center; font-size: 0.7rem; font-weight: 600; color: var(--muted); background: var(--wax); flex-shrink: 0; }
     .calendar-week .cal-day-events { flex: 1; min-height: 0; padding: 0.35rem 0.35rem 0 0.35rem; font-size: 0.7rem; overflow: auto; border-radius: 0 0 6px 6px; }
     .calendar-week .cal-day-events .cal-event-dot { display: block; margin-bottom: 0.2rem; }
-    .calendar-day-wrap { height: var(--cal-five-rows-height); background: var(--card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; }
-    .calendar-day-list { flex: 1; min-height: 0; overflow: auto; padding: 0.35rem; }
+    .calendar-day-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 0.35rem; }
+    .calendar-day-list { padding: 0; }
     .calendar-day .cal-day-header { font-size: 1.1rem; font-weight: 600; color: var(--honey-dark); margin-bottom: 0.75rem; }
     .calendar-day .cal-event-item { padding: 0.6rem; margin-bottom: 0.5rem; background: var(--card); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; }
     .calendar-day .cal-event-item:hover { background: var(--wax); border-color: var(--honey-dark); }
