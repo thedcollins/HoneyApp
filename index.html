@@ -240,16 +240,16 @@
     .app-profile-logout { display: block; width: 100%; text-align: left; padding: 0.5rem 0.75rem; border: none; background: none; font-size: 0.9rem; color: var(--text); cursor: pointer; }
     .app-profile-logout:hover { background: var(--wax); }
     @media (min-width: 768px) and (hover: none) and (pointer: coarse) {
-      .app-top-bar { display: flex; flex-direction: column; align-items: stretch; gap: 0; position: absolute; top: 50%; right: 0; transform: translateY(-50%); z-index: 100; width: 5.5rem; }
+      .app-top-bar { display: flex; flex-direction: row; align-items: stretch; justify-content: flex-end; gap: 0; position: absolute; top: 0; right: 0; z-index: 100; }
       .app-top-bar .app-top-bar-icon { display: none; }
       .app-top-bar .app-top-bar-text { display: inline; }
-      .app-top-bar .app-top-bar-btn { width: 100%; min-width: 0; height: auto; min-height: 2.75rem; padding: 0.6rem 0.75rem; font-size: 0.9rem; font-weight: 600; border-radius: 8px 0 0 8px; border: 1px solid var(--border); border-right: none; background: var(--wax); color: var(--honey-dark); box-shadow: -2px 0 6px rgba(0,0,0,0.06); }
+      .app-top-bar .app-top-bar-btn { height: auto; min-height: 2.75rem; padding: 0.6rem 1rem; font-size: 0.9rem; font-weight: 600; border-radius: 8px 8px 0 0; border: 1px solid var(--border); border-bottom: none; background: var(--wax); color: var(--honey-dark); box-shadow: 0 -2px 6px rgba(0,0,0,0.06); }
       .app-top-bar .app-top-bar-btn:hover { background: var(--card); }
-      .app-top-bar .app-top-bar-btn:first-of-type { border-radius: 8px 0 0 0; }
-      .app-top-bar-profile-wrap .app-top-bar-btn { border-radius: 0 0 0 8px; border-top: none; }
-      #screen-app { padding-top: 0; }
-      .home-layout { margin-right: 5.5rem; }
-      .app-profile-dropdown { left: 0; right: auto; top: 100%; margin-top: 0.25rem; }
+      .app-top-bar .app-top-bar-btn:first-of-type { border-radius: 8px 0 0 0; border-right: none; }
+      .app-top-bar-profile-wrap .app-top-bar-btn { border-radius: 0 8px 0 0; }
+      #screen-app { padding-top: 2.75rem; }
+      .home-layout { margin-right: 0; }
+      .app-profile-dropdown { left: auto; right: 0; top: 100%; margin-top: 0.25rem; }
       .home-refresh-wrap { display: none; }
     }
     @media (max-width: 767px) {
