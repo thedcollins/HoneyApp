@@ -179,20 +179,14 @@
       .home-header-bar { width: 100%; max-height: 45vh; }
     }
     @media (min-width: 768px) and (hover: none) and (pointer: coarse) {
-      #screen-app.active { height: calc(100vh - 50px); height: calc(100dvh - 50px); display: flex; flex-direction: column; min-height: 0; }
-      #screen-app.active .home-layout { flex: 1; min-height: 0; display: flex; }
-      #screen-app.active .home-header-bar { max-height: calc(100vh - 50px); max-height: calc(100dvh - 50px); }
-      #screen-app.active .home-main { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
-      #screen-app.active #sheet-home { flex: 1; min-height: 0; overflow: auto; }
       #sheet-home .app-grid { gap: 2.75rem 1.75rem; }
       .app-icon-wrap { width: 132px; height: 132px; border-radius: 30px; }
       .app-card .app-icon { font-size: 4.1rem; }
       .app-card .app-title { font-size: 1rem; margin-top: 0.75rem; }
-      .calendar-month { max-width: 75%; margin-left: auto; margin-right: auto; }
-      .calendar-month .cal-day { aspect-ratio: 1; min-height: 0; }
-    }
+      }
     .home-header-bar { flex: 0 0 auto; width: 200px; min-height: 3rem; max-height: 80vh; overflow-y: auto; background: var(--honey-dark); color: #fff; border-radius: 10px; padding: 0.75rem 1rem; margin-bottom: 0; box-sizing: border-box; display: flex; flex-direction: column; gap: 1rem; }
     .home-header-bar.empty { display: none; }
+    .home-layout:has(.app-sheet.active) .home-header-bar { display: none; }
     .home-header-col { flex: 0 0 auto; min-width: 0; width: 100%; }
     .home-header-col .home-col-title { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.9; margin-bottom: 0.4rem; text-align: center; }
     .home-header-bar .home-today-empty, .home-header-bar .home-upcoming-empty { display: flex; align-items: center; justify-content: center; min-height: 2.5rem; font-size: 0.9rem; color: rgba(255,255,255,0.9); }
