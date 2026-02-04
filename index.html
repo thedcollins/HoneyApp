@@ -90,35 +90,51 @@
     .calendar-view-switcher button.active { background: var(--honey-dark); color: #fff; border-color: var(--honey-dark); }
     .calendar-nav { display: flex; align-items: center; gap: 0.5rem; margin-left: auto; }
     .calendar-nav button { padding: 0.35rem 0.6rem; min-height: auto; width: auto; font-size: 1rem; }
-    .calendar-nav .calendar-label { font-weight: 600; color: var(--honey-dark); min-width: 140px; text-align: center; font-size: 0.95rem; }
-    .calendar-month { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .calendar-nav .calendar-label { font-weight: 600; color: var(--honey-dark); min-width: 140px; text-align: center; font-size: 0.95rem; display: inline-block; }
+    :root { --cal-cell-height: 72px; --cal-header-height: 2rem; --cal-five-rows-height: calc(var(--cal-header-height) + 5 * var(--cal-cell-height)); }
+    .calendar-month { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; min-height: var(--cal-five-rows-height); }
     .calendar-month .cal-weekday { padding: 0.35rem; text-align: center; font-size: 0.7rem; font-weight: 600; color: var(--muted); background: var(--wax); }
-    .calendar-month .cal-day { min-height: 72px; padding: 0.35rem; background: var(--card); font-size: 0.8rem; }
+    .calendar-month .cal-day { min-height: var(--cal-cell-height); padding: 0.35rem; background: var(--card); font-size: 0.8rem; }
     .calendar-month .cal-day.other-month { background: var(--bg); color: var(--muted); }
     .calendar-month .cal-day.today { background: var(--wax); border: 1px solid var(--honey-dark); }
     .calendar-month .cal-day-num { font-weight: 600; margin-bottom: 0.25rem; }
     .calendar-month .cal-day-events { font-size: 0.7rem; }
     .calendar-month .cal-event-dot { display: inline-block; margin-right: 0.2rem; padding: 0 0.25rem; border-radius: 4px; background: var(--honey-dark); color: #fff; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
-    .calendar-week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 1rem; }
-    .calendar-week .cal-day-col { min-height: 120px; padding: 0.5rem; background: var(--card); }
+    .calendar-week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 1rem; height: var(--cal-five-rows-height); }
+    .calendar-week .cal-day-col { min-height: 0; padding: 0; background: var(--card); display: flex; flex-direction: column; }
     .calendar-week .cal-day-col.other-month { background: var(--bg); color: var(--muted); }
-    .calendar-week .cal-day-col.today { background: var(--wax); }
-    .calendar-week .cal-day-header { font-weight: 600; font-size: 0.8rem; margin-bottom: 0.5rem; }
-    .calendar-week .cal-day-events { font-size: 0.8rem; }
-    .calendar-day { margin-bottom: 1rem; }
+    .calendar-week .cal-day-col.today .cal-day-events { background: var(--wax); border: 1px solid var(--honey-dark); }
+    .calendar-week .cal-day-header { padding: 0.35rem; text-align: center; font-size: 0.7rem; font-weight: 600; color: var(--muted); background: var(--wax); flex-shrink: 0; }
+    .calendar-week .cal-day-events { flex: 1; min-height: 0; padding: 0.35rem; font-size: 0.7rem; overflow: auto; border-radius: 0 0 6px 6px; }
+    .calendar-week .cal-day-events .cal-event-dot { display: block; margin-bottom: 0.2rem; }
+    .calendar-day-wrap { height: var(--cal-five-rows-height); background: var(--card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; }
+    .calendar-day-list { flex: 1; min-height: 0; overflow: auto; padding: 0.35rem; }
     .calendar-day .cal-day-header { font-size: 1.1rem; font-weight: 600; color: var(--honey-dark); margin-bottom: 0.75rem; }
     .calendar-day .cal-event-item { padding: 0.6rem; margin-bottom: 0.5rem; background: var(--card); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; }
     .calendar-day .cal-event-item:hover { background: var(--wax); border-color: var(--honey-dark); }
     .calendar-day .cal-event-time { font-size: 0.8rem; color: var(--muted); margin-right: 0.5rem; }
-    .calendar-event-form { background: var(--wax); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
+    .calendar-event-form { background: var(--wax); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; overflow: hidden; min-width: 0; }
     .calendar-event-form label { display: block; font-weight: 600; margin-top: 0.5rem; }
-    .calendar-event-form input, .calendar-event-form select, .calendar-event-form textarea { width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; margin: 0.25rem 0; box-sizing: border-box; }
-    .calendar-event-form textarea { min-height: 60px; resize: vertical; }
+    .calendar-event-form input, .calendar-event-form select, .calendar-event-form textarea { width: 100%; max-width: 100%; min-width: 0; padding: 0.5rem; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; margin: 0.25rem 0; box-sizing: border-box; background: var(--card); color: var(--text); }
+    .calendar-event-form input[type="text"], .calendar-event-form input[type="time"], .calendar-event-form input[type="date"], .calendar-event-form select { height: 2.5rem; min-height: 2.5rem; max-height: 2.5rem; line-height: 1.25; }
+    .calendar-event-form input[type="date"] { background: var(--card) !important; color: var(--text) !important; font-size: 1rem; }
+    .calendar-event-form textarea { min-height: 60px; resize: vertical; background: var(--card); color: var(--text); }
     .calendar-event-form .form-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
     .calendar-event-form .form-actions .btn { width: auto; }
-    #cal-repeat-custom-wrap { display: flex; flex-wrap: nowrap; align-items: center; gap: 0.5rem; margin-top: 0.35rem; }
-    #cal-repeat-custom-wrap label { display: inline-block; margin-top: 0; width: auto; }
-    #cal-repeat-custom-wrap input, #cal-repeat-custom-wrap select { padding: 0.5rem; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; margin: 0; box-sizing: border-box; }
+    .calendar-event-form-row { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 0.5rem 1rem; margin-bottom: 0.5rem; }
+    .calendar-event-form-row .calendar-event-field { flex: 1 1 8rem; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; }
+    .calendar-event-form-row .calendar-event-field label { margin-top: 0; line-height: 1.25; }
+    .calendar-event-title-row .calendar-event-field { flex: 1 1 100%; min-width: 0; }
+    .calendar-event-repeat-row .calendar-event-field-location { flex: 0 1 15rem; min-width: 0; max-width: 15rem; }
+    .calendar-event-repeat-row .calendar-event-field-repeat { flex: 1 1 0; min-width: 7rem; }
+    .calendar-event-repeat-row #cal-repeat-custom-wrap { flex: 1 1 0; min-width: 8rem; flex-direction: column; align-items: flex-start; gap: 0.25rem; }
+    .cal-repeat-custom-inner { display: flex; flex-wrap: nowrap; align-items: center; gap: 0.5rem; width: 100%; }
+    .cal-repeat-custom-inner input[type="number"] { width: 4rem; flex: 0 0 auto; }
+    .cal-repeat-custom-inner select { flex: 1 1 0; min-width: 0; }
+    .cal-repeat-custom-inner input, .cal-repeat-custom-inner select { height: 2.5rem; min-height: 2.5rem; max-height: 2.5rem; line-height: 1.25; box-sizing: border-box; }
+    #cal-repeat-custom-wrap { display: none; flex-direction: column; align-items: flex-start; gap: 0.25rem; }
+    #cal-repeat-custom-wrap label { margin-top: 0; width: auto; }
+    #cal-repeat-custom-wrap input, #cal-repeat-custom-wrap select { padding: 0.5rem; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; line-height: 1.25; margin: 0; box-sizing: border-box; background: var(--card); color: var(--text); }
     #cal-repeat-custom-wrap input[type="number"] { width: 4rem; }
     #cal-repeat-custom-wrap select { width: auto; min-width: 7rem; }
     .cal-event-item .cal-event-location { font-size: 0.85rem; color: var(--muted); margin-left: 0.25rem; }
@@ -149,7 +165,7 @@
     .tasks-form-wrap input[type="date"] { background: var(--card) !important; color: var(--text) !important; font-size: 1rem; }
     .tasks-form-wrap .form-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
     .tasks-form-wrap .form-actions .btn { width: auto; }
-    #task-cancel { background: #fff; color: var(--honey-dark); border: 1px solid var(--honey-dark); }
+    #task-cancel, #cal-event-cancel { background: #fff; color: var(--honey-dark); border: 1px solid var(--honey-dark); }
     .tasks-name-priority-row { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 0.5rem 1rem; margin-bottom: 0.5rem; }
     .tasks-name-priority-row .tasks-field { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; }
     .tasks-name-priority-row .tasks-field label { margin-top: 0; line-height: 1.25; }
@@ -160,15 +176,30 @@
     .tasks-date-repeat-row .tasks-field label { margin-top: 0; line-height: 1.25; }
     .tasks-field-date { flex: 0 0 auto; width: 10rem; max-width: 10rem; }
     .tasks-field-date input[type="date"] { width: 100%; max-width: 100%; min-width: 0; }
-    /* iPad / touch only: narrower date column, space before repeat, same 2rem height for all task form controls */
+    /* iPad / touch only: narrower date column, space before repeat, same 2rem height for date and 3.25rem for other task form controls */
     @media (hover: none) and (pointer: coarse) {
       .tasks-field-date { width: 9rem; max-width: 9rem; margin-right: 1rem; }
       .tasks-date-repeat-row { gap: 0.5rem 1rem; }
       .tasks-form-wrap #task-title,
       .tasks-form-wrap #task-priority,
-      .tasks-form-wrap #task-repeat { height: 3.1rem !important; min-height: 3.1rem !important; max-height: 3.1rem !important; }
+      .tasks-form-wrap #task-repeat { height: 3.25rem !important; min-height: 3.25rem !important; max-height: 3.25rem !important; }
       .tasks-date-repeat-row #task-date { height: 2rem !important; min-height: 2rem !important; max-height: 2rem !important; }
       .tasks-field-date input[type="date"] { width: 100% !important; max-width: 100% !important; min-width: 0 !important; }
+      /* Calendar add event: same iPad treatment */
+      .calendar-event-form #cal-event-title,
+      .calendar-event-form #cal-event-location,
+      .calendar-event-form #cal-event-time,
+      .calendar-event-form #cal-event-end-time,
+      .calendar-event-form #cal-event-repeat { height: 3.25rem !important; min-height: 3.25rem !important; max-height: 3.25rem !important; }
+      .calendar-event-form #cal-event-date,
+      .calendar-event-form #cal-event-end-date { height: 2rem !important; min-height: 2rem !important; max-height: 2rem !important; }
+      .calendar-event-form-row:nth-child(2) .calendar-event-field:first-child,
+      .calendar-event-form-row:nth-child(3) .calendar-event-field:first-child { width: 9rem; max-width: 9rem; margin-right: 1rem; flex: 0 0 auto; }
+      .calendar-event-form #cal-event-date,
+      .calendar-event-form #cal-event-end-date { width: 100% !important; max-width: 100% !important; min-width: 0 !important; }
+      .calendar-event-form .cal-repeat-custom-inner input,
+      .calendar-event-form .cal-repeat-custom-inner select { height: 3.25rem !important; min-height: 3.25rem !important; max-height: 3.25rem !important; line-height: 1.25; box-sizing: border-box; }
+      .calendar-event-form-row { gap: 0.5rem 1rem; }
     }
     .tasks-field-repeat { flex: 1 1 8rem; min-width: 8rem; }
     .tasks-field-custom { flex: 2 1 0; min-width: 10rem; flex-direction: column; align-items: flex-start; }
@@ -438,39 +469,63 @@
           </div>
         </div>
         <div id="calendar-event-form-wrap" class="calendar-event-form" style="display: none;">
-          <label for="cal-event-title">Title</label>
-          <input type="text" id="cal-event-title" placeholder="Event title">
-          <label for="cal-event-date">Start date</label>
-          <input type="date" id="cal-event-date">
-          <label for="cal-event-time">Start time (optional)</label>
-          <input type="time" id="cal-event-time">
-          <label for="cal-event-end-date">End date (optional)</label>
-          <input type="date" id="cal-event-end-date">
-          <label for="cal-event-end-time">End time (optional)</label>
-          <input type="time" id="cal-event-end-time">
-          <label for="cal-event-location">Location (optional)</label>
-          <input type="text" id="cal-event-location" placeholder="Where">
-          <label for="cal-event-repeat">Repeat</label>
-          <select id="cal-event-repeat">
-            <option value="">None</option>
-            <option value="daily">Every day</option>
-            <option value="weekly">Every week</option>
-            <option value="biweekly">Every 2 weeks</option>
-            <option value="monthly">Every month</option>
-            <option value="yearly">Every year</option>
-            <option value="custom">Custom</option>
-          </select>
-          <div id="cal-repeat-custom-wrap" style="display: none;">
-            <label for="cal-repeat-interval">Every</label>
-            <input type="number" id="cal-repeat-interval" min="1" max="99" value="1">
-            <select id="cal-repeat-frequency">
-              <option value="daily">day(s)</option>
-              <option value="weekly">week(s)</option>
-              <option value="monthly">month(s)</option>
-              <option value="yearly">year(s)</option>
-            </select>
+          <div class="calendar-event-form-row calendar-event-title-row">
+            <div class="calendar-event-field">
+              <label for="cal-event-title">Title</label>
+              <input type="text" id="cal-event-title" placeholder="Event title">
+            </div>
           </div>
-          <label for="cal-event-desc">Description (optional)</label>
+          <div class="calendar-event-form-row">
+            <div class="calendar-event-field">
+              <label for="cal-event-date">Start date</label>
+              <input type="date" id="cal-event-date">
+            </div>
+            <div class="calendar-event-field">
+              <label for="cal-event-time">Start time</label>
+              <input type="time" id="cal-event-time">
+            </div>
+          </div>
+          <div class="calendar-event-form-row">
+            <div class="calendar-event-field">
+              <label for="cal-event-end-date">End date</label>
+              <input type="date" id="cal-event-end-date">
+            </div>
+            <div class="calendar-event-field">
+              <label for="cal-event-end-time">End time</label>
+              <input type="time" id="cal-event-end-time">
+            </div>
+          </div>
+          <div class="calendar-event-form-row calendar-event-repeat-row">
+            <div class="calendar-event-field calendar-event-field-location">
+              <label for="cal-event-location">Location</label>
+              <input type="text" id="cal-event-location" placeholder="Where">
+            </div>
+            <div class="calendar-event-field calendar-event-field-repeat">
+              <label for="cal-event-repeat">Repeat</label>
+              <select id="cal-event-repeat">
+                <option value="">None</option>
+                <option value="daily">Every day</option>
+                <option value="weekly">Every week</option>
+                <option value="biweekly">Every 2 weeks</option>
+                <option value="monthly">Every month</option>
+                <option value="yearly">Every year</option>
+                <option value="custom">Custom</option>
+              </select>
+            </div>
+            <div id="cal-repeat-custom-wrap" class="calendar-event-field">
+              <label for="cal-repeat-interval">Every</label>
+              <div class="cal-repeat-custom-inner">
+                <input type="number" id="cal-repeat-interval" min="1" max="99" value="1">
+                <select id="cal-repeat-frequency">
+                  <option value="daily">day(s)</option>
+                  <option value="weekly">week(s)</option>
+                  <option value="monthly">month(s)</option>
+                  <option value="yearly">year(s)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <label for="cal-event-desc">Description</label>
           <textarea id="cal-event-desc" placeholder="Notes"></textarea>
           <div class="form-actions">
             <button type="button" class="btn" id="cal-event-save">Save</button>
@@ -1123,6 +1178,13 @@
     return getEventInstancesInRange(startKey, endKey).map(function (x) { return x.event; });
   }
   function isToday(d) { return formatDateKey(d) === formatDateKey(new Date()); }
+  function parseTimeToHour(timeStr) {
+    if (!timeStr || !(timeStr = (timeStr + '').trim())) return 0;
+    var parts = timeStr.split(':');
+    var h = parseInt(parts[0], 10) || 0;
+    var m = parts[1] ? parseInt(parts[1], 10) || 0 : 0;
+    return h + m / 60;
+  }
   function isOtherMonth(d, year, month) { return d.getFullYear() !== year || d.getMonth() !== month; }
   function calendarUpdateLabel() {
     var el = $('calendar-label');
@@ -1136,6 +1198,28 @@
       end.setDate(end.getDate() + 6);
       el.textContent = start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' – ' + end.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     } else el.textContent = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+  }
+  function calendarFixLabelWidth() {
+    var el = $('calendar-label');
+    if (!el || el.dataset.calLabelWidthFixed) return;
+    var longestDay = new Date(2026, 8, 30).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+    var longestWeekStart = new Date(2026, 11, 28);
+    var longestWeekEnd = new Date(2026, 11, 31);
+    var longestWeek = longestWeekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' – ' + longestWeekEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    var longestMonth = new Date(2026, 8, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    var measure = document.createElement('span');
+    measure.style.cssText = 'position:absolute;left:-9999px;top:0;visibility:hidden;font-weight:600;font-size:0.95rem;white-space:nowrap;';
+    measure.textContent = longestDay;
+    document.body.appendChild(measure);
+    var wDay = measure.offsetWidth;
+    measure.textContent = longestWeek;
+    var wWeek = measure.offsetWidth;
+    measure.textContent = longestMonth;
+    var wMonth = measure.offsetWidth;
+    document.body.removeChild(measure);
+    var w = Math.max(wDay, wWeek, wMonth);
+    el.style.minWidth = w + 'px';
+    el.dataset.calLabelWidthFixed = '1';
   }
   function getWeekStart(d) {
     var copy = new Date(d);
@@ -1234,6 +1318,8 @@
     });
     var html = '<div class="calendar-day">';
     html += '<div class="cal-day-header">' + d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }) + '</div>';
+    html += '<div class="calendar-day-wrap">';
+    html += '<div class="calendar-day-list">';
     events.forEach(function (ev) {
       var timeStr = (ev.time || '').trim();
       if ((ev.endTime || '').trim()) timeStr = timeStr ? (timeStr + ' – ' + (ev.endTime || '').trim()) : ('– ' + (ev.endTime || '').trim());
@@ -1241,7 +1327,7 @@
       html += '<div class="cal-event-item" data-event-id="' + escapeHtml(ev.id || '') + '"><span class="cal-event-time">' + escapeHtml(timeStr) + '</span>' + escapeHtml(ev.title || '') + (ev.location ? ' <span class="cal-event-location">@ ' + escapeHtml(ev.location) + '</span>' : '') + (getRepeatSpec(ev) ? ' <span class="help">(repeats)</span>' : '') + (ev.description ? '<br><span class="help">' + escapeHtml(ev.description) + '</span>' : '') + '</div>';
     });
     if (!events.length) html += '<p class="help">No events this day.</p>';
-    html += '</div>';
+    html += '</div></div></div>';
     el.innerHTML = html;
     el.style.display = '';
   }
@@ -1257,6 +1343,7 @@
       b.classList.toggle('active', (b.getAttribute('data-cal-view') || '') === mode);
     });
     calendarUpdateLabel();
+    calendarFixLabelWidth();
     if (mode === 'month') renderMonth();
     else if (mode === 'week') renderWeek();
     else renderDay();
@@ -1409,6 +1496,34 @@
     var ev = events.filter(function (x) { return x.id === id; })[0];
     if (ev) calendarShowForm(ev);
   });
+  var monthViewEl = $('calendar-month-view');
+  if (monthViewEl) {
+    monthViewEl.addEventListener('click', function (e) {
+      if (e.target.closest('.cal-event-dot')) return;
+      var dayCell = e.target.closest('.cal-day');
+      if (!dayCell) return;
+      var key = dayCell.getAttribute('data-date');
+      if (!key) return;
+      var d = parseDateKey(key);
+      if (!d) return;
+      calendarState.currentDate = d;
+      showCalendarView('day');
+    });
+  }
+  var weekViewEl = $('calendar-week-view');
+  if (weekViewEl) {
+    weekViewEl.addEventListener('click', function (e) {
+      if (e.target.closest('.cal-event-dot')) return;
+      var dayCol = e.target.closest('.cal-day-col');
+      if (!dayCol) return;
+      var key = dayCol.getAttribute('data-date');
+      if (!key) return;
+      var d = parseDateKey(key);
+      if (!d) return;
+      calendarState.currentDate = d;
+      showCalendarView('day');
+    });
+  }
 
   // --- Tasks app ---
   var tasksState = { viewMode: 'scheduled', editingTaskId: null };
