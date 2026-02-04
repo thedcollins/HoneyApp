@@ -222,6 +222,11 @@
     .cal-event-item .cal-event-location { font-size: 0.85rem; color: var(--muted); margin-left: 0.25rem; }
     .home-layout { display: flex; flex-direction: row; gap: 1rem; width: 100%; min-height: 0; }
     .home-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .home-refresh-wrap { display: none; margin-top: 1rem; width: 100%; box-sizing: border-box; }
+    .home-refresh-wrap .btn { width: 100%; margin: 0; }
+    @media (min-width: 768px) and (hover: none) and (pointer: coarse) {
+      .home-refresh-wrap { display: block; }
+    }
     @media (max-width: 767px) {
       .home-layout { flex-direction: column; align-items: stretch; }
       .home-main { width: 100%; min-width: 0; box-sizing: border-box; }
@@ -399,6 +404,9 @@
         <div class="app-card" data-app="notes" role="button" tabindex="0"><div class="app-icon-wrap"><span class="app-icon">📝</span></div><div class="app-title">Notes</div></div>
         <div class="app-card" data-app="calendar" role="button" tabindex="0"><div class="app-icon-wrap"><span class="app-icon">📅</span></div><div class="app-title">Calendar</div></div>
         <div class="app-card" data-app="settings" role="button" tabindex="0"><div class="app-icon-wrap"><span class="app-icon">⚙️</span></div><div class="app-title">Settings</div></div>
+      </div>
+      <div class="home-refresh-wrap" aria-hidden="false">
+        <button type="button" class="btn secondary" id="home-refresh-btn" aria-label="Refresh app">🔄 Refresh</button>
       </div>
       <div id="app-sheet-database" class="app-sheet" data-app="database">
         <div class="app-sheet-header">
@@ -1236,15 +1244,18 @@
   function showHomeView(view) {
     var grid = $('home-app-grid');
     var sheets = document.querySelectorAll('#sheet-home .app-sheet');
+    var refreshWrap = document.querySelector('.home-refresh-wrap');
     closeCalendarNewEventModal();
     closeTasksNewTaskModal();
     closeDatabaseNewItemModal();
     if (view === 'grid') {
       if (grid) grid.style.display = '';
+      if (refreshWrap) refreshWrap.style.display = '';
       sheets.forEach(function (s) { s.classList.remove('active'); });
       updateHomeHeader();
     } else {
       if (grid) grid.style.display = 'none';
+      if (refreshWrap) refreshWrap.style.display = 'none';
       sheets.forEach(function (s) {
         s.classList.toggle('active', s.getAttribute('data-app') === view);
       });
@@ -2460,6 +2471,8 @@
       showHomeView('grid');
     });
   });
+  var homeRefreshBtn = $('home-refresh-btn');
+  if (homeRefreshBtn) homeRefreshBtn.addEventListener('click', function () { window.location.reload(); });
 
   var homeHeaderEl = $('home-header');
   if (homeHeaderEl) {
