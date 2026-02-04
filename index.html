@@ -16,7 +16,7 @@
     .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin: 1rem 0; }
     .btn { background: var(--honey-dark); color: #fff; border: none; padding: 0.65rem 1rem; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.95rem; min-height: 44px; width: 100%; margin: 0.4rem 0; }
     .btn:hover { background: var(--honey); }
-    .btn.secondary { background: var(--wax); color: var(--text); width: auto; }
+    .btn.secondary { background: var(--wax); color: var(--text); width: auto; border: 1px solid var(--border); }
     .status { font-size: 0.9rem; color: var(--muted); margin-top: 0.5rem; }
     .status.ok { color: #2d6a2d; }
     .status.err { color: #a52a2a; }
@@ -98,7 +98,7 @@
     .calendar-day { margin-bottom: 1rem; }
     .calendar-day .cal-day-header { font-size: 1.1rem; font-weight: 600; color: var(--honey-dark); margin-bottom: 0.75rem; }
     .calendar-day .cal-event-item { padding: 0.6rem; margin-bottom: 0.5rem; background: var(--card); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; }
-    .calendar-day .cal-event-item:hover { background: var(--wax); }
+    .calendar-day .cal-event-item:hover { background: var(--wax); border-color: var(--honey-dark); }
     .calendar-day .cal-event-time { font-size: 0.8rem; color: var(--muted); margin-right: 0.5rem; }
     .calendar-event-form { background: var(--wax); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
     .calendar-event-form label { display: block; font-weight: 600; margin-top: 0.5rem; }
@@ -133,21 +133,43 @@
     .tasks-form-wrap { background: var(--wax); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; overflow: hidden; min-width: 0; }
     .tasks-form-wrap label { display: block; font-weight: 600; margin-top: 0.5rem; }
     .tasks-form-wrap input, .tasks-form-wrap select { width: 100%; max-width: 100%; min-width: 0; padding: 0.5rem; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; margin: 0.25rem 0; box-sizing: border-box; background: var(--card); color: var(--text); }
+    .tasks-form-wrap input[type="text"],
     .tasks-form-wrap input[type="date"],
     .tasks-form-wrap select { height: 2.5rem; min-height: 2.5rem; max-height: 2.5rem; line-height: 1.25; }
     .tasks-form-wrap input[type="date"] { background: var(--card) !important; color: var(--text) !important; font-size: 1rem; }
     .tasks-form-wrap .form-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
     .tasks-form-wrap .form-actions .btn { width: auto; }
-    #tasks-repeat-custom-wrap { display: flex; flex-wrap: nowrap; align-items: center; gap: 0.5rem; margin-top: 0.35rem; }
-    #tasks-repeat-custom-wrap label { display: inline-block; margin-top: 0; width: auto; }
-    #tasks-repeat-custom-wrap input, #tasks-repeat-custom-wrap select { padding: 0.5rem; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; margin: 0; box-sizing: border-box; }
+    .tasks-name-priority-row { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 0.5rem 1rem; margin-bottom: 0.5rem; }
+    .tasks-name-priority-row .tasks-field { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; }
+    .tasks-name-priority-row .tasks-field label { margin-top: 0; line-height: 1.25; }
+    .tasks-field-name { flex: 1 1 12rem; min-width: 0; }
+    .tasks-field-priority { flex: 0 0 auto; min-width: 8rem; }
+    /* Same colours as home header .home-task-pill.priority-*; no grey hover */
+    #task-priority:hover { background: var(--card); color: var(--text); }
+    #task-priority option[value="low"] { background: #2d6a2d; color: #fff; }
+    #task-priority option[value="medium"] { background: #c9a800; color: #fff; }
+    #task-priority option[value="high"] { background: #a52a2a; color: #fff; }
+    #task-priority option[value="low"]:hover { background: #2d6a2d; color: #fff; }
+    #task-priority option[value="medium"]:hover { background: #c9a800; color: #fff; }
+    #task-priority option[value="high"]:hover { background: #a52a2a; color: #fff; }
+    .tasks-date-repeat-row { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 0.5rem 1rem; margin-top: 0.5rem; }
+    .tasks-date-repeat-row .tasks-field { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; }
+    .tasks-date-repeat-row .tasks-field label { margin-top: 0; line-height: 1.25; }
+    .tasks-field-date { flex: 0 0 auto; width: 10rem; max-width: 10rem; }
+    .tasks-field-date input[type="date"] { width: 100%; max-width: 100%; }
+    .tasks-field-repeat { flex: 1 1 8rem; min-width: 8rem; }
+    .tasks-field-custom { flex: 1 1 auto; min-width: 10rem; flex-direction: column; align-items: flex-start; }
+    .tasks-repeat-custom-inner { display: flex; flex-wrap: nowrap; align-items: center; gap: 0.5rem; width: 100%; }
+    .tasks-repeat-custom-inner input, .tasks-repeat-custom-inner select { height: 2.5rem; min-height: 2.5rem; max-height: 2.5rem; box-sizing: border-box; }
+    #tasks-repeat-custom-wrap { display: none; flex-direction: column; align-items: flex-start; gap: 0.25rem; }
+    #tasks-repeat-custom-wrap label { margin-top: 0; width: auto; }
+    #tasks-repeat-custom-wrap input, #tasks-repeat-custom-wrap select { padding: 0.5rem; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; margin: 0; box-sizing: border-box; background: var(--card); color: var(--text); }
     #tasks-repeat-custom-wrap input[type="number"] { width: 4rem; }
     #tasks-repeat-custom-wrap select { width: auto; min-width: 7rem; }
     .tasks-group { margin-bottom: 1.25rem; }
     .tasks-group-title { font-size: 0.8rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.5rem; padding-bottom: 0.25rem; }
     .tasks-list { list-style: none; padding: 0; margin: 0; }
     .tasks-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border); background: var(--card); border-radius: 6px; margin-bottom: 0.35rem; }
-    .tasks-item:hover { background: var(--wax); }
     .tasks-item .task-priority { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
     .tasks-item .task-priority.low { background: #2d6a2d; }
     .tasks-item .task-priority.medium { background: #c9a800; }
@@ -299,35 +321,49 @@
           <button type="button" id="tasks-view-completed">Completed</button>
         </div>
         <div id="tasks-form-wrap" class="tasks-form-wrap" style="display: none;">
-          <label for="task-title">Name</label>
-          <input type="text" id="task-title" placeholder="Task name">
-          <label for="task-date">Date</label>
-          <input type="date" id="task-date">
-          <label for="task-priority">Priority</label>
-          <select id="task-priority">
-            <option value="low">Low (green)</option>
-            <option value="medium">Medium (yellow)</option>
-            <option value="high">High (red)</option>
-          </select>
-          <label for="task-repeat">Repeat</label>
-          <select id="task-repeat">
-            <option value="">None</option>
-            <option value="daily">Every day</option>
-            <option value="weekly">Every week</option>
-            <option value="biweekly">Every 2 weeks</option>
-            <option value="monthly">Every month</option>
-            <option value="yearly">Every year</option>
-            <option value="custom">Custom</option>
-          </select>
-          <div id="tasks-repeat-custom-wrap" style="display: none;">
-            <label for="task-repeat-interval">Every</label>
-            <input type="number" id="task-repeat-interval" min="1" max="99" value="1">
-            <select id="task-repeat-frequency">
-              <option value="daily">day(s)</option>
-              <option value="weekly">week(s)</option>
-              <option value="monthly">month(s)</option>
-              <option value="yearly">year(s)</option>
-            </select>
+          <div class="tasks-name-priority-row">
+            <div class="tasks-field tasks-field-name">
+              <label for="task-title">Name</label>
+              <input type="text" id="task-title" placeholder="Task name">
+            </div>
+            <div class="tasks-field tasks-field-priority">
+              <label for="task-priority">Priority</label>
+              <select id="task-priority">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
+            </div>
+          </div>
+          <div class="tasks-date-repeat-row">
+            <div class="tasks-field tasks-field-date">
+              <label for="task-date">Date</label>
+              <input type="date" id="task-date">
+            </div>
+            <div class="tasks-field tasks-field-repeat">
+              <label for="task-repeat">Repeat</label>
+              <select id="task-repeat">
+                <option value="">None</option>
+                <option value="daily">Every day</option>
+                <option value="weekly">Every week</option>
+                <option value="biweekly">Every 2 weeks</option>
+                <option value="monthly">Every month</option>
+                <option value="yearly">Every year</option>
+                <option value="custom">Custom</option>
+              </select>
+            </div>
+            <div id="tasks-repeat-custom-wrap" class="tasks-field tasks-field-custom">
+              <label for="task-repeat-interval">Every</label>
+              <div class="tasks-repeat-custom-inner">
+                <input type="number" id="task-repeat-interval" min="1" max="99" value="1">
+                <select id="task-repeat-frequency">
+                  <option value="daily">day(s)</option>
+                  <option value="weekly">week(s)</option>
+                  <option value="monthly">month(s)</option>
+                  <option value="yearly">year(s)</option>
+                </select>
+              </div>
+            </div>
           </div>
           <div class="form-actions">
             <button type="button" class="btn" id="task-save">Save</button>
@@ -1450,6 +1486,7 @@
       if ($('task-repeat-interval')) $('task-repeat-interval').value = '1';
       if ($('task-repeat-frequency')) $('task-repeat-frequency').value = 'weekly';
       if ($('tasks-repeat-custom-wrap')) $('tasks-repeat-custom-wrap').style.display = 'none';
+      if ($('task-priority')) $('task-priority').value = 'low';
       if (delBtn) delBtn.style.display = 'none';
     }
     wrap.style.display = 'block';
