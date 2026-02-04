@@ -211,11 +211,13 @@
       .app-icon-wrap { width: 132px; height: 132px; border-radius: 30px; }
       .app-card .app-icon { font-size: 4.1rem; }
       .app-card .app-title { font-size: 1rem; margin-top: 0.75rem; }
-      .home-header-bar { width: 250px; max-height: none; height: auto; }
       }
     .home-header-bar { flex: 0 0 auto; width: 200px; min-height: 3rem; max-height: 80vh; overflow-y: auto; background: var(--honey-dark); color: #fff; border-radius: 10px; padding: 0.75rem 1rem; margin-bottom: 0; box-sizing: border-box; display: flex; flex-direction: column; gap: 1rem; }
     @media (max-width: 767px) {
-      .home-header-bar { flex: 0 0 auto; width: calc(100% + 2rem); max-width: none; margin-left: -1rem; margin-right: -1rem; max-height: none; height: auto; box-sizing: border-box; order: -1; padding: 1rem 2rem; }
+      .home-header-bar { flex: 0 0 auto; width: 100%; max-width: 100%; margin-left: 0; margin-right: 0; max-height: none; height: auto; box-sizing: border-box; order: -1; padding: 1rem; }
+    }
+    @media (min-width: 768px) and (hover: none) and (pointer: coarse) {
+      .home-header-bar { width: 250px; max-height: none; height: auto; }
     }
     .home-header-bar.empty { display: none; }
     .home-layout:has(.app-sheet.active) .home-header-bar { display: none; }
@@ -1694,6 +1696,7 @@
   if ($('cal-event-cancel')) $('cal-event-cancel').addEventListener('click', function () { closeCalendarNewEventModal(); calendarHideForm(); });
   if ($('cal-event-delete')) $('cal-event-delete').addEventListener('click', calendarDeleteEvent);
   document.addEventListener('click', function (e) {
+    if (e.target.closest('#home-header')) return;
     var target = e.target.closest('[data-event-id]');
     if (!target) return;
     var id = target.getAttribute('data-event-id');
@@ -1877,6 +1880,17 @@
     modalWrap.setAttribute('aria-hidden', 'false');
     tasksShowForm(null);
   }
+  function openTasksNewTaskModalForEdit(task) {
+    var formWrap = $('tasks-form-wrap');
+    var content = $('tasks-new-task-content');
+    var placeholder = $('tasks-form-placeholder');
+    var modalWrap = $('tasks-new-task-wrapper');
+    if (!formWrap || !content || !placeholder || !modalWrap || !task) return;
+    content.appendChild(formWrap);
+    modalWrap.classList.add('active');
+    modalWrap.setAttribute('aria-hidden', 'false');
+    tasksShowForm(task);
+  }
   function closeTasksNewTaskModal() {
     var formWrap = $('tasks-form-wrap');
     var content = $('tasks-new-task-content');
@@ -1974,7 +1988,7 @@
       if (!id) return;
       var tasks = getTasks();
       var task = tasks.find(function (t) { return t.id === id; });
-      if (task) tasksShowForm(task);
+      if (task) openTasksNewTaskModalForEdit(task);
       return;
     }
     var checkbox = e.target.closest('.task-checkbox');
@@ -2124,10 +2138,7 @@
         if (!taskId) return;
         showHomeView('tasks');
         var task = getTasks().filter(function (t) { return t.id === taskId; })[0];
-        if (task) {
-          ensureTasksFormInList();
-          tasksShowForm(task);
-        }
+        if (task) openTasksNewTaskModalForEdit(task);
       }
     });
   }
