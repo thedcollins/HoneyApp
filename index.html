@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -210,6 +211,10 @@
       .calendar-event-form #cal-event-end-time { height: 2rem !important; min-height: 2rem !important; max-height: 2rem !important; }
       .calendar-event-form-row:nth-child(2) .calendar-event-field,
       .calendar-event-form-row:nth-child(3) .calendar-event-field { flex: 1 1 0; min-width: 0; }
+      .calendar-event-form-row:nth-child(2) .calendar-event-field:first-child,
+      .calendar-event-form-row:nth-child(3) .calendar-event-field:first-child { margin-right: 1rem; }
+      .calendar-event-form-row:nth-child(2) .calendar-event-field:nth-child(2),
+      .calendar-event-form-row:nth-child(3) .calendar-event-field:nth-child(2) { margin-right: 1rem; }
       .calendar-event-form #cal-event-date,
       .calendar-event-form #cal-event-end-date,
       .calendar-event-form #cal-event-time,
@@ -257,7 +262,7 @@
         <label for="unlock_password">Password</label>
         <input type="password" id="unlock_password" placeholder="Password" autocomplete="current-password">
         <label class="help" style="display:flex;align-items:center;gap:0.5rem;margin:0.5rem 0 0 0;cursor:pointer;">
-          <input type="checkbox" id="unlock_keep_session" name="keep_session">
+          <input type="checkbox" id="unlock_keep_session" name="keep_session" autocomplete="off">
           <span>Keep unlocked for this session (until you close the tab)</span>
         </label>
         <button type="submit" id="btn_unlock" class="btn">Unlock</button>
@@ -387,7 +392,7 @@
           <div class="tasks-name-priority-row">
             <div class="tasks-field tasks-field-name">
               <label for="task-title">Name</label>
-              <input type="text" id="task-title" placeholder="Task name">
+              <input type="text" id="task-title" placeholder="Task name" autocomplete="off">
             </div>
             <div class="tasks-field tasks-field-priority">
               <label for="task-priority">Priority</label>
@@ -401,7 +406,7 @@
           <div class="tasks-date-repeat-row">
             <div class="tasks-field tasks-field-date">
               <label for="task-date">Date</label>
-              <input type="date" id="task-date">
+              <input type="date" id="task-date" autocomplete="off">
             </div>
             <div class="tasks-field tasks-field-repeat">
               <label for="task-repeat">Repeat</label>
@@ -418,7 +423,7 @@
             <div id="tasks-repeat-custom-wrap" class="tasks-field tasks-field-custom">
               <label for="task-repeat-interval">Every</label>
               <div class="tasks-repeat-custom-inner">
-                <input type="number" id="task-repeat-interval" min="1" max="99" value="1">
+                <input type="number" id="task-repeat-interval" min="1" max="99" value="1" autocomplete="off">
                 <select id="task-repeat-frequency">
                   <option value="daily">day(s)</option>
                   <option value="weekly">week(s)</option>
@@ -469,8 +474,8 @@
             <ul id="notes-list" class="notes-list" aria-label="Notes"></ul>
           </aside>
           <div class="notes-editor">
-            <input type="text" id="notes-title" class="notes-title-input" placeholder="Note title" aria-label="Note title">
-            <textarea id="notes-body" class="notes-body-input" placeholder="Write your note here…" aria-label="Note body"></textarea>
+            <input type="text" id="notes-title" class="notes-title-input" placeholder="Note title" aria-label="Note title" autocomplete="off">
+            <textarea id="notes-body" class="notes-body-input" placeholder="Write your note here…" aria-label="Note body" autocomplete="off"></textarea>
             <div class="notes-editor-actions">
               <button type="button" class="btn" id="notes-save-btn">Save</button>
               <button type="button" class="btn secondary" id="notes-delete-btn">Delete</button>
@@ -500,33 +505,33 @@
           <div class="calendar-event-form-row calendar-event-title-row">
             <div class="calendar-event-field">
               <label for="cal-event-title">Title</label>
-              <input type="text" id="cal-event-title" placeholder="Event title">
+              <input type="text" id="cal-event-title" placeholder="Event title" autocomplete="off">
             </div>
           </div>
           <div class="calendar-event-form-row">
             <div class="calendar-event-field">
               <label for="cal-event-date">Start date</label>
-              <input type="date" id="cal-event-date">
+              <input type="date" id="cal-event-date" autocomplete="off">
             </div>
             <div class="calendar-event-field">
               <label for="cal-event-time">Start time</label>
-              <input type="time" id="cal-event-time">
+              <input type="time" id="cal-event-time" autocomplete="off">
             </div>
           </div>
           <div class="calendar-event-form-row">
             <div class="calendar-event-field">
               <label for="cal-event-end-date">End date</label>
-              <input type="date" id="cal-event-end-date">
+              <input type="date" id="cal-event-end-date" autocomplete="off">
             </div>
             <div class="calendar-event-field">
               <label for="cal-event-end-time">End time</label>
-              <input type="time" id="cal-event-end-time">
+              <input type="time" id="cal-event-end-time" autocomplete="off">
             </div>
           </div>
           <div class="calendar-event-form-row calendar-event-repeat-row">
             <div class="calendar-event-field calendar-event-field-location">
               <label for="cal-event-location">Location</label>
-              <input type="text" id="cal-event-location" placeholder="Where">
+              <input type="text" id="cal-event-location" placeholder="Where" autocomplete="off">
             </div>
             <div class="calendar-event-field calendar-event-field-repeat">
               <label for="cal-event-repeat">Repeat</label>
@@ -554,7 +559,7 @@
             </div>
           </div>
           <label for="cal-event-desc">Description</label>
-          <textarea id="cal-event-desc" placeholder="Notes"></textarea>
+          <textarea id="cal-event-desc" placeholder="Notes" autocomplete="off"></textarea>
           <div class="form-actions">
             <button type="button" class="btn" id="cal-event-save">Save</button>
             <button type="button" class="btn secondary" id="cal-event-cancel">Cancel</button>
@@ -591,11 +596,11 @@
               <label for="github_repo">Repository (owner/repo)</label>
               <input type="text" id="github_repo" placeholder="username/HoneyApp" autocomplete="off">
               <label for="github_filename">Filename</label>
-              <input type="text" id="github_filename" placeholder="index.html" value="index.html">
+              <input type="text" id="github_filename" placeholder="index.html" value="index.html" autocomplete="off">
               <label for="github_branch">Branch</label>
               <input type="text" id="github_branch" placeholder="master" value="master">
               <label for="github_path">Path (optional, e.g. / or /wiki/)</label>
-              <input type="text" id="github_path" placeholder="/">
+              <input type="text" id="github_path" placeholder="/" autocomplete="off">
               <label for="github_username">Username (GitHub username)</label>
               <input type="text" id="github_username" placeholder="GitHub username" autocomplete="username">
               <label for="github_token">Password (personal access token)</label>
@@ -644,11 +649,11 @@
       <h1 id="password_prompt_title">Add admin</h1>
       <form id="password_form" autocomplete="off">
         <label for="password_username" id="label_password_username" style="display: block;">Username</label>
-        <input type="text" id="password_username" name="username" placeholder="Username" style="display: block;">
+        <input type="text" id="password_username" name="username" placeholder="Username" style="display: block;" autocomplete="username">
         <label for="password_input">Password</label>
-        <input type="password" id="password_input" name="password" placeholder="Password">
+        <input type="password" id="password_input" name="password" placeholder="Password" autocomplete="new-password">
         <label for="password_repeat" id="label_password_repeat" style="display: block;">Repeat password</label>
-        <input type="password" id="password_repeat" name="password2" placeholder="Repeat password" style="display: block;">
+        <input type="password" id="password_repeat" name="password2" placeholder="Repeat password" style="display: block;" autocomplete="new-password">
         <button type="submit" id="password_submit" class="btn">Submit</button>
         <button type="button" id="password_cancel" class="btn secondary" style="display: block;">Cancel</button>
       </form>
